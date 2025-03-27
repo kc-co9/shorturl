@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.co.kc.shorturl.repository.mapper.KeyGenMapper">
+
+    <resultMap type="com.co.kc.shorturl.repository.entity.KeyGen" id="KeyGenMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="keyStart" column="key_start" jdbcType="INTEGER"/>
+        <result property="keyEnd" column="key_end" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="KeyGenMap">
+        select
+          id, key_start, key_end, create_time
+        from key_gen
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="KeyGenMap">
+        select
+          id, key_start, key_end, create_time
+        from key_gen
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="keyStart != null">
+                and key_start = #{keyStart}
+            </if>
+            <if test="keyEnd != null">
+                and key_end = #{keyEnd}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from key_gen
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="keyStart != null">
+                and key_start = #{keyStart}
+            </if>
+            <if test="keyEnd != null">
+                and key_end = #{keyEnd}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into key_gen(key_start, key_end, create_time)
+        values (#{keyStart}, #{keyEnd}, #{createTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into key_gen(key_start, key_end, create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.keyStart}, #{entity.keyEnd}, #{entity.createTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into key_gen(key_start, key_end, create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.keyStart}, #{entity.keyEnd}, #{entity.createTime})
+        </foreach>
+        on duplicate key update
+        key_start = values(key_start),
+        key_end = values(key_end),
+        create_time = values(create_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update key_gen
+        <set>
+            <if test="keyStart != null">
+                key_start = #{keyStart},
+            </if>
+            <if test="keyEnd != null">
+                key_end = #{keyEnd},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from key_gen where id = #{id}
+    </delete>
+
+</mapper>
+

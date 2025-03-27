@@ -1,4 +1,4 @@
-package com.co.kc.shorturl.repository.entities;
+package com.co.kc.shorturl.repository.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -21,12 +21,12 @@ public class BaseEntity {
     /**
      * 创建时间
      */
-    @TableField(value = "created_at")
-    private LocalDateTime createdAt;
+    @TableField(value = "create_time")
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    @TableField(value = "updated_at")
-    private LocalDateTime updatedAt;
+    @TableField(value = "update_time")
+    private LocalDateTime updateTime;
 }

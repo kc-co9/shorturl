@@ -3,6 +3,8 @@ package com.co.kc.shorturl.common.exception;
 import lombok.Getter;
 
 /**
+ * 异常基础类
+ *
  * @author kc
  */
 @Getter
