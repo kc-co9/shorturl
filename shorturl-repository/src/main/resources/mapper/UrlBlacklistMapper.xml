@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.co.kc.shorturl.repository.mapper.UrlBlacklistMapper">
 
-    <resultMap type="com.co.kc.shorturl.repository.entity.UrlBlacklist" id="UrlBlacklistMap">
+    <resultMap type="com.co.kc.shorturl.repository.po.entity.UrlBlacklist" id="UrlBlacklistMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="url" column="url" jdbcType="VARCHAR"/>
         <result property="hash" column="hash" jdbcType="VARCHAR"/>

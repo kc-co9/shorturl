@@ -1,4 +1,4 @@
-package com.co.kc.shorturl.repository.entity;
+package com.co.kc.shorturl.repository.po.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

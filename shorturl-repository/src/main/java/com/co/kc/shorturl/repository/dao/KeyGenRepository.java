@@ -1,6 +1,6 @@
 package com.co.kc.shorturl.repository.dao;
 
-import com.co.kc.shorturl.repository.entity.KeyGen;
+import com.co.kc.shorturl.repository.po.entity.KeyGen;
 import com.co.kc.shorturl.repository.mapper.KeyGenMapper;
 import org.springframework.stereotype.Repository;
 

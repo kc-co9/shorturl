@@ -1,7 +1,7 @@
 package com.co.kc.shorturl.repository.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.co.kc.shorturl.repository.entity.UrlBlacklist;
+import com.co.kc.shorturl.repository.po.entity.UrlBlacklist;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
