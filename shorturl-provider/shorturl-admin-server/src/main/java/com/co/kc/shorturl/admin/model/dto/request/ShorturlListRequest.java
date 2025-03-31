@@ -1,4 +1,4 @@
-package com.co.kc.shorturl.admin.model.dto;
+package com.co.kc.shorturl.admin.model.dto.request;
 
 import com.co.kc.shorturl.common.model.Paging;
 import com.co.kc.shorturl.repository.enums.UrlKeyStatus;

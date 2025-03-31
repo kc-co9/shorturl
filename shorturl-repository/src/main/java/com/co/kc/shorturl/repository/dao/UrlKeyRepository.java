@@ -14,9 +14,16 @@ import java.util.Optional;
  */
 @Repository
 public class UrlKeyRepository extends BaseRepository<UrlKeyMapper, UrlKey> {
-    public Optional<UrlKey> findUrlKeyByHash(String hash, String url) {
+    public Optional<UrlKey> findByKey(String key) {
+        return this.getFirst(this.getQueryWrapper()
+                .eq(UrlKey::getKey, key));
+    }
+
+    public Optional<UrlKey> findByHash(String hash, String url) {
         return this.getFirst(this.getQueryWrapper()
                 .eq(UrlKey::getHash, hash)
                 .eq(UrlKey::getUrl, url));
     }
+
+
 }

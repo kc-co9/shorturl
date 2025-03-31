@@ -1,4 +1,4 @@
-package com.co.kc.shorturl.admin.model.dto;
+package com.co.kc.shorturl.admin.model.dto.response;
 
 import lombok.Data;
 

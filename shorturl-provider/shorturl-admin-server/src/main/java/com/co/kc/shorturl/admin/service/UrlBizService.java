@@ -2,8 +2,10 @@ package com.co.kc.shorturl.admin.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.co.kc.shorturl.admin.model.dto.BlacklistDTO;
-import com.co.kc.shorturl.admin.model.dto.ShorturlDTO;
+import com.co.kc.shorturl.admin.config.ShorturlConfig;
+import com.co.kc.shorturl.admin.model.dto.response.BlacklistDTO;
+import com.co.kc.shorturl.admin.model.dto.response.ShorturlDTO;
+import com.co.kc.shorturl.common.exception.ToastException;
 import com.co.kc.shorturl.common.model.Paging;
 import com.co.kc.shorturl.common.model.PagingResult;
 import com.co.kc.shorturl.common.utils.FunctionUtils;
@@ -27,6 +29,8 @@ import java.util.Objects;
 @Service
 public class UrlBizService {
     @Autowired
+    private ShorturlConfig shorturlConfig;
+    @Autowired
     private UrlKeyRepository urlKeyRepository;
     @Autowired
     private UrlBlacklistRepository urlBlacklistRepository;
@@ -40,7 +44,7 @@ public class UrlBizService {
         List<ShorturlDTO> shorturlList = FunctionUtils.mappingList(urlKeyPage.getRecords(), urlKey -> {
             ShorturlDTO shorturlDTO = new ShorturlDTO();
             shorturlDTO.setUrl(urlKey.getUrl());
-            shorturlDTO.setShorturl(urlKey.getKey());
+            shorturlDTO.setShorturl(buildShorturl(urlKey.getKey()));
             shorturlDTO.setStatus(urlKey.getStatus());
             shorturlDTO.setValidStart(urlKey.getValidStart());
             shorturlDTO.setValidEnd(urlKey.getValidEnd());
@@ -58,7 +62,12 @@ public class UrlBizService {
         // 计算HASH
         String hash = HashUtils.murmurHash32(url);
         // 查询数据库
-        UrlKey urlKey = urlKeyRepository.findUrlKeyByHash(hash, url).orElse(null);
+        UrlBlacklist blacklist = urlBlacklistRepository.findBlacklistByHash(hash, url).orElse(null);
+        if (blacklist != null) {
+            throw new ToastException("该链接被封禁，无法创建短链");
+        }
+        // 查询数据库
+        UrlKey urlKey = urlKeyRepository.findByHash(hash, url).orElse(null);
         if (urlKey != null) {
             return urlKey.getKey();
         }
@@ -73,6 +82,25 @@ public class UrlBizService {
         urlKey.setValidEnd(validEnd);
         urlKeyRepository.save(urlKey);
         return urlKey.getKey();
+    }
+
+    public void updateShorturlStatus(Long id, UrlKeyStatus status) {
+        UrlKey urlKey = urlKeyRepository.getById(id);
+        if (urlKey == null) {
+            throw new ToastException("数据不存在");
+        }
+        // 计算HASH
+        String hash = HashUtils.murmurHash32(urlKey.getUrl());
+        // 查询数据库
+        UrlBlacklist blacklist = urlBlacklistRepository.findBlacklistByHash(hash, urlKey.getUrl()).orElse(null);
+        if (blacklist != null) {
+            throw new ToastException("该链接被封禁，无法变更");
+        }
+        urlKeyRepository.update(urlKeyRepository.getUpdateWrapper()
+                .set(UrlKey::getStatus, status)
+                .eq(UrlKey::getId, id)
+                .eq(UrlKey::getStatus, urlKey.getStatus())
+        );
     }
 
     public PagingResult<BlacklistDTO> getBlacklistList(Paging paging) {
@@ -113,4 +141,8 @@ public class UrlBizService {
         urlBlacklistRepository.removeById(id);
     }
 
+
+    private String buildShorturl(String key) {
+        return shorturlConfig.getHost() + "/" + key;
+    }
 }

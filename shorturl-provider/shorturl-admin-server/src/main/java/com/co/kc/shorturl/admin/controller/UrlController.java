@@ -1,6 +1,9 @@
 package com.co.kc.shorturl.admin.controller;
 
-import com.co.kc.shorturl.admin.model.dto.*;
+import com.co.kc.shorturl.admin.model.dto.request.*;
+import com.co.kc.shorturl.admin.model.dto.response.BlacklistDTO;
+import com.co.kc.shorturl.admin.model.dto.response.ShorturlCreateDTO;
+import com.co.kc.shorturl.admin.model.dto.response.ShorturlDTO;
 import com.co.kc.shorturl.admin.service.UrlBizService;
 import com.co.kc.shorturl.common.model.PagingResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +26,14 @@ public class UrlController {
     }
 
     @PostMapping("/createShorturl")
-    public ShorturlCreateResponse createShorturl(@RequestBody @Validated ShorturlCreateRequest request) {
+    public ShorturlCreateDTO createShorturl(@RequestBody @Validated ShorturlCreateRequest request) {
         String shorturl = urlBizService.createShorturl(request.getUrl(), request.getValidStart(), request.getValidEnd());
-        return new ShorturlCreateResponse(shorturl);
+        return new ShorturlCreateDTO(shorturl);
+    }
+
+    @PostMapping("/updateShorturlStatus")
+    public void updateShorturlStatus(@RequestBody @Validated ShorturlStatusUpdateRequest request) {
+        urlBizService.updateShorturlStatus(request.getId(), request.getStatus());
     }
 
     @GetMapping("/blacklistList")

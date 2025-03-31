@@ -30,7 +30,6 @@ public class PagingResult<T> {
      */
     private Long totalPages;
 
-
     private PagingResult() {
     }
 

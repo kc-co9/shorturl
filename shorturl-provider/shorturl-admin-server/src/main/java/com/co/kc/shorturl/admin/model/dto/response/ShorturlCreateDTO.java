@@ -1,4 +1,4 @@
-package com.co.kc.shorturl.admin.model.dto;
+package com.co.kc.shorturl.admin.model.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShorturlCreateResponse {
+public class ShorturlCreateDTO {
     private String shorturl;
 }

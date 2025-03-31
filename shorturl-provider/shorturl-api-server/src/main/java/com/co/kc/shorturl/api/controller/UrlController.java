@@ -1,8 +1,13 @@
 package com.co.kc.shorturl.api.controller;
 
+import com.co.kc.shorturl.api.model.UrlPreviewDTO;
+import com.co.kc.shorturl.api.service.UrlBizService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author kc
@@ -10,12 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UrlController {
 
-    @GetMapping("/preview/{code}")
-    public void preview(@PathVariable(value = "code") String code) {
+    @Autowired
+    private UrlBizService urlBizService;
+
+    @GetMapping("/preview/{key}")
+    public UrlPreviewDTO preview(@PathVariable(value = "key") String key) {
+        String url = urlBizService.parseShorturl(key);
+        return new UrlPreviewDTO(url);
     }
 
-    @GetMapping("/{code}")
-    public void redirect(@PathVariable(value = "code") String code) {
+    @GetMapping("/{key}")
+    public void redirect(@PathVariable(value = "key") String key, HttpServletResponse response) {
+        String url = urlBizService.parseShorturl(key);
+        response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
+        response.setHeader("Location", url);
     }
 
 }
