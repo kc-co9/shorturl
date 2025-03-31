@@ -31,9 +31,9 @@ public class UrlController {
         return new ShorturlCreateDTO(shorturl);
     }
 
-    @PostMapping("/updateShorturlStatus")
-    public void updateShorturlStatus(@RequestBody @Validated ShorturlStatusUpdateRequest request) {
-        urlBizService.updateShorturlStatus(request.getId(), request.getStatus());
+    @PostMapping("/updateShorturl")
+    public void updateShorturl(@RequestBody @Validated ShorturlUpdateRequest request) {
+        urlBizService.updateShorturl(request.getId(), request.getStatus(), request.getValidStart(), request.getValidEnd());
     }
 
     @GetMapping("/blacklistList")

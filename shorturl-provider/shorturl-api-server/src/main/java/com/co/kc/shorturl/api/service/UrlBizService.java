@@ -10,6 +10,8 @@ import com.co.kc.shorturl.repository.po.entity.UrlKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * @author kc
  */
@@ -25,7 +27,9 @@ public class UrlBizService {
         if (!UrlKeyStatus.ACTIVE.equals(urlKey.getStatus())) {
             throw new ToastException("该链接被屏蔽，无法访问");
         }
-        // 计算HASH
+        if (urlKey.getValidStart().isAfter(LocalDateTime.now()) || urlKey.getValidEnd().isBefore(LocalDateTime.now())) {
+            throw new ToastException("该链接已过期，无法访问");
+        }
         String hash = HashUtils.murmurHash32(urlKey.getUrl());
         UrlBlacklist blacklist = urlBlacklistRepository.findBlacklistByHash(hash, urlKey.getUrl()).orElse(null);
         if (blacklist != null) {

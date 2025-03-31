@@ -3,6 +3,7 @@ package com.co.kc.shorturl.admin.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.co.kc.shorturl.admin.config.ShorturlConfig;
+import com.co.kc.shorturl.admin.model.domain.UrlKeyGenerator;
 import com.co.kc.shorturl.admin.model.dto.response.BlacklistDTO;
 import com.co.kc.shorturl.admin.model.dto.response.ShorturlDTO;
 import com.co.kc.shorturl.common.exception.ToastException;
@@ -30,6 +31,8 @@ import java.util.Objects;
 public class UrlBizService {
     @Autowired
     private ShorturlConfig shorturlConfig;
+    @Autowired
+    private UrlKeyGenerator urlKeyGenerator;
     @Autowired
     private UrlKeyRepository urlKeyRepository;
     @Autowired
@@ -59,23 +62,18 @@ public class UrlBizService {
     }
 
     public String createShorturl(String url, LocalDateTime validStart, LocalDateTime validEnd) {
-        // 计算HASH
         String hash = HashUtils.murmurHash32(url);
-        // 查询数据库
         UrlBlacklist blacklist = urlBlacklistRepository.findBlacklistByHash(hash, url).orElse(null);
         if (blacklist != null) {
             throw new ToastException("该链接被封禁，无法创建短链");
         }
-        // 查询数据库
         UrlKey urlKey = urlKeyRepository.findByHash(hash, url).orElse(null);
         if (urlKey != null) {
             return urlKey.getKey();
         }
-        // 创建short url
         urlKey = new UrlKey();
         urlKey.setUrl(url);
-        // TODO 设计key填充
-        urlKey.setKey("");
+        urlKey.setKey(urlKeyGenerator.next());
         urlKey.setHash(hash);
         urlKey.setStatus(UrlKeyStatus.ACTIVE);
         urlKey.setValidStart(validStart);
@@ -84,23 +82,21 @@ public class UrlBizService {
         return urlKey.getKey();
     }
 
-    public void updateShorturlStatus(Long id, UrlKeyStatus status) {
+    public void updateShorturl(Long id, UrlKeyStatus status, LocalDateTime validStart, LocalDateTime validEnd) {
         UrlKey urlKey = urlKeyRepository.getById(id);
         if (urlKey == null) {
             throw new ToastException("数据不存在");
         }
-        // 计算HASH
         String hash = HashUtils.murmurHash32(urlKey.getUrl());
-        // 查询数据库
         UrlBlacklist blacklist = urlBlacklistRepository.findBlacklistByHash(hash, urlKey.getUrl()).orElse(null);
         if (blacklist != null) {
             throw new ToastException("该链接被封禁，无法变更");
         }
         urlKeyRepository.update(urlKeyRepository.getUpdateWrapper()
                 .set(UrlKey::getStatus, status)
-                .eq(UrlKey::getId, id)
-                .eq(UrlKey::getStatus, urlKey.getStatus())
-        );
+                .set(UrlKey::getValidStart, validStart)
+                .set(UrlKey::getValidEnd, validEnd)
+                .eq(UrlKey::getId, id));
     }
 
     public PagingResult<BlacklistDTO> getBlacklistList(Paging paging) {
@@ -123,9 +119,7 @@ public class UrlBizService {
     }
 
     public void addBlacklist(String url, String remark) {
-        // 计算HASH
         String hash = HashUtils.murmurHash32(url);
-        // 查询数据库
         UrlBlacklist blacklist = urlBlacklistRepository.findBlacklistByHash(hash, url).orElse(null);
         if (blacklist != null) {
             return;
