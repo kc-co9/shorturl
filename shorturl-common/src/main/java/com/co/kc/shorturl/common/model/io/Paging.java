@@ -1,8 +1,12 @@
-package com.co.kc.shorturl.common.model;
+package com.co.kc.shorturl.common.model.io;
 
+import com.alibaba.fastjson2.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.beans.Transient;
 
 /**
  * @author kc
@@ -25,7 +29,10 @@ public class Paging {
     /**
      * get paging info
      */
+    @Transient
+    @JsonIgnore
+    @JSONField(serialize = false, deserialize = false)
     public Paging getPaging() {
-        return new Paging(pageNo, pageSize);
+        return this;
     }
 }

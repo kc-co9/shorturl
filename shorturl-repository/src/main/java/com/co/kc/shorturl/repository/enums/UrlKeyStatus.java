@@ -1,6 +1,7 @@
 package com.co.kc.shorturl.repository.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.co.kc.shorturl.common.model.enums.BaseEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,7 +10,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum UrlKeyStatus {
+public enum UrlKeyStatus implements BaseEnum {
     /**
      * 未知
      */

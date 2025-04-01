@@ -7,8 +7,8 @@ import com.co.kc.shorturl.admin.model.domain.UrlKeyGenerator;
 import com.co.kc.shorturl.admin.model.dto.response.BlacklistDTO;
 import com.co.kc.shorturl.admin.model.dto.response.ShorturlDTO;
 import com.co.kc.shorturl.common.exception.ToastException;
-import com.co.kc.shorturl.common.model.Paging;
-import com.co.kc.shorturl.common.model.PagingResult;
+import com.co.kc.shorturl.common.model.io.Paging;
+import com.co.kc.shorturl.common.model.io.PagingResult;
 import com.co.kc.shorturl.common.utils.FunctionUtils;
 import com.co.kc.shorturl.common.utils.HashUtils;
 import com.co.kc.shorturl.repository.dao.UrlBlacklistRepository;
@@ -21,14 +21,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author kc
  */
 @Service
 public class UrlBizService {
+
+    private static final char[] CHARSET = new char[]{
+            'e', 'H', 'M', 'F', 'x', 'X', 'm', 'l', '4',
+            'L', 'g', '6', '1', 'B', 'n', 'C', 't', 'q',
+            'w', '2', 'a', 'o', 'K', 'P', 'W', 'R', 'S',
+            'A', 'k', '0', 'U', 'Y', '9', 's', '5', 'c',
+            'N', 'Q', 'T', 'r', 'I', 'h', 'V', 'b', 'E',
+            '3', '7', 'D', 'i', 'O', 'z', 'G', 'u', 'p',
+            'f', 'j', 'v', '8', 'd', 'Z', 'y', 'J'};
+
     @Autowired
     private ShorturlConfig shorturlConfig;
     @Autowired
@@ -46,6 +55,7 @@ public class UrlBizService {
                         .orderByDesc(UrlKey::getId));
         List<ShorturlDTO> shorturlList = FunctionUtils.mappingList(urlKeyPage.getRecords(), urlKey -> {
             ShorturlDTO shorturlDTO = new ShorturlDTO();
+            shorturlDTO.setId(urlKey.getId());
             shorturlDTO.setUrl(urlKey.getUrl());
             shorturlDTO.setShorturl(buildShorturl(urlKey.getKey()));
             shorturlDTO.setStatus(urlKey.getStatus());
@@ -62,6 +72,9 @@ public class UrlBizService {
     }
 
     public String createShorturl(String url, LocalDateTime validStart, LocalDateTime validEnd) {
+        if (validStart.isAfter(validEnd)) {
+            throw new ToastException("有效期校验异常");
+        }
         String hash = HashUtils.murmurHash32(url);
         UrlBlacklist blacklist = urlBlacklistRepository.findBlacklistByHash(hash, url).orElse(null);
         if (blacklist != null) {
@@ -73,7 +86,7 @@ public class UrlBizService {
         }
         urlKey = new UrlKey();
         urlKey.setUrl(url);
-        urlKey.setKey(urlKeyGenerator.next());
+        urlKey.setKey(base62(urlKeyGenerator.next()));
         urlKey.setHash(hash);
         urlKey.setStatus(UrlKeyStatus.ACTIVE);
         urlKey.setValidStart(validStart);
@@ -107,7 +120,7 @@ public class UrlBizService {
             BlacklistDTO shorturlDTO = new BlacklistDTO();
             shorturlDTO.setId(blacklist.getId());
             shorturlDTO.setUrl(blacklist.getUrl());
-            shorturlDTO.setRemark(blacklist.getUrl());
+            shorturlDTO.setRemark(blacklist.getRemark());
             return shorturlDTO;
         });
         return PagingResult.<BlacklistDTO>newBuilder()
@@ -138,5 +151,22 @@ public class UrlBizService {
 
     private String buildShorturl(String key) {
         return shorturlConfig.getHost() + "/" + key;
+    }
+
+    private String base62(Long num) {
+        // 定义62进制的字符集
+        if (num == 0) {
+            return String.valueOf(CHARSET[0]);
+        }
+        StringBuilder result = new StringBuilder();
+        while (num > 0) {
+            // 取模得到当前位的索引
+            int remainder = (int) (num % 62);
+            // 根据索引从字符集中获取对应的字符
+            result.insert(0, CHARSET[remainder]);
+            // 整除62更新十进制数
+            num = num / 62;
+        }
+        return result.toString();
     }
 }

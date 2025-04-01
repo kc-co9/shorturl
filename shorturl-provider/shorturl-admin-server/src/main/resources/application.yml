@@ -1,5 +1,5 @@
 server:
-  port: 9095
+  port: 9096
   servlet:
     context-path: /
   tomcat:
@@ -49,7 +49,7 @@ druid:
   useGlobalDataSourceStat: true  # 合并多个DruidDataSource的监控数据
 
 mybatis-plus:
-  typeEnumsPackage: com.share.co.kcl.**.enums
+  typeEnumsPackage: com.co.kc.**.enums
   mapper-locations: classpath*:/mapper/**/*.xml
   configuration:
     localCacheScope: STATEMENT

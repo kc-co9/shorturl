@@ -1,6 +1,6 @@
 package com.co.kc.shorturl.admin.model.dto.request;
 
-import com.co.kc.shorturl.common.model.Paging;
+import com.co.kc.shorturl.common.model.io.Paging;
 
 /**
  * @author kc

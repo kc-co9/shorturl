@@ -1,6 +1,6 @@
 package com.co.kc.shorturl.common.processor.advice;
 
-import com.co.kc.shorturl.common.model.Result;
+import com.co.kc.shorturl.common.model.io.Result;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

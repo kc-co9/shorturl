@@ -11,5 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UrlPreviewDTO {
+    /**
+     * 原始链接
+     */
     private String url;
 }

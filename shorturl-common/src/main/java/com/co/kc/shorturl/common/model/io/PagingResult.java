@@ -1,4 +1,4 @@
-package com.co.kc.shorturl.common.model;
+package com.co.kc.shorturl.common.model.io;
 
 import lombok.Getter;
 import org.springframework.util.Assert;

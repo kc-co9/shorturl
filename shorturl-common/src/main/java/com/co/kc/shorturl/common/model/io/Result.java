@@ -1,4 +1,4 @@
-package com.co.kc.shorturl.common.model;
+package com.co.kc.shorturl.common.model.io;
 
 import com.co.kc.shorturl.common.constants.ResultCode;
 import com.co.kc.shorturl.common.exception.BaseException;

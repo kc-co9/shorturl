@@ -49,39 +49,9 @@ druid:
   useGlobalDataSourceStat: true  # 合并多个DruidDataSource的监控数据
 
 mybatis-plus:
-  typeEnumsPackage: com.share.co.kcl.**.enums
+  typeEnumsPackage: com.co.kc.**.enums
   mapper-locations: classpath*:/mapper/**/*.xml
   configuration:
     localCacheScope: STATEMENT
     cacheEnabled: false
 
-knife4j:
-  enable: true
-  cors: false
-  production: false
-  basic:
-    enable: false
-    username: dev
-    password: dev
-  setting:
-    language: zh-CN
-    enableSwaggerModels: true
-    enableDocumentManage: true
-    swaggerModelName: 实体类列表
-    enableVersion: false
-    enableReloadCacheParameter: true
-    enableAfterScript: false
-    enableFilterMultipartApiMethodType: POST
-    enableFilterMultipartApis: false
-    enableRequestCache: true
-    enableHost: false
-    enableHostText: false
-    enableHomeCustom: false
-    enableSearch: true
-    enableFooter: false
-    enableFooterCustom: true
-    footerCustomContent: Apache License 2.0 | Copyright  2024-[shorturl]
-    enableDynamicParameter: true
-    enableDebug: true
-    enableOpenApi: true
-    enableGroup: true

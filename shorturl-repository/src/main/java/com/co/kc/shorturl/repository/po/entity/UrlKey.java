@@ -1,5 +1,6 @@
 package com.co.kc.shorturl.repository.po.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.co.kc.shorturl.repository.enums.UrlKeyStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,26 +21,32 @@ public class UrlKey extends BaseEntity implements Serializable {
     /**
      * 原始链接
      */
+    @TableField("`url`")
     private String url;
     /**
      * 原始链接key
      */
+    @TableField("`key`")
     private String key;
     /**
      * 原始链接hash值
      */
+    @TableField("`hash`")
     private String hash;
     /**
      * 状态 0-未知 1-激活 2-失效
      */
+    @TableField("`status`")
     private UrlKeyStatus status;
     /**
      * 有效期-开始时间
      */
+    @TableField("`valid_start`")
     private LocalDateTime validStart;
     /**
      * 有效期-结束时间
      */
+    @TableField("`valid_end`")
     private LocalDateTime validEnd;
 }
 

@@ -2,7 +2,7 @@ package com.co.kc.shorturl.common.processor.advice;
 
 import com.co.kc.shorturl.common.constants.ResultCode;
 import com.co.kc.shorturl.common.exception.*;
-import com.co.kc.shorturl.common.model.Result;
+import com.co.kc.shorturl.common.model.io.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
