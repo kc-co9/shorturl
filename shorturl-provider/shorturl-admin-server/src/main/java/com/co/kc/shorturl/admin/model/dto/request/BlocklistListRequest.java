@@ -5,5 +5,5 @@ import com.co.kc.shorturl.common.model.io.Paging;
 /**
  * @author kc
  */
-public class BlacklistListRequest extends Paging {
+public class BlocklistListRequest extends Paging {
 }

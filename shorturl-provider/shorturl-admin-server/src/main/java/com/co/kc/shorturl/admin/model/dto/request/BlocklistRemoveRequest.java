@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * @author kc
  */
 @Data
-public class BlacklistRemoveRequest {
+public class BlocklistRemoveRequest {
     /**
      * ID
      */

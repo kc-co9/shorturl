@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS `url_key`
     UNIQUE KEY uk_key (`key`) USING BTREE
 ) ENGINE = INNODB COMMENT = 'url标识符';
 
-DROP TABLE IF EXISTS `url_blacklist`;
-CREATE TABLE IF NOT EXISTS `url_blacklist`
+DROP TABLE IF EXISTS `url_blocklist`;
+CREATE TABLE IF NOT EXISTS `url_blocklist`
 (
     `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
     `url`         TEXT                     DEFAULT NULL COMMENT '链接',

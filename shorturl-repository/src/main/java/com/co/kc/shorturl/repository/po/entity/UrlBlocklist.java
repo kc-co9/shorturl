@@ -6,14 +6,14 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 /**
- * url黑名单(UrlBlacklist)实体类
+ * url黑名单(UrlBlocklist)实体类
  *
  * @author makejava
  * @since 2025-03-27 12:03:30
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UrlBlacklist extends BaseEntity implements Serializable {
+public class UrlBlocklist extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 694861458806579982L;
     /**
      * 链接

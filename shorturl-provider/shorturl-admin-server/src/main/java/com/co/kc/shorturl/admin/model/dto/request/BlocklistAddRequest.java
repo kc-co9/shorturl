@@ -1,23 +1,19 @@
-package com.co.kc.shorturl.admin.model.dto.response;
+package com.co.kc.shorturl.admin.model.dto.request;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author kc
  */
 @Data
-public class BlacklistDTO {
-    /**
-     * ID
-     */
-    @ApiModelProperty(value = "ID")
-    private Long id;
-    /**
-     * 链接
-     */
+public class BlocklistAddRequest {
+    @NotBlank(message = "被禁链接不能为空")
     @ApiModelProperty(value = "被禁链接")
     private String url;
+
     /**
      * 备注
      */

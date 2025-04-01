@@ -1,7 +1,7 @@
 package com.co.kc.shorturl.admin.controller;
 
 import com.co.kc.shorturl.admin.model.dto.request.*;
-import com.co.kc.shorturl.admin.model.dto.response.BlacklistDTO;
+import com.co.kc.shorturl.admin.model.dto.response.BlocklistDTO;
 import com.co.kc.shorturl.admin.model.dto.response.ShorturlCreateDTO;
 import com.co.kc.shorturl.admin.model.dto.response.ShorturlDTO;
 import com.co.kc.shorturl.admin.service.UrlBizService;
@@ -40,22 +40,22 @@ public class UrlController {
         urlBizService.updateShorturl(request.getId(), request.getStatus(), request.getValidStart(), request.getValidEnd());
     }
 
-    @GetMapping("/blacklistList")
+    @GetMapping("/blocklistList")
     @ApiOperation(value = "链接黑名单列表")
-    public PagingResult<BlacklistDTO> blacklistList(@ModelAttribute @Validated BlacklistListRequest request) {
-        return urlBizService.getBlacklistList(request.getPaging());
+    public PagingResult<BlocklistDTO> blocklistList(@ModelAttribute @Validated BlocklistListRequest request) {
+        return urlBizService.getBlocklistList(request.getPaging());
     }
 
-    @PostMapping("/addBlacklist")
+    @PostMapping("/addBlocklist")
     @ApiOperation(value = "链接黑名单新增")
-    public void addBlacklist(@RequestBody @Validated BlacklistAddRequest request) {
-        urlBizService.addBlacklist(request.getUrl(), request.getRemark());
+    public void addBlocklist(@RequestBody @Validated BlocklistAddRequest request) {
+        urlBizService.addBlocklist(request.getUrl(), request.getRemark());
     }
 
-    @PostMapping("/removeBlacklist")
+    @PostMapping("/removeBlocklist")
     @ApiOperation(value = "链接黑名单移除")
-    public void removeBlacklist(@RequestBody @Validated BlacklistRemoveRequest request) {
-        urlBizService.removeBlacklist(request.getId());
+    public void removeBlocklist(@RequestBody @Validated BlocklistRemoveRequest request) {
+        urlBizService.removeBlocklist(request.getId());
     }
 
 
