@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS shorturl;
 
 USE shorturl;
 
-DROP TABLE IF EXISTS `key_gen`;
+# DROP TABLE IF EXISTS `key_gen`;
 CREATE TABLE IF NOT EXISTS `key_gen`
 (
     `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `key_gen`
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = INNODB COMMENT = 'key生成器';
 
-DROP TABLE IF EXISTS `url_key`;
+# DROP TABLE IF EXISTS `url_key`;
 CREATE TABLE IF NOT EXISTS `url_key`
 (
     `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `url_key`
     UNIQUE KEY uk_key (`key`) USING BTREE
 ) ENGINE = INNODB COMMENT = 'url标识符';
 
-DROP TABLE IF EXISTS `url_blocklist`;
+# DROP TABLE IF EXISTS `url_blocklist`;
 CREATE TABLE IF NOT EXISTS `url_blocklist`
 (
     `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -42,3 +42,17 @@ CREATE TABLE IF NOT EXISTS `url_blocklist`
     PRIMARY KEY (`id`) USING BTREE,
     KEY idx_hash_url (`hash`, `url`(45)) USING BTREE
 ) ENGINE = INNODB COMMENT = 'url黑名单';
+
+# DROP TABLE IF EXISTS `dtp_administrator`;
+CREATE TABLE IF NOT EXISTS `administrator`
+(
+    `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `account`     VARCHAR(45)     NOT NULL DEFAULT '' COMMENT '管理者账号',
+    `password`    VARCHAR(90)     NOT NULL DEFAULT '' COMMENT '管理者密码',
+    `username`    VARCHAR(90)     NOT NULL DEFAULT '' COMMENT '管理者用户名',
+    `email`       VARCHAR(90)     NOT NULL DEFAULT '' COMMENT '管理者邮箱',
+    `create_time` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    KEY idx_account (`account`) USING BTREE
+) ENGINE = INNODB COMMENT = '管理者';

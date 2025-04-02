@@ -63,3 +63,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/shorturl-admin-web/node_modules/

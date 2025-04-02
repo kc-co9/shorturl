@@ -27,7 +27,7 @@ import java.util.*;
  * @author kc
  */
 @Service
-public class UrlBizService {
+public class ShorturlBizService {
 
     private static final char[] CHARSET = new char[]{
             'e', 'H', 'M', 'F', 'x', 'X', 'm', 'l', '4',
@@ -110,42 +110,6 @@ public class UrlBizService {
                 .set(UrlKey::getValidStart, validStart)
                 .set(UrlKey::getValidEnd, validEnd)
                 .eq(UrlKey::getId, id));
-    }
-
-    public PagingResult<BlocklistDTO> getBlocklistList(Paging paging) {
-        IPage<UrlBlocklist> blocklistPage =
-                urlBlocklistRepository.page(new Page<>(paging.getPageNo(), paging.getPageSize()),
-                        urlBlocklistRepository.getQueryWrapper().orderByDesc(UrlBlocklist::getId));
-        List<BlocklistDTO> blocklistList = FunctionUtils.mappingList(blocklistPage.getRecords(), blocklist -> {
-            BlocklistDTO shorturlDTO = new BlocklistDTO();
-            shorturlDTO.setId(blocklist.getId());
-            shorturlDTO.setUrl(blocklist.getUrl());
-            shorturlDTO.setRemark(blocklist.getRemark());
-            return shorturlDTO;
-        });
-        return PagingResult.<BlocklistDTO>newBuilder()
-                .paging(paging)
-                .records(blocklistList)
-                .totalCount(blocklistPage.getTotal())
-                .totalPages(blocklistPage.getPages())
-                .build();
-    }
-
-    public void addBlocklist(String url, String remark) {
-        String hash = HashUtils.murmurHash32(url);
-        UrlBlocklist blocklist = urlBlocklistRepository.findByHash(hash, url).orElse(null);
-        if (blocklist != null) {
-            return;
-        }
-        blocklist = new UrlBlocklist();
-        blocklist.setUrl(url);
-        blocklist.setHash(hash);
-        blocklist.setRemark(remark);
-        urlBlocklistRepository.save(blocklist);
-    }
-
-    public void removeBlocklist(Long id) {
-        urlBlocklistRepository.removeById(id);
     }
 
 

@@ -1,0 +1,218 @@
+<template>
+  <div class="app-container">
+    <el-row>
+
+      <el-form
+          ref="dataForm"
+          inline
+          :model="dataForm"
+          type="flex"
+          justify="center"
+      >
+        <el-form-item>
+          <el-button type="primary" @click="showAdd">
+            新增
+          </el-button>
+        </el-form-item>
+      </el-form>
+
+    </el-row>
+
+    <el-row>
+      <h4 style="margin:0">
+        共搜到{{ dataTable.totalCount }}条数据
+      </h4>
+      <el-table
+          :data="dataTable.records"
+          border
+          style="width: 100%">
+
+        <el-table-column
+            prop="url"
+            label="被禁链接">
+        </el-table-column>
+        <el-table-column
+            prop="remark"
+            label="备注">
+        </el-table-column>
+        <el-table-column
+            prop="createTime"
+            label="创建时间">
+        </el-table-column>
+
+        <el-table-column
+            align="center"
+            label="操作"
+            fixed="right"
+            width="120">
+          <template slot-scope="scope">
+            <el-button type="text" @click="showEdit(scope.row)">
+              编辑
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-row>
+    <el-row type="flex" justify="center" style="margin-top:20px">
+      <el-pagination
+          :current-page="parseInt(dataTable.paging.pageNo)"
+          :total="parseInt(dataTable.totalPages)"
+          layout="sizes,total, prev, pager, next, jumper"
+          @current-change="pageChange"
+      />
+    </el-row>
+
+    <el-dialog title="创建短链" :visible.sync="addVisible">
+      <el-form :model="addForm" label-position="right" label-width="120px">
+        <el-form-item label="原始链接">
+          <el-input v-model="addForm.url" placeHolder="请输入" style="width: 300px"/>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="addForm.remark" placeHolder="请输入" style="width: 300px"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addVisible = false">
+          取 消
+        </el-button>
+        <el-button type="primary" @click="add">
+          确 定
+        </el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="编辑短链" :visible.sync="editVisible">
+      <el-form :model="editForm" label-position="right" label-width="120px">
+        <el-form-item label="备注">
+          <el-input v-model="editForm.remark" placeHolder="请输入" style="width: 300px"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editVisible = false">
+          取 消
+        </el-button>
+        <el-button type="primary" @click="edit">
+          确 定
+        </el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+
+<script>
+import {CONSTANTS} from '@/api/common'
+import {getBlocklistList, addBlocklist, updateBlocklist, removeBlocklist} from '@/api/blocklist'
+
+export default {
+  name: 'Server',
+  data() {
+    return {
+      dataForm: {
+        key: "",
+        status: "",
+        pageNo: 1,
+        pageSize: 10
+      },
+      dataTable: {
+        totalCount: 0,
+        totalPages: 10,
+        paging: {
+          pageNo: 1,
+          pageSize: 10
+        },
+        records: []
+      },
+      tableLoading: false,
+      addVisible: false,
+      addForm: {
+        url: null,
+        remark: null,
+      },
+      editVisible: false,
+      editForm: {
+        id: null,
+        url: null,
+        status: null,
+        validStart: null,
+        validEnd: null
+      }
+    }
+  },
+  mounted: function () {
+    this.pageData();
+  },
+  methods: {
+    search() {
+      this.pageData();
+    },
+    pageChange(e) {
+      this.dataForm.pageNo = e
+      this.pageData();
+    },
+    async pageData() {
+      this.tableLoading = true
+      getBlocklistList(this.dataForm)
+          .then((response) => {
+            if (response.code === CONSTANTS.SUCCESS_CODE) {
+              this.dataTable = response.data
+            }
+            this.tableLoading = false
+          })
+          .catch((err) => {
+            this.tableLoading = false
+            console.error(err)
+          })
+    },
+    showAdd() {
+      this.addForm.url = null
+      this.addForm.remark = null
+      this.addVisible = true;
+    },
+    add() {
+      addBlocklist(this.addForm)
+          .then((response) => {
+            if (response.code === CONSTANTS.SUCCESS_CODE) {
+              this.search();
+              this.addVisible = false
+              this.addForm.url = null
+              this.addForm.remark = null
+            }
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+    },
+    showEdit(row) {
+      this.editForm.id = row.id
+      this.editForm.remark = row.remark
+      this.editVisible = true
+    },
+    edit() {
+      updateBlocklist(this.editForm)
+          .then((response) => {
+            if (response.code === CONSTANTS.SUCCESS_CODE) {
+              this.search();
+              this.editVisible = false
+              this.editForm.id = null
+              this.editForm.remark = null
+            }
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+    },
+    remove(row) {
+      removeBlocklist({id: row.id})
+          .then((response) => {
+            if (response.code === CONSTANTS.SUCCESS_CODE) {
+              this.search();
+            }
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+    },
+  }
+}
+</script>
