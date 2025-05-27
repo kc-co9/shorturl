@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author K.C
  */
 @SpringBootApplication
-@ComponentScan(basePackages = "com.co.kc.shorturl.*")
+@ComponentScan(basePackages = "com.co.kc.shortening.*")
 public class ShortUrlAdminServerApplication {
 
     public static void main(String[] args) {

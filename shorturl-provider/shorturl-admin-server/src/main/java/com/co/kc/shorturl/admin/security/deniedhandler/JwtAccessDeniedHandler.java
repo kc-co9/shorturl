@@ -1,8 +1,8 @@
 package com.co.kc.shorturl.admin.security.deniedhandler;
 
 import com.alibaba.fastjson2.JSON;
-import com.co.kc.shorturl.common.constants.ResultCode;
-import com.co.kc.shorturl.common.model.io.Result;
+import com.co.kc.shorturl.provider.common.Result;
+import com.co.kc.shorturl.provider.common.constants.ResultCode;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 

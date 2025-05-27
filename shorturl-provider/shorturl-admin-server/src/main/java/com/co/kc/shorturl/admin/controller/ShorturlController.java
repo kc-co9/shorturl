@@ -1,13 +1,21 @@
 package com.co.kc.shorturl.admin.controller;
 
+import com.co.kc.shortening.application.model.cqrs.command.shorturl.ShorturlAddCommand;
+import com.co.kc.shortening.application.model.cqrs.command.shorturl.ShorturlUpdateCommand;
+import com.co.kc.shortening.application.model.cqrs.dto.ShorturlDTO;
+import com.co.kc.shortening.application.model.cqrs.dto.ShorturlQueryDTO;
+import com.co.kc.shortening.application.model.cqrs.query.ShorturlQuery;
+import com.co.kc.shortening.application.service.appservice.ShorturlAppService;
+import com.co.kc.shortening.application.service.queryservice.ShorturlQueryService;
+import com.co.kc.shorturl.admin.assembler.BlocklistListVoAssembler;
+import com.co.kc.shorturl.admin.assembler.ShorturlListVoAssembler;
 import com.co.kc.shorturl.admin.model.dto.request.*;
-import com.co.kc.shorturl.admin.model.dto.response.ShorturlCreateDTO;
-import com.co.kc.shorturl.admin.model.dto.response.ShorturlDTO;
+import com.co.kc.shorturl.admin.model.dto.response.ShorturlAddVO;
+import com.co.kc.shorturl.admin.model.dto.response.ShorturlListVO;
 import com.co.kc.shorturl.admin.security.annotation.Auth;
-import com.co.kc.shorturl.admin.service.ShorturlBizService;
-import com.co.kc.shorturl.common.model.io.PagingResult;
+import com.co.kc.shortening.application.model.io.PagingResult;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,32 +23,50 @@ import org.springframework.web.bind.annotation.*;
  * @author kc
  */
 @RestController
+@AllArgsConstructor
 @RequestMapping("/shorturl")
 public class ShorturlController {
-
-    @Autowired
-    private ShorturlBizService shorturlBizService;
+    private final ShorturlAppService shorturlAppService;
+    private final ShorturlQueryService shorturlQueryService;
 
     @Auth
     @GetMapping("/v1/shorturlList")
     @ApiOperation(value = "短链列表")
-    public PagingResult<ShorturlDTO> shorturlList(@ModelAttribute @Validated ShorturlListRequest request) {
-        return shorturlBizService.getShorturlList(request.getKey(), request.getStatus(), request.getPaging());
+    public PagingResult<ShorturlListVO> shorturlList(@ModelAttribute @Validated ShorturlListRequest request) {
+        ShorturlQuery query = new ShorturlQuery();
+        query.setCode(request.getCode());
+        query.setStatus(request.getStatus());
+        query.setValidTimeStart(request.getValidTimeStart());
+        query.setValidTimeEnd(request.getValidTimeEnd());
+        query.setPageNo(request.getPageNo());
+        query.setPageSize(request.getPageSize());
+        PagingResult<ShorturlQueryDTO> pagingResult = shorturlQueryService.queryShorturl(query);
+        return pagingResult.mapping(ShorturlListVoAssembler::shorturlQueryDTOToVO);
     }
 
     @Auth
-    @PostMapping("/v1/createShorturl")
+    @PostMapping("/v1/addShorturl")
     @ApiOperation(value = "短链创建")
-    public ShorturlCreateDTO createShorturl(@RequestBody @Validated ShorturlCreateRequest request) {
-        String shorturl = shorturlBizService.createShorturl(request.getUrl(), request.getValidStart(), request.getValidEnd());
-        return new ShorturlCreateDTO(shorturl);
+    public ShorturlAddVO addShorturl(@RequestBody @Validated ShorturlAddRequest request) {
+        ShorturlAddCommand command = new ShorturlAddCommand();
+        command.setRawLink(request.getUrl());
+        command.setStatus(request.getStatus());
+        command.setValidTimeStart(request.getValidTimeStart());
+        command.setValidTimeEnd(request.getValidTimeEnd());
+        ShorturlDTO shorturlDTO = shorturlAppService.add(command);
+        return new ShorturlAddVO(shorturlDTO.getShorturl());
     }
 
     @Auth
     @PostMapping("/v1/updateShorturl")
     @ApiOperation(value = "短链更新")
     public void updateShorturl(@RequestBody @Validated ShorturlUpdateRequest request) {
-        shorturlBizService.updateShorturl(request.getId(), request.getStatus(), request.getValidStart(), request.getValidEnd());
+        ShorturlUpdateCommand command = new ShorturlUpdateCommand();
+        command.setShortId(request.getShortId());
+        command.setStatus(request.getStatus());
+        command.setValidTimeStart(request.getValidStart());
+        command.setValidTimeEnd(request.getValidEnd());
+        shorturlAppService.update(command);
     }
 
 }

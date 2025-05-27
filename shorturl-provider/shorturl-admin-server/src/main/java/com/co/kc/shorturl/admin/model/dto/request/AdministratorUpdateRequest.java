@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 public class AdministratorUpdateRequest {
     @NotNull(message = "用户ID不能为空")
     @ApiModelProperty(value = "用户ID")
-    private Long id;
+    private Long userId;
 
     @NotBlank(message = "管理者账号不能为空")
     @ApiModelProperty(value = "管理者账号")

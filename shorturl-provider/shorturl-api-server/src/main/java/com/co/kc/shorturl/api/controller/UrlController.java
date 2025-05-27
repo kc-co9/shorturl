@@ -1,7 +1,7 @@
 package com.co.kc.shorturl.api.controller;
 
+import com.co.kc.shortening.application.service.appservice.ShorturlAppService;
 import com.co.kc.shorturl.api.model.UrlPreviewDTO;
-import com.co.kc.shorturl.api.service.UrlBizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,19 +16,19 @@ import javax.servlet.http.HttpServletResponse;
 public class UrlController {
 
     @Autowired
-    private UrlBizService urlBizService;
+    private ShorturlAppService shorturlAppService;
 
-    @GetMapping("/preview/{key}")
-    public UrlPreviewDTO preview(@PathVariable(value = "key") String key) {
-        String url = urlBizService.parseShorturl(key);
-        return new UrlPreviewDTO(url);
+    @GetMapping("/preview/{code}")
+    public UrlPreviewDTO preview(@PathVariable(value = "code") String code) {
+        String rawLink = shorturlAppService.redirect(code);
+        return new UrlPreviewDTO(rawLink);
     }
 
-    @GetMapping("/{key}")
-    public void redirect(@PathVariable(value = "key") String key, HttpServletResponse response) {
-        String url = urlBizService.parseShorturl(key);
+    @GetMapping("/{code}")
+    public void redirect(@PathVariable(value = "code") String code, HttpServletResponse response) {
+        String rawLink = shorturlAppService.redirect(code);
         response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
-        response.setHeader("Location", url);
+        response.setHeader("Location", rawLink);
     }
 
 }

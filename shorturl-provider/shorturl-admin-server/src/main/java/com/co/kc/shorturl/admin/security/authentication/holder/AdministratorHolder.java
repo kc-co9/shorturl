@@ -16,14 +16,15 @@ public class AdministratorHolder {
     private AdministratorHolder() {
     }
 
-    public static String getAdministratorId() {
+    public static Long getAdministratorId() {
         return Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .filter(PreAuthenticatedAuthenticationToken.class::isInstance)
                 .map(Authentication::getPrincipal)
                 .map(JwtUserDetails.class::cast)
                 .map(JwtUserDetails::getPrincipal)
-                .orElse("");
+                .map(Long::parseLong)
+                .orElse(-1L);
     }
 
 

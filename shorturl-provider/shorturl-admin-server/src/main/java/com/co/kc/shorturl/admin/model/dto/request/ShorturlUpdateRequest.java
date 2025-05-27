@@ -1,6 +1,5 @@
 package com.co.kc.shorturl.admin.model.dto.request;
 
-import com.co.kc.shorturl.repository.enums.UrlKeyStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,11 +14,11 @@ import java.time.LocalDateTime;
 public class ShorturlUpdateRequest {
     @NotNull(message = "ID不能为空")
     @ApiModelProperty(value = "ID")
-    private Long id;
+    private Long shortId;
 
     @NotNull(message = "状态不能为空")
     @ApiModelProperty(value = "状态")
-    private UrlKeyStatus status;
+    private Integer status;
 
     @NotNull(message = "有效期开始时间不能为空")
     @ApiModelProperty(value = "有效期开始时间")

@@ -11,9 +11,9 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class AdministratorSignInRequest {
 
-    @NotBlank(message = "账号不能为空")
-    @ApiModelProperty(value = "账号")
-    private String account;
+    @NotBlank(message = "邮箱不能为空")
+    @ApiModelProperty(value = "邮箱")
+    private String email;
 
     @NotBlank(message = "密码不能为空")
     @ApiModelProperty(value = "密码")

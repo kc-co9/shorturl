@@ -2,7 +2,7 @@ package com.co.kc.shorturl.admin.security.authentication;
 
 import com.co.kc.shorturl.admin.model.domain.SecurityAuth;
 import com.co.kc.shorturl.admin.utils.SecurityUtils;
-import com.co.kc.shorturl.common.constants.ParamsConstants;
+import com.co.kc.shorturl.provider.common.constants.ParamsConstants;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 

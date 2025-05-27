@@ -1,6 +1,6 @@
 package com.co.kc.shorturl.admin.model.dto.request;
 
-import com.co.kc.shorturl.common.model.io.Paging;
+import com.co.kc.shortening.application.model.io.Paging;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

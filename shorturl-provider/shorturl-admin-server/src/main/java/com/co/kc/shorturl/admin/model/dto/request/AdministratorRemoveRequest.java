@@ -12,6 +12,6 @@ import javax.validation.constraints.NotNull;
 public class AdministratorRemoveRequest {
     @NotNull(message = "用户ID不能为空")
     @ApiModelProperty(value = "用户ID")
-    private Long id;
+    private Long userId;
 
 }

@@ -14,5 +14,5 @@ public class HashUtils {
     public static String murmurHash32(String s) {
         return String.valueOf(Hashing.murmur3_32_fixed().hashString(s, StandardCharsets.UTF_8).asInt());
     }
-
 }
+

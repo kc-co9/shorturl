@@ -19,4 +19,10 @@ public class BlocklistUpdateRequest {
      */
     @ApiModelProperty(value = "备注")
     private String remark;
+
+    /**
+     * 状态
+     */
+    @ApiModelProperty(value = "状态")
+    private Integer status;
 }

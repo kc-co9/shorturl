@@ -1,15 +1,22 @@
 package com.co.kc.shorturl.admin.controller;
 
+import com.co.kc.shortening.application.model.cqrs.command.blocklist.BlocklistAddCommand;
+import com.co.kc.shortening.application.model.cqrs.dto.BlocklistQueryDTO;
+import com.co.kc.shortening.application.model.cqrs.query.BlocklistQuery;
+import com.co.kc.shortening.application.service.appservice.BlocklistAppService;
+import com.co.kc.shortening.application.model.cqrs.command.blocklist.BlocklistRemoveCommand;
+import com.co.kc.shortening.application.model.cqrs.command.blocklist.BlocklistUpdateCommand;
+import com.co.kc.shortening.application.service.queryservice.BlocklistQueryService;
+import com.co.kc.shorturl.admin.assembler.BlocklistListVoAssembler;
 import com.co.kc.shorturl.admin.model.dto.request.BlocklistAddRequest;
 import com.co.kc.shorturl.admin.model.dto.request.BlocklistListRequest;
 import com.co.kc.shorturl.admin.model.dto.request.BlocklistRemoveRequest;
 import com.co.kc.shorturl.admin.model.dto.request.BlocklistUpdateRequest;
-import com.co.kc.shorturl.admin.model.dto.response.BlocklistDTO;
+import com.co.kc.shorturl.admin.model.dto.response.BlocklistListVO;
 import com.co.kc.shorturl.admin.security.annotation.Auth;
-import com.co.kc.shorturl.admin.service.BlocklistBizService;
-import com.co.kc.shorturl.common.model.io.PagingResult;
+import com.co.kc.shortening.application.model.io.PagingResult;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,38 +24,53 @@ import org.springframework.web.bind.annotation.*;
  * @author kc
  */
 @RestController
+@AllArgsConstructor
 @RequestMapping("/blocklist")
 public class BlocklistController {
 
-    @Autowired
-    private BlocklistBizService blocklistBizService;
+    private final BlocklistAppService blocklistAppService;
+    private final BlocklistQueryService blocklistQueryService;
 
     @Auth
     @GetMapping("/v1/blocklistList")
     @ApiOperation(value = "链接黑名单列表")
-    public PagingResult<BlocklistDTO> blocklistList(@ModelAttribute @Validated BlocklistListRequest request) {
-        return blocklistBizService.getBlocklistList(request.getPaging());
+    public PagingResult<BlocklistListVO> blocklistList(@ModelAttribute @Validated BlocklistListRequest request) {
+        BlocklistQuery query = new BlocklistQuery();
+        query.setPageNo(request.getPageNo());
+        query.setPageSize(request.getPageSize());
+        PagingResult<BlocklistQueryDTO> pagingResult = blocklistQueryService.queryBlocklist(query);
+        return pagingResult.mapping(BlocklistListVoAssembler::blocklistQueryDTOToVO);
     }
 
     @Auth
     @PostMapping("/v1/addBlocklist")
     @ApiOperation(value = "链接黑名单新增")
     public void addBlocklist(@RequestBody @Validated BlocklistAddRequest request) {
-        blocklistBizService.addBlocklist(request.getUrl(), request.getRemark());
+        BlocklistAddCommand blocklistAddCommand = new BlocklistAddCommand();
+        blocklistAddCommand.setBlockLink(request.getUrl());
+        blocklistAddCommand.setRemark(request.getRemark());
+        blocklistAddCommand.setStatus(request.getStatus());
+        blocklistAppService.add(blocklistAddCommand);
     }
 
     @Auth
     @PostMapping("/v1/updateBlocklist")
     @ApiOperation(value = "链接黑名单更新")
     public void updateBlocklist(@RequestBody @Validated BlocklistUpdateRequest request) {
-        blocklistBizService.updateBlocklist(request.getId(), request.getRemark());
+        BlocklistUpdateCommand command = new BlocklistUpdateCommand();
+        command.setBlockId(request.getId());
+        command.setRemark(request.getRemark());
+        command.setStatus(request.getStatus());
+        blocklistAppService.update(command);
     }
 
     @Auth
     @PostMapping("/v1/removeBlocklist")
     @ApiOperation(value = "链接黑名单移除")
     public void removeBlocklist(@RequestBody @Validated BlocklistRemoveRequest request) {
-        blocklistBizService.removeBlocklist(request.getId());
+        BlocklistRemoveCommand command = new BlocklistRemoveCommand();
+        command.setBlockId(request.getId());
+        blocklistAppService.remove(command);
     }
 
 

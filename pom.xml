@@ -17,8 +17,10 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>shorturl-common</module>
-        <module>shorturl-repository</module>
         <module>shorturl-provider</module>
+        <module>shorturl-domain</module>
+        <module>shorturl-application</module>
+        <module>shorturl-infrastructure</module>
     </modules>
 
     <properties>
