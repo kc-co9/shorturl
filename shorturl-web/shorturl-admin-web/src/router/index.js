@@ -33,7 +33,7 @@ import Layout from '@/layout'
 export const constantRoutes = [
     {
         path: '/login',
-        component: () => import('@/views/login/index'),
+        component: () => import('@/views/login'),
         hidden: true
     },
 
@@ -50,7 +50,7 @@ export const constantRoutes = [
         children: [{
             path: 'dashboard',
             name: 'Dashboard',
-            component: () => import('@/views/dashboard/index'),
+            component: () => import('@/views/dashboard'),
             meta: {title: '主页', icon: 'dashboard'}
         }]
     },
@@ -63,7 +63,7 @@ export const constantRoutes = [
         children: [{
             path: 'index',
             name: 'Administrator',
-            component: () => import('@/views/admin/index'),
+            component: () => import('@/views/admin'),
             meta: {title: '账号管理', icon: 'el-icon-s-help'}
         }]
     },
@@ -76,7 +76,7 @@ export const constantRoutes = [
         children: [{
             path: 'index',
             name: 'Shorturl',
-            component: () => import('@/views/shorturl/index'),
+            component: () => import('@/views/shorturl'),
             meta: {title: '短链管理', icon: 'el-icon-s-help'},
         }]
     },
@@ -89,7 +89,7 @@ export const constantRoutes = [
         children: [{
             path: 'index',
             name: 'Blocklist',
-            component: () => import('@/views/blocklist/index'),
+            component: () => import('@/views/blocklist'),
             meta: {title: '黑名单管理', icon: 'el-icon-s-help'},
         }]
     },
