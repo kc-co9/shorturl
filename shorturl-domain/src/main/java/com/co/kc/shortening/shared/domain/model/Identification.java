@@ -21,7 +21,7 @@ public class Identification {
     public Identification() {
     }
 
-    protected void setId(Long id) {
+    public void setId(Long id) {
         if (Objects.isNull(id)) {
             throw new IllegalArgumentException("id is null");
         }

@@ -25,11 +25,18 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  */
 @Configuration
 public class RedisConfig {
+    @Bean(name = "cacheRedisTemplate")
+    public RedisTemplate<String, String> cacheRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, String> redisTemplate = new StringRedisTemplate(redisConnectionFactory);
+        redisTemplate.setKeySerializer(new PrefixedStringRedisSerializer("cache"));
+        return redisTemplate;
+    }
 
-    @Primary
-    @Bean(name = "shorturlStringRedisTemplate")
-    public RedisTemplate<String, String> stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        return new StringRedisTemplate(redisConnectionFactory);
+    @Bean(name = "sessionRedisTemplate")
+    public RedisTemplate<String, String> sessionRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, String> redisTemplate = new StringRedisTemplate(redisConnectionFactory);
+        redisTemplate.setKeySerializer(new PrefixedStringRedisSerializer("session"));
+        return redisTemplate;
     }
 
     @Primary
@@ -82,6 +89,38 @@ public class RedisConfig {
         private Integer port;
         private String password;
         private String database;
+    }
+
+    private static class PrefixedStringRedisSerializer extends StringRedisSerializer {
+        private final String prefix;
+        private final char separator;
+
+        public PrefixedStringRedisSerializer(String prefix) {
+            this(prefix, ':');
+        }
+
+        public PrefixedStringRedisSerializer(String prefix, char separator) {
+            super();
+            this.prefix = prefix;
+            this.separator = separator;
+        }
+
+        @Override
+        public String deserialize(byte[] bytes) {
+            String key = super.deserialize(bytes);
+            if (key == null) {
+                return null;
+            }
+            return key.startsWith(prefix + separator) ? key.substring(prefix.length() + 1) : key;
+        }
+
+        @Override
+        public byte[] serialize(String key) {
+            if (key == null) {
+                return new byte[0];
+            }
+            return super.serialize(prefix + separator + key);
+        }
     }
 
 }

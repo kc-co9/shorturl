@@ -1,11 +1,13 @@
 package com.co.kc.shortening.infrastructure.config.bean;
 
 import com.co.kc.shortening.application.service.appservice.BlocklistAppService;
-import com.co.kc.shortening.application.client.IdClient;
+import com.co.kc.shortening.application.service.queryservice.BlocklistQueryService;
 import com.co.kc.shortening.blocklist.domain.model.BlocklistRepository;
-import com.co.kc.shortening.infrastructure.repository.BlocklistMySQLRepository;
+import com.co.kc.shortening.infrastructure.mybatis.service.UrlBlocklistService;
+import com.co.kc.shortening.infrastructure.repository.BlocklistMySqlRepository;
 import com.co.kc.shortening.blocklist.service.BlocklistService;
-import com.co.kc.shortening.infrastructure.client.id.bizid.BlocklistIdClient;
+import com.co.kc.shortening.infrastructure.client.id.bizid.BlockIdClient;
+import com.co.kc.shortening.infrastructure.service.query.BlocklistQueryMySqlService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,8 +19,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BlocklistConfig {
     @Bean
-    public BlocklistRepository blocklistRepository() {
-        return new BlocklistMySQLRepository();
+    public BlockIdClient blockIdClient() {
+        return new BlockIdClient();
+    }
+
+    @Bean
+    public BlocklistRepository blocklistRepository(UrlBlocklistService urlBlocklistService) {
+        return new BlocklistMySqlRepository(urlBlocklistService);
     }
 
     @Bean
@@ -27,12 +34,12 @@ public class BlocklistConfig {
     }
 
     @Bean
-    public IdClient<Long> blocklistService() {
-        return new BlocklistIdClient();
+    public BlocklistQueryService blocklistQueryService(UrlBlocklistService urlBlocklistService) {
+        return new BlocklistQueryMySqlService(urlBlocklistService);
     }
 
     @Bean
-    public BlocklistAppService blocklistAppService(IdClient<Long> idClient, BlocklistRepository blocklistRepository) {
-        return new BlocklistAppService(idClient, blocklistRepository);
+    public BlocklistAppService blocklistAppService(BlockIdClient blockIdClient, BlocklistRepository blocklistRepository) {
+        return new BlocklistAppService(blockIdClient, blocklistRepository);
     }
 }

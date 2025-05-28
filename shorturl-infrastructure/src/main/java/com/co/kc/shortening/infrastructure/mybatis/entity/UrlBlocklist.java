@@ -1,5 +1,6 @@
 package com.co.kc.shortening.infrastructure.mybatis.entity;
 
+import com.co.kc.shortening.infrastructure.mybatis.enums.UrlBlocklistStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,6 +17,10 @@ import java.io.Serializable;
 public class UrlBlocklist extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 694861458806579982L;
     /**
+     * 黑名单ID
+     */
+    private Long blockId;
+    /**
      * 链接
      */
     private String url;
@@ -27,5 +32,9 @@ public class UrlBlocklist extends BaseEntity implements Serializable {
      * 备注
      */
     private String remark;
+    /**
+     * 状态
+     */
+    private UrlBlocklistStatus status;
 }
 

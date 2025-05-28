@@ -1,12 +1,18 @@
 package com.co.kc.shortening.infrastructure.config.bean;
 
 import com.co.kc.shortening.application.provider.ShortDomainProvider;
-import com.co.kc.shortening.application.client.IdClient;
+import com.co.kc.shortening.application.service.queryservice.ShorturlQueryService;
 import com.co.kc.shortening.blocklist.service.BlocklistService;
 import com.co.kc.shortening.application.service.appservice.ShorturlAppService;
-import com.co.kc.shortening.infrastructure.client.id.bizid.ShorturlIdClient;
+import com.co.kc.shortening.infrastructure.client.id.bizid.ShortIdClient;
+import com.co.kc.shortening.infrastructure.client.id.code.ShortCodeClient;
+import com.co.kc.shortening.infrastructure.mybatis.service.CodeGenService;
+import com.co.kc.shortening.infrastructure.mybatis.service.UrlMappingService;
+import com.co.kc.shortening.infrastructure.provider.ShortDomainYmlProvider;
+import com.co.kc.shortening.infrastructure.service.query.ShorturlQueryMySqlService;
+import com.co.kc.shortening.web.common.config.ShorturlProperties;
 import com.co.kc.shortening.shorturl.domain.model.ShorturlRepository;
-import com.co.kc.shortening.infrastructure.repository.ShorturlMySQLRepository;
+import com.co.kc.shortening.infrastructure.repository.ShorturlMySqlRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,23 +23,37 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class ShorturlConfig {
-
     @Bean
-    public ShorturlRepository shorturlRepository() {
-        return new ShorturlMySQLRepository();
+    public ShortIdClient shortIdClient() {
+        return new ShortIdClient();
     }
 
     @Bean
-    public IdClient<Long> shortIdGenerator() {
-        return new ShorturlIdClient();
+    public ShortDomainProvider shortDomainProvider(ShorturlProperties shorturlProperties) {
+        return new ShortDomainYmlProvider(shorturlProperties);
     }
 
     @Bean
-    public ShorturlAppService shorturlAppService(IdClient<Long> idClient,
-                                                 IdClient<String> codeClient,
+    public ShortCodeClient shortCodeClient(CodeGenService codeGenService) {
+        return new ShortCodeClient(codeGenService);
+    }
+
+    @Bean
+    public ShorturlRepository shorturlRepository(UrlMappingService urlMappingService) {
+        return new ShorturlMySqlRepository(urlMappingService);
+    }
+
+    @Bean
+    public ShorturlQueryService shorturlQueryService(UrlMappingService urlMappingService) {
+        return new ShorturlQueryMySqlService(urlMappingService);
+    }
+
+    @Bean
+    public ShorturlAppService shorturlAppService(ShortIdClient shortIdClient,
+                                                 ShortCodeClient shortCodeClient,
                                                  ShortDomainProvider shortDomainProvider,
                                                  BlocklistService blocklistService,
                                                  ShorturlRepository shorturlRepository) {
-        return new ShorturlAppService(idClient, codeClient, shortDomainProvider, blocklistService, shorturlRepository);
+        return new ShorturlAppService(shortIdClient, shortCodeClient, shortDomainProvider, blocklistService, shorturlRepository);
     }
 }

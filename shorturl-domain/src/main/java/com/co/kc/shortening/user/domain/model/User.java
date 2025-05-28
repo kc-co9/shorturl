@@ -24,6 +24,7 @@ public class User extends Identification {
     private UserEmail email;
     @Getter
     private UserName name;
+    @Getter
     private UserPassword password;
     @Getter
     private List<RoleId> roleIds;

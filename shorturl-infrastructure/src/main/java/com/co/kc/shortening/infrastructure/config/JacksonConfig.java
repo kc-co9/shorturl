@@ -1,7 +1,7 @@
 package com.co.kc.shortening.infrastructure.config;
 
-import com.co.kc.shorturl.provider.common.BaseEnum;
-import com.co.kc.shorturl.provider.common.serializer.BaseEnumSerializer;
+import com.co.kc.shortening.web.common.BaseEnum;
+import com.co.kc.shortening.web.common.serializer.BaseEnumSerializer;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

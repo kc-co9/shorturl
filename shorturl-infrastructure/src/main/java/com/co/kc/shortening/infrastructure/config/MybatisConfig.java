@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableTransactionManagement
-@MapperScan(value = "com.co.kc.shorturl.repository.mapper")
+@MapperScan(value = "com.co.kc.shortening.infrastructure.mybatis.mapper")
 public class MybatisConfig {
     /**
      * 分页插件

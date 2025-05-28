@@ -1,6 +1,8 @@
 package com.co.kc.shortening.infrastructure.client.id.code;
 
 import com.co.kc.shortening.application.client.IdClient;
+import com.co.kc.shortening.infrastructure.mybatis.entity.CodeGen;
+import com.co.kc.shortening.infrastructure.mybatis.service.CodeGenService;
 import com.co.kc.shorturl.common.exception.ExhaustionException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,29 +22,29 @@ public class ShortCodeClient implements IdClient<String> {
             '3', '7', 'D', 'i', 'O', 'z', 'G', 'u', 'p',
             'f', 'j', 'v', '8', 'd', 'Z', 'y', 'J'};
 
-    private final AtomicLong index;
-    private final CodeInterval interval;
+    private Long codeIdx;
+    private CodeInterval interval;
+    private final CodeGenService codeGenService;
 
-    public ShortCodeClient(CodeInterval interval) {
-        this.interval = interval;
-        this.index = new AtomicLong(interval.getCodeStart());
+    public ShortCodeClient(CodeGenService codeGenService) {
+        this.codeGenService = codeGenService;
     }
 
     @Override
-    public String next() {
+    public synchronized String next() {
         if (isExhausted()) {
-            throw new ExhaustionException("code资源耗尽");
+            CodeGen codeGen = codeGenService.newCodeGen();
+            this.interval = new CodeInterval(codeGen.getCodeStart(), codeGen.getCodeEnd());
+            this.codeIdx = interval.getCodeStart();
         }
-        Long code = index.getAndIncrement();
-        if (!interval.contain(code)) {
-            throw new ExhaustionException("code资源耗尽");
-        }
-        return base62(code);
+        return base62(codeIdx++);
     }
 
     public boolean isExhausted() {
-        Long code = index.get();
-        return !interval.contain(code);
+        if (codeIdx == null) {
+            return true;
+        }
+        return !interval.contain(codeIdx);
     }
 
     private String base62(Long num) {
@@ -62,61 +64,9 @@ public class ShortCodeClient implements IdClient<String> {
         return result.toString();
     }
 
-
-    //    private CodeGen codeGen;
-//    private final CodeGenRepository codeGenRepository;
-//
-//    public CodeGenService(CodeGenRepository codeGenRepository) {
-//        this.codeGenRepository = codeGenRepository;
-//    }
-//
-//    public ShortCode next() {
-//        try {
-//            if (codeGen.isExhausted()) {
-//                synchronized (this) {
-//                    codeGen = codeGenRepository.find();
-//                    if (codeGen.isExhausted()) {
-//                        codeGen = new CodeGen()
-//                        codeGenRepository.save(codeGen);
-//                    }
-//                }
-//            }
-//            return codeGen.next();
-//        } catch (ExhaustionException e) {
-//            synchronized (this) {
-//                codeGen = codeGenRepository.find();
-//                if (codeGen.isExhausted()) {
-//                    codeGen = new CodeGen()
-//                    codeGenRepository.save(codeGen);
-//                }
-//            }
-//            return codeGen.next();
-//        }
-//    }
-//
-//    /**
-//     * 查询当前CodeGen
-//     *
-//     * @return CodeGen
-//     */
-//    CodeGen findCurrent() {
-//        return null;
-//    }
-//
-//    /**
-//     * 创建下一个CodeGen
-//     * <p>
-//     *
-//     * @return CodeGen
-//     */
-//    CodeGen createNext() {
-//        return null;
-//    }
-
-
     @Getter
     @EqualsAndHashCode
-    public static class CodeInterval {
+    private static class CodeInterval {
         /**
          * code开始
          */

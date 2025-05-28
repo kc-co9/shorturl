@@ -16,20 +16,20 @@ import java.io.Serializable;
 public class Administrator extends BaseEntity implements Serializable {
     private static final long serialVersionUID = -23720920342386229L;
     /**
-     * 管理者账号
+     * 管理者ID
      */
-    private String account;
+    private Long administratorId;
     /**
-     * 管理者密码
+     * 管理者邮箱
      */
-    private String password;
+    private String email;
     /**
      * 管理者用户名
      */
     private String username;
     /**
-     * 管理者邮箱
+     * 管理者密码
      */
-    private String email;
+    private String password;
 }
 
