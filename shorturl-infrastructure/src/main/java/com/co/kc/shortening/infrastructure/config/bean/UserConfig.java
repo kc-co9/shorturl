@@ -2,10 +2,12 @@ package com.co.kc.shortening.infrastructure.config.bean;
 
 import com.co.kc.shortening.application.client.IdClient;
 import com.co.kc.shortening.application.client.SessionClient;
+import com.co.kc.shortening.application.client.TokenClient;
 import com.co.kc.shortening.application.service.appservice.UserAppService;
 import com.co.kc.shortening.application.service.queryservice.UserQueryService;
 import com.co.kc.shortening.infrastructure.client.id.bizid.UserIdClient;
 import com.co.kc.shortening.infrastructure.client.session.RedisSessionClient;
+import com.co.kc.shortening.infrastructure.client.token.JwtTokenClient;
 import com.co.kc.shortening.infrastructure.mybatis.service.AdministratorService;
 import com.co.kc.shortening.infrastructure.repository.PermissionMySqlRepository;
 import com.co.kc.shortening.infrastructure.repository.RoleMySqlRepository;
@@ -36,6 +38,11 @@ public class UserConfig {
     @Bean
     public SessionClient sessionClient(RedisTemplate<String, String> sessionRedisTemplate) {
         return new RedisSessionClient(sessionRedisTemplate);
+    }
+
+    @Bean
+    public TokenClient tokenClient() {
+        return new JwtTokenClient();
     }
 
     @Bean
@@ -79,7 +86,16 @@ public class UserConfig {
                                          UserService userService,
                                          PasswordService passwordService,
                                          IdClient<Long> userIdClient,
-                                         SessionClient sessionClient) {
-        return new UserAppService(userRepository, authService, userService, passwordService, userIdClient, sessionClient);
+                                         SessionClient sessionClient,
+                                         TokenClient tokenClient
+    ) {
+        return new UserAppService(
+                userRepository,
+                authService,
+                userService,
+                passwordService,
+                userIdClient,
+                sessionClient,
+                tokenClient);
     }
 }

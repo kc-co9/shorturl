@@ -1,14 +1,13 @@
 package com.co.kc.shortening.admin.controller;
 
+import com.co.kc.shortening.admin.security.authentication.holder.AdministratorHolder;
 import com.co.kc.shortening.application.model.cqrs.command.user.SignInCommand;
 import com.co.kc.shortening.application.model.cqrs.command.user.SignOutCommand;
 import com.co.kc.shortening.application.model.cqrs.dto.SignInDTO;
 import com.co.kc.shortening.application.service.appservice.UserAppService;
-import com.co.kc.shortening.admin.model.domain.SecurityAuth;
-import com.co.kc.shortening.admin.model.dto.request.AdministratorSignInRequest;
-import com.co.kc.shortening.admin.model.dto.response.AdministratorSignInVO;
-import com.co.kc.shortening.admin.security.annotation.Auth;
-import com.co.kc.shortening.admin.security.authentication.holder.AdministratorHolder;
+import com.co.kc.shortening.admin.model.request.AdministratorSignInRequest;
+import com.co.kc.shortening.admin.model.response.AdministratorSignInVO;
+import com.co.kc.shortening.application.annotation.Auth;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -31,8 +30,7 @@ public class AccountController {
     public AdministratorSignInVO signIn(@RequestBody @Validated AdministratorSignInRequest request) {
         SignInCommand command = new SignInCommand(request.getEmail(), request.getPassword());
         SignInDTO signInDTO = userAppService.signIn(command);
-        String authToken = new SecurityAuth(String.valueOf(signInDTO.getUserId())).echoToken();
-        return new AdministratorSignInVO(authToken);
+        return new AdministratorSignInVO(signInDTO.getToken());
     }
 
     @Auth

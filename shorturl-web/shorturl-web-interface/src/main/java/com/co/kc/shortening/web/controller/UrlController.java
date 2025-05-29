@@ -1,7 +1,7 @@
 package com.co.kc.shortening.web.controller;
 
 import com.co.kc.shortening.application.service.appservice.ShorturlAppService;
-import com.co.kc.shortening.web.model.dto.UrlPreviewDTO;
+import com.co.kc.shortening.web.model.vo.UrlPreviewVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +18,9 @@ public class UrlController {
     private final ShorturlAppService shorturlAppService;
 
     @GetMapping("/preview/{code}")
-    public UrlPreviewDTO preview(@PathVariable(value = "code") String code) {
+    public UrlPreviewVO preview(@PathVariable(value = "code") String code) {
         String rawLink = shorturlAppService.redirect(code);
-        return new UrlPreviewDTO(rawLink);
+        return new UrlPreviewVO(rawLink);
     }
 
     @GetMapping("/{code}")

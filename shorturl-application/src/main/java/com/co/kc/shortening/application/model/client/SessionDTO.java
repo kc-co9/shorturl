@@ -2,7 +2,6 @@ package com.co.kc.shortening.application.model.client;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**

@@ -3,8 +3,8 @@ package com.co.kc.shortening.admin.security;
 import com.co.kc.shortening.admin.security.authentication.JwtPreAuthenticatedProcessingFilter;
 import com.co.kc.shortening.admin.security.deniedhandler.JwtAccessDeniedHandler;
 import com.co.kc.shortening.admin.security.deniedhandler.JwtAuthenticationEntryPoint;
+import com.co.kc.shortening.application.client.TokenClient;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,20 +23,22 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
  */
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackages = {"com.co.kc.shortening.admin.security"})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> authenticationUserDetailsService;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final AccessDeniedHandler accessDeniedHandler;
+    private final TokenClient tokenClient;
 
     public WebSecurityConfig(
             AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> authenticationUserDetailsService,
             AuthenticationEntryPoint authenticationEntryPoint,
-            AccessDeniedHandler accessDeniedHandler) {
+            AccessDeniedHandler accessDeniedHandler,
+            TokenClient tokenClient) {
         this.authenticationUserDetailsService = authenticationUserDetailsService;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.accessDeniedHandler = accessDeniedHandler;
+        this.tokenClient = tokenClient;
     }
 
     @Override
@@ -63,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anonymous()
                 .principal(0)
                 .and()
-                .addFilter(new JwtPreAuthenticatedProcessingFilter(authenticationManager()))
+                .addFilter(new JwtPreAuthenticatedProcessingFilter(authenticationManager(), tokenClient))
                 // 授权异常
                 .exceptionHandling()
                 .authenticationEntryPoint(this.authenticationEntryPoint)

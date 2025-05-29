@@ -44,6 +44,6 @@ public class AuthorizeVoter implements AccessDecisionVoter<MethodInvocation> {
             }
         }
 
-        return ACCESS_GRANTED;
+        return AccessDecisionVoter.ACCESS_GRANTED;
     }
 }

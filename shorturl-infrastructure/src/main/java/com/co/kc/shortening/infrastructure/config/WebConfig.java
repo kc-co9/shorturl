@@ -1,7 +1,7 @@
 package com.co.kc.shortening.infrastructure.config;
 
-import com.co.kc.shortening.web.common.convert.IntegerCodeToBaseEnumConverterFactory;
-import com.co.kc.shortening.web.common.convert.StringCodeToBaseEnumConverterFactory;
+import com.co.kc.shortening.infrastructure.convert.IntegerCodeToBaseEnumConverterFactory;
+import com.co.kc.shortening.infrastructure.convert.StringCodeToBaseEnumConverterFactory;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,7 @@
 package com.co.kc.shortening.admin.assembler;
 
 import com.co.kc.shortening.application.model.cqrs.dto.UserQueryDTO;
-import com.co.kc.shortening.admin.model.dto.response.AdministratorListVO;
+import com.co.kc.shortening.admin.model.response.AdministratorListVO;
 
 /**
  * @author kc

@@ -23,12 +23,6 @@
         </dependency>
 
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.2</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.co.kc.shorturl</groupId>
             <artifactId>shorturl-web-common</artifactId>
             <version>1.0-SNAPSHOT</version>

@@ -1,7 +1,7 @@
 package com.co.kc.shortening.admin.assembler;
 
 import com.co.kc.shortening.application.model.cqrs.dto.BlocklistQueryDTO;
-import com.co.kc.shortening.admin.model.dto.response.BlocklistListVO;
+import com.co.kc.shortening.admin.model.response.BlocklistListVO;
 
 /**
  * @author kc

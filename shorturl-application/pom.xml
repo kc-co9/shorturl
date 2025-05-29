@@ -23,6 +23,12 @@
             <version>0.10.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.2</version>
+            <scope>test</scope>
+        </dependency>
         <!-- 引入shorturl-domain中的测试类 -->
         <dependency>
             <groupId>com.co.kc.shorturl</groupId>
@@ -31,5 +37,6 @@
             <classifier>tests</classifier> <!-- 指向测试JAR -->
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>

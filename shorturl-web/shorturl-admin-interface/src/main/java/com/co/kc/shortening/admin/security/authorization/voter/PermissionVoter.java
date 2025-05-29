@@ -23,19 +23,19 @@ public class PermissionVoter implements AccessDecisionVoter<MethodInvocation> {
     @Override
     public int vote(Authentication authentication, MethodInvocation object, Collection<ConfigAttribute> attributes) {
         if (authentication == null) {
-            return ACCESS_DENIED;
+            return AccessDecisionVoter.ACCESS_DENIED;
         }
-        int result = ACCESS_ABSTAIN;
+        int result = AccessDecisionVoter.ACCESS_ABSTAIN;
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
         for (ConfigAttribute attribute : attributes) {
             if (this.supports(attribute)) {
-                result = ACCESS_DENIED;
+                result = AccessDecisionVoter.ACCESS_DENIED;
 
                 // Attempt to find a matching granted authority
                 for (GrantedAuthority authority : authorities) {
                     if (attribute.getAttribute().equals(authority.getAuthority())) {
-                        return ACCESS_GRANTED;
+                        return AccessDecisionVoter.ACCESS_GRANTED;
                     }
                 }
             }

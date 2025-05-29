@@ -1,7 +1,7 @@
 package com.co.kc.shortening.admin.security.authorization.metadatasource.impl;
 
-import com.co.kc.shortening.admin.security.annotation.Permission;
 import com.co.kc.shortening.admin.security.authorization.configattribute.PermissionConfigAttribute;
+import com.co.kc.shortening.application.annotation.Permission;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.annotation.AnnotationMetadataExtractor;
 import org.springframework.security.access.annotation.SecuredAnnotationSecurityMetadataSource;

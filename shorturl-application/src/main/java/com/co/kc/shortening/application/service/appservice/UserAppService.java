@@ -1,8 +1,11 @@
 package com.co.kc.shortening.application.service.appservice;
 
-import com.co.kc.shortening.application.assembler.SignInDtoAssembler;
 import com.co.kc.shortening.application.assembler.SessionDtoAssembler;
+import com.co.kc.shortening.application.assembler.SignInDtoAssembler;
+import com.co.kc.shortening.application.assembler.TokenDtoAssembler;
 import com.co.kc.shortening.application.assembler.UserDetailDtoAssembler;
+import com.co.kc.shortening.application.client.TokenClient;
+import com.co.kc.shortening.application.model.client.TokenDTO;
 import com.co.kc.shortening.application.model.cqrs.command.user.*;
 import com.co.kc.shortening.application.model.cqrs.query.UserDetailQuery;
 import com.co.kc.shortening.application.model.cqrs.dto.SignInDTO;
@@ -35,13 +38,15 @@ public class UserAppService {
 
     private final IdClient<Long> userIdClient;
     private final SessionClient sessionClient;
+    private final TokenClient tokenClient;
 
     public UserAppService(UserRepository userRepository,
                           AuthService authService,
                           UserService userService,
                           PasswordService passwordService,
                           IdClient<Long> userIdClient,
-                          SessionClient sessionClient) {
+                          SessionClient sessionClient,
+                          TokenClient tokenClient) {
         this.userRepository = userRepository;
 
         this.authService = authService;
@@ -50,6 +55,7 @@ public class UserAppService {
 
         this.userIdClient = userIdClient;
         this.sessionClient = sessionClient;
+        this.tokenClient = tokenClient;
     }
 
     public SignInDTO signIn(SignInCommand command) {
@@ -65,7 +71,10 @@ public class UserAppService {
         SessionDTO sessionDTO = SessionDtoAssembler.userToDTO(user, roleList, permissionList);
         sessionClient.save(sessionId, sessionDTO, 7L, TimeUnit.DAYS);
 
-        return SignInDtoAssembler.userToDTO(user);
+        TokenDTO tokenDTO = TokenDtoAssembler.userToDTO(user);
+        String token = tokenClient.create(tokenDTO);
+
+        return SignInDtoAssembler.userTokenToDTO(user, token);
     }
 
     public void signOut(SignOutCommand command) {

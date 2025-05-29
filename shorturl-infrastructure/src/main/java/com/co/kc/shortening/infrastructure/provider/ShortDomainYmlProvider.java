@@ -1,7 +1,7 @@
 package com.co.kc.shortening.infrastructure.provider;
 
 import com.co.kc.shortening.application.provider.ShortDomainProvider;
-import com.co.kc.shortening.web.common.config.ShorturlProperties;
+import com.co.kc.shortening.infrastructure.config.properties.ShorturlProperties;
 
 /**
  * @author kc
@@ -15,6 +15,6 @@ public class ShortDomainYmlProvider implements ShortDomainProvider {
 
     @Override
     public String getDomain() {
-        return shorturlProperties.getHost();
+        return shorturlProperties.getShortDomain();
     }
 }

@@ -14,14 +14,13 @@
     <dependencies>
         <dependency>
             <groupId>com.co.kc.shorturl</groupId>
+            <artifactId>shorturl-web-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.co.kc.shorturl</groupId>
             <artifactId>shorturl-infrastructure</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.co.kc.shorturl</groupId>
-                    <artifactId>shorturl-admin-interface</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 </project>

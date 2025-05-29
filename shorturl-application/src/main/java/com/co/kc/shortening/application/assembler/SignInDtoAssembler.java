@@ -12,11 +12,10 @@ public class SignInDtoAssembler {
     private SignInDtoAssembler() {
     }
 
-    public static SignInDTO userToDTO(User user) {
+    public static SignInDTO userTokenToDTO(User user, String token) {
         SignInDTO signInDTO = new SignInDTO();
         signInDTO.setUserId(user.getUserId().getId());
-        signInDTO.setEmail(user.getEmail().getEmail());
-        signInDTO.setUsername(user.getName().getName());
+        signInDTO.setToken(token);
         return signInDTO;
     }
 }

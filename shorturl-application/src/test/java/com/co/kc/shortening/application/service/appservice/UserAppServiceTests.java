@@ -1,9 +1,6 @@
 package com.co.kc.shortening.application.service.appservice;
 
-import com.co.kc.shortening.application.client.IdClient;
-import com.co.kc.shortening.application.client.SessionClient;
-import com.co.kc.shortening.application.client.RandomIdClient;
-import com.co.kc.shortening.application.client.MemorySessionClient;
+import com.co.kc.shortening.application.client.*;
 import com.co.kc.shortening.application.model.cqrs.command.user.*;
 import com.co.kc.shortening.application.model.cqrs.dto.SignInDTO;
 import com.co.kc.shortening.application.model.cqrs.dto.UserDetailDTO;
@@ -35,6 +32,7 @@ public class UserAppServiceTests {
 
         IdClient<Long> userIdClient = new RandomIdClient();
         SessionClient sessionClient = new MemorySessionClient();
+        TokenClient tokenClient = new JwtTokenClient();
 
         UserPassword userPassword = passwordService.encrypt(new UserRawPassword("testPassword"));
         User user = new User(
@@ -45,7 +43,7 @@ public class UserAppServiceTests {
                 Collections.emptyList());
         userRepository.save(user);
 
-        userAppService = new UserAppService(userRepository, authService, userService, passwordService, userIdClient, sessionClient);
+        userAppService = new UserAppService(userRepository, authService, userService, passwordService, userIdClient, sessionClient, tokenClient);
     }
 
     @Test
@@ -53,6 +51,7 @@ public class UserAppServiceTests {
         SignInCommand command = new SignInCommand("testName@test.com", "testPassword");
         SignInDTO signInDTO = userAppService.signIn(command);
         Assert.assertNotNull(signInDTO);
+
 
         UserDetailQuery query = new UserDetailQuery(signInDTO.getUserId());
         UserDetailDTO userDetailDTO = userAppService.userDetail(query);

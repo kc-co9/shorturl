@@ -1,7 +1,6 @@
 package com.co.kc.shortening.infrastructure.mybatis.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.co.kc.shortening.web.common.BaseEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,7 +9,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum UrlMappingStatus implements BaseEnum {
+public enum UrlMappingStatus {
     /**
      * 未知
      */

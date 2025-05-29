@@ -5,8 +5,6 @@ server:
   tomcat:
     uri-encoding: UTF-8
 
-debug: true
-
 spring:
   application.name: shorturl
   http:

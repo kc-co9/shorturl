@@ -1,5 +1,10 @@
 package com.co.kc.shortening.admin.controller;
 
+import com.co.kc.shortening.admin.model.request.AdministratorAddRequest;
+import com.co.kc.shortening.admin.model.request.AdministratorRemoveRequest;
+import com.co.kc.shortening.admin.model.request.AdministratorUpdateRequest;
+import com.co.kc.shortening.admin.model.request.AdministratorsGetRequest;
+import com.co.kc.shortening.admin.security.authentication.holder.AdministratorHolder;
 import com.co.kc.shortening.application.model.cqrs.dto.UserQueryDTO;
 import com.co.kc.shortening.application.model.cqrs.query.UserQuery;
 import com.co.kc.shortening.application.model.io.PagingResult;
@@ -9,11 +14,9 @@ import com.co.kc.shortening.application.model.cqrs.query.UserDetailQuery;
 import com.co.kc.shortening.application.model.cqrs.dto.UserDetailDTO;
 import com.co.kc.shortening.application.service.queryservice.UserQueryService;
 import com.co.kc.shortening.admin.assembler.AdministratorListVoAssembler;
-import com.co.kc.shortening.admin.model.dto.request.*;
-import com.co.kc.shortening.admin.model.dto.response.AdministratorDetailVO;
-import com.co.kc.shortening.admin.model.dto.response.AdministratorListVO;
-import com.co.kc.shortening.admin.security.annotation.Auth;
-import com.co.kc.shortening.admin.security.authentication.holder.AdministratorHolder;
+import com.co.kc.shortening.admin.model.response.AdministratorDetailVO;
+import com.co.kc.shortening.admin.model.response.AdministratorListVO;
+import com.co.kc.shortening.application.annotation.Auth;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;

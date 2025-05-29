@@ -36,7 +36,7 @@ public class SwaggerConfig {
                 .groupName("API")
                 .select()
                 .apis(RequestHandlerSelectors
-                        .basePackage("com.co.kc.shorturl.admin")
+                        .basePackage("com.co.kc.shortening.admin")
                         .and(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class)))
                 .paths(PathSelectors.any())
                 .build()
