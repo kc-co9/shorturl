@@ -2,7 +2,7 @@ package com.co.kc.shortening.infrastructure.aop;
 
 import com.co.kc.shortening.application.client.LockClient;
 import com.co.kc.shortening.application.annotation.Lock;
-import com.co.kc.shorturl.common.exception.ToastException;
+import com.co.kc.shortening.common.exception.ToastException;
 import com.co.kc.shortening.infrastructure.utils.AopUtils;
 import com.co.kc.shortening.infrastructure.utils.SpELUtils;
 import org.aspectj.lang.ProceedingJoinPoint;

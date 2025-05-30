@@ -2,7 +2,7 @@ package com.co.kc.shortening.application.client;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
-import com.co.kc.shorturl.common.exception.BusinessException;
+import com.co.kc.shortening.common.exception.BusinessException;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.junit.platform.commons.util.StringUtils;
 

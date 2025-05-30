@@ -3,11 +3,8 @@ package com.co.kc.shortening.infrastructure.client.id.code;
 import com.co.kc.shortening.application.client.IdClient;
 import com.co.kc.shortening.infrastructure.mybatis.entity.CodeGen;
 import com.co.kc.shortening.infrastructure.mybatis.service.CodeGenService;
-import com.co.kc.shorturl.common.exception.ExhaustionException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author kc

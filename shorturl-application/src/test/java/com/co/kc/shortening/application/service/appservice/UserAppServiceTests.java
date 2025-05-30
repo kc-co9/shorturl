@@ -10,7 +10,7 @@ import com.co.kc.shortening.user.service.AuthService;
 import com.co.kc.shortening.user.service.BcryptPasswordService;
 import com.co.kc.shortening.user.service.PasswordService;
 import com.co.kc.shortening.user.service.UserService;
-import com.co.kc.shorturl.common.exception.AuthException;
+import com.co.kc.shortening.common.exception.AuthException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

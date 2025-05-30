@@ -8,7 +8,7 @@ import com.co.kc.shortening.application.client.IdClient;
 import com.co.kc.shortening.application.model.cqrs.dto.BlocklistDTO;
 import com.co.kc.shortening.blocklist.domain.model.*;
 import com.co.kc.shortening.shared.domain.model.Link;
-import com.co.kc.shorturl.common.exception.BusinessException;
+import com.co.kc.shortening.common.exception.BusinessException;
 
 /**
  * 黑名单-应用服务

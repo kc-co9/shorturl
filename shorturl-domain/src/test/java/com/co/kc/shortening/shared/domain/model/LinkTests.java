@@ -1,6 +1,6 @@
 package com.co.kc.shortening.shared.domain.model;
 
-import com.co.kc.shorturl.common.utils.HashUtils;
+import com.co.kc.shortening.common.utils.HashUtils;
 import org.junit.Assert;
 import org.junit.Test;
 

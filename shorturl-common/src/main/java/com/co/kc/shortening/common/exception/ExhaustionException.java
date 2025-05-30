@@ -1,4 +1,4 @@
-package com.co.kc.shorturl.common.exception;
+package com.co.kc.shortening.common.exception;
 
 /**
  * 资源耗尽异常

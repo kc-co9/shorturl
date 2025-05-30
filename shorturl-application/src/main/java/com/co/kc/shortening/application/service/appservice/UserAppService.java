@@ -17,8 +17,8 @@ import com.co.kc.shortening.user.domain.model.*;
 import com.co.kc.shortening.user.service.AuthService;
 import com.co.kc.shortening.user.service.PasswordService;
 import com.co.kc.shortening.user.service.UserService;
-import com.co.kc.shorturl.common.exception.AuthException;
-import com.co.kc.shorturl.common.exception.BusinessException;
+import com.co.kc.shortening.common.exception.AuthException;
+import com.co.kc.shortening.common.exception.BusinessException;
 
 import java.util.Collections;
 import java.util.List;

@@ -8,7 +8,7 @@ import com.co.kc.shortening.application.model.io.PagingResult;
 import com.co.kc.shortening.application.service.queryservice.ShorturlQueryService;
 import com.co.kc.shortening.infrastructure.mybatis.entity.UrlMapping;
 import com.co.kc.shortening.infrastructure.mybatis.service.UrlMappingService;
-import com.co.kc.shorturl.common.utils.FunctionUtils;
+import com.co.kc.shortening.common.utils.FunctionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;

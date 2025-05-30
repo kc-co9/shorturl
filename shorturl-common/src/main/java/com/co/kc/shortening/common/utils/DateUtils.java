@@ -1,4 +1,4 @@
-package com.co.kc.shorturl.common.utils;
+package com.co.kc.shortening.common.utils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

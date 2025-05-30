@@ -8,7 +8,7 @@ import com.co.kc.shortening.application.model.io.PagingResult;
 import com.co.kc.shortening.application.service.queryservice.BlocklistQueryService;
 import com.co.kc.shortening.infrastructure.mybatis.entity.UrlBlocklist;
 import com.co.kc.shortening.infrastructure.mybatis.service.UrlBlocklistService;
-import com.co.kc.shorturl.common.utils.FunctionUtils;
+import com.co.kc.shortening.common.utils.FunctionUtils;
 
 import java.util.List;
 

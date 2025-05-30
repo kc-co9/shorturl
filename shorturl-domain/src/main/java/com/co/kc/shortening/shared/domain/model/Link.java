@@ -1,6 +1,6 @@
 package com.co.kc.shortening.shared.domain.model;
 
-import com.co.kc.shorturl.common.utils.HashUtils;
+import com.co.kc.shortening.common.utils.HashUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;

@@ -1,7 +1,7 @@
 package com.co.kc.shortening.user.service;
 
 import com.co.kc.shortening.user.domain.model.*;
-import com.co.kc.shorturl.common.exception.AuthException;
+import com.co.kc.shortening.common.exception.AuthException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

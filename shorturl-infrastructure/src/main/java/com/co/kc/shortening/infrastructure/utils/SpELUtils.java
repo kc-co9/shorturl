@@ -1,7 +1,7 @@
 package com.co.kc.shortening.infrastructure.utils;
 
 import com.alibaba.fastjson2.JSON;
-import com.co.kc.shorturl.common.utils.ReflectUtils;
+import com.co.kc.shortening.common.utils.ReflectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

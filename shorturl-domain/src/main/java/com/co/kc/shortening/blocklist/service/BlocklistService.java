@@ -2,7 +2,7 @@ package com.co.kc.shortening.blocklist.service;
 
 import com.co.kc.shortening.blocklist.domain.model.*;
 import com.co.kc.shortening.shared.domain.model.Link;
-import com.co.kc.shorturl.common.exception.BusinessException;
+import com.co.kc.shortening.common.exception.BusinessException;
 
 /**
  * 黑名单-领域服务

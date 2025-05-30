@@ -1,6 +1,6 @@
-package com.co.kc.shorturl.common.utils;
+package com.co.kc.shortening.common.utils;
 
-import com.co.kc.shorturl.common.exception.BusinessException;
+import com.co.kc.shortening.common.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,7 +3,7 @@ package com.co.kc.shortening.infrastructure.aop;
 import com.alibaba.fastjson2.JSON;
 import com.co.kc.shortening.application.annotation.LogPrint;
 import com.co.kc.shortening.infrastructure.utils.AopUtils;
-import com.co.kc.shorturl.common.utils.NetworkUtils;
+import com.co.kc.shortening.common.utils.NetworkUtils;
 import com.google.common.base.Throwables;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;

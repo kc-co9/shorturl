@@ -1,6 +1,6 @@
 package com.co.kc.shortening.web.common;
 
-import com.co.kc.shorturl.common.exception.BaseException;
+import com.co.kc.shortening.common.exception.BaseException;
 import com.co.kc.shortening.web.common.constants.ResultCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;

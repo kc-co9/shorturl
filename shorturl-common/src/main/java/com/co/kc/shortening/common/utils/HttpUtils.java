@@ -1,8 +1,8 @@
-package com.co.kc.shorturl.common.utils;
+package com.co.kc.shortening.common.utils;
 
 
 import com.alibaba.fastjson2.JSON;
-import com.co.kc.shorturl.common.exception.HttpException;
+import com.co.kc.shortening.common.exception.HttpException;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.collections4.MapUtils;

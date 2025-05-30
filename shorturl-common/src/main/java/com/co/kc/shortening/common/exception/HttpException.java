@@ -1,4 +1,4 @@
-package com.co.kc.shorturl.common.exception;
+package com.co.kc.shortening.common.exception;
 
 /**
  * HTTP请求异常

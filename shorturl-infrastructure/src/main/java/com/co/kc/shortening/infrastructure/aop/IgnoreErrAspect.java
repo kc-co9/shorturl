@@ -2,7 +2,7 @@ package com.co.kc.shortening.infrastructure.aop;
 
 import com.co.kc.shortening.application.annotation.IgnoreErr;
 import com.co.kc.shortening.infrastructure.utils.AopUtils;
-import com.co.kc.shorturl.common.utils.ReflectUtils;
+import com.co.kc.shortening.common.utils.ReflectUtils;
 import com.co.kc.shortening.infrastructure.utils.SpELUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;

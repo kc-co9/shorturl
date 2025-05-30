@@ -1,6 +1,6 @@
 package com.co.kc.shortening.application.client;
 
-import com.co.kc.shorturl.common.exception.BusinessException;
+import com.co.kc.shortening.common.exception.BusinessException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

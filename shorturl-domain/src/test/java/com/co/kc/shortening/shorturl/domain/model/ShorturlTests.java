@@ -1,7 +1,7 @@
 package com.co.kc.shortening.shorturl.domain.model;
 
 import com.co.kc.shortening.shared.domain.model.Link;
-import com.co.kc.shorturl.common.exception.BusinessException;
+import com.co.kc.shortening.common.exception.BusinessException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

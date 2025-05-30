@@ -10,7 +10,7 @@ import com.co.kc.shortening.blocklist.service.BlocklistService;
 import com.co.kc.shortening.shorturl.domain.model.ShortCode;
 import com.co.kc.shortening.shared.domain.model.Link;
 import com.co.kc.shortening.shorturl.domain.model.*;
-import com.co.kc.shorturl.common.exception.BusinessException;
+import com.co.kc.shortening.common.exception.BusinessException;
 
 /**
  * 短链-应用服务

@@ -1,5 +1,6 @@
 package com.co.kc.shortening.web.common.advice;
 
+import com.co.kc.shortening.common.exception.*;
 import com.co.kc.shorturl.common.exception.*;
 import com.co.kc.shortening.web.common.Result;
 import com.co.kc.shortening.web.common.constants.ResultCode;

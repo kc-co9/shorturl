@@ -1,4 +1,4 @@
-package com.co.kc.shorturl.common.utils;
+package com.co.kc.shortening.common.utils;
 
 import com.google.common.hash.Hashing;
 
