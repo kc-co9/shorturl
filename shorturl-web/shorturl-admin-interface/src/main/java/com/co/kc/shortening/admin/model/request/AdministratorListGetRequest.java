@@ -10,12 +10,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AdministratorsGetRequest extends Paging {
-    /**
-     * 管理者账号
-     */
-    @ApiModelProperty(value = "管理者账号")
-    private String account;
+public class AdministratorListGetRequest extends Paging {
 
     /**
      * 管理者用户名

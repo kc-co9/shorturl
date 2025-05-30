@@ -1,10 +1,6 @@
 package com.co.kc.shortening.admin.controller;
 
-import com.co.kc.shortening.admin.model.request.AdministratorAddRequest;
-import com.co.kc.shortening.admin.model.request.AdministratorRemoveRequest;
-import com.co.kc.shortening.admin.model.request.AdministratorUpdateRequest;
-import com.co.kc.shortening.admin.model.request.AdministratorsGetRequest;
-import com.co.kc.shortening.admin.security.authentication.holder.AdministratorHolder;
+import com.co.kc.shortening.admin.model.request.*;
 import com.co.kc.shortening.application.model.cqrs.dto.UserQueryDTO;
 import com.co.kc.shortening.application.model.cqrs.query.UserQuery;
 import com.co.kc.shortening.application.model.io.PagingResult;
@@ -18,7 +14,7 @@ import com.co.kc.shortening.admin.model.response.AdministratorDetailVO;
 import com.co.kc.shortening.admin.model.response.AdministratorListVO;
 import com.co.kc.shortening.application.annotation.Auth;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  * @author kc
  */
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/administrator")
 public class AdministratorController {
     private final UserAppService userAppService;
@@ -35,7 +31,7 @@ public class AdministratorController {
     @Auth
     @ApiOperation(value = "获取管理者列表")
     @GetMapping(value = "/v1/administratorList")
-    public PagingResult<AdministratorListVO> getAdministratorList(@ModelAttribute @Validated AdministratorsGetRequest request) {
+    public PagingResult<AdministratorListVO> getAdministratorList(@ModelAttribute @Validated AdministratorListGetRequest request) {
         UserQuery query = new UserQuery();
         query.setEmail(request.getEmail());
         query.setUsername(request.getUsername());
@@ -48,9 +44,8 @@ public class AdministratorController {
     @Auth
     @ApiOperation(value = "获取管理者信息")
     @GetMapping(value = "/v1/administratorDetail")
-    public AdministratorDetailVO getAdministratorDetail() {
-        Long administratorId = AdministratorHolder.getAdministratorId();
-        UserDetailQuery userDetailQuery = new UserDetailQuery(administratorId);
+    public AdministratorDetailVO getAdministratorDetail(@ModelAttribute @Validated AdministratorDetailGetRequest request) {
+        UserDetailQuery userDetailQuery = new UserDetailQuery(request.getAdministratorId());
         UserDetailDTO userDetailDTO = userAppService.userDetail(userDetailQuery);
         return new AdministratorDetailVO(userDetailDTO.getUserId(), userDetailDTO.getUserName());
     }
@@ -68,7 +63,7 @@ public class AdministratorController {
     @PostMapping(value = "/v1/updateAdministrator")
     public void updateAdministrator(@RequestBody @Validated AdministratorUpdateRequest request) {
         UserUpdateCommand command = new UserUpdateCommand(
-                request.getUserId(), request.getEmail(), request.getUsername(), request.getPassword());
+                request.getAdministratorId(), request.getEmail(), request.getUsername(), request.getPassword());
         userAppService.updateUser(command);
     }
 
@@ -76,7 +71,7 @@ public class AdministratorController {
     @ApiOperation(value = "删除管理者")
     @PostMapping(value = "/v1/removeAdministrator")
     public void removeAdministrator(@RequestBody @Validated AdministratorRemoveRequest request) {
-        UserRemoveCommand command = new UserRemoveCommand(request.getUserId());
+        UserRemoveCommand command = new UserRemoveCommand(request.getAdministratorId());
         userAppService.removeUser(command);
     }
 }

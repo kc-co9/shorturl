@@ -16,7 +16,7 @@ import com.co.kc.shortening.admin.model.response.ShorturlListVO;
 import com.co.kc.shortening.application.annotation.Auth;
 import com.co.kc.shortening.application.model.io.PagingResult;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @author kc
  */
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/shorturl")
 public class ShorturlController {
     private final ShorturlAppService shorturlAppService;
