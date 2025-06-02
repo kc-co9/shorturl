@@ -28,6 +28,12 @@ public class BlocklistListVO {
     private String remark;
 
     /**
+     * 状态
+     */
+    @ApiModelProperty(value = "状态")
+    private Integer status;
+
+    /**
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")

@@ -39,7 +39,7 @@ public class LogAspect {
     /**
      * 需要修改包路径
      */
-    @Pointcut(value = "execution(* com.co.kc.shorturl..*.controller..*.*(..))")
+    @Pointcut(value = "execution(* com.co.kc.shortening..*.controller..*.*(..))")
     protected void pointcut() {
     }
 

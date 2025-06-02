@@ -10,7 +10,7 @@ export function getShorturlList(data) {
 
 export function createShorturl(data) {
     return request({
-        url: '/shorturl/v1/createShorturl',
+        url: '/shorturl/v1/addShorturl',
         method: 'post',
         data: data
     })

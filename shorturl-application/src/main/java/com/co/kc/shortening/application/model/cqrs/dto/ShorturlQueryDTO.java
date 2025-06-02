@@ -24,6 +24,10 @@ public class ShorturlQueryDTO {
      */
     private String rawLink;
     /**
+     * 短链
+     */
+    private String shortLink;
+    /**
      * 状态 0-未知 1-激活 2-失效
      */
     private Integer status;

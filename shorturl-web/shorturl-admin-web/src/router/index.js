@@ -63,7 +63,7 @@ export const constantRoutes = [
         children: [{
             path: 'index',
             name: 'Administrator',
-            component: () => import('@/views/admin'),
+            component: () => import('@/views/administrator'),
             meta: {title: '账号管理', icon: 'el-icon-s-help'}
         }]
     },

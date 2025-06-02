@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 public class ShorturlUpdateRequest {
     @NotNull(message = "ID不能为空")
-    @ApiModelProperty(value = "ID")
+    @ApiModelProperty(value = "shortId")
     private Long shortId;
 
     @NotNull(message = "状态不能为空")

@@ -9,9 +9,6 @@
           type="flex"
           justify="center"
       >
-        <el-form-item label="账号：" prop="account">
-          <el-input v-model="dataForm.account" placeholder="请输入内容" clearable/>
-        </el-form-item>
         <el-form-item label="用户名：" prop="username">
           <el-input v-model="dataForm.username" placeholder="请输入内容" clearable/>
         </el-form-item>
@@ -43,12 +40,8 @@
           border
           style="width: 100%">
         <el-table-column
-            prop="id"
+            prop="administratorId"
             label="ID">
-        </el-table-column>
-        <el-table-column
-            prop="account"
-            label="账号">
         </el-table-column>
         <el-table-column
             prop="username"
@@ -61,10 +54,6 @@
         <el-table-column
             prop="createTime"
             label="创建时间">
-        </el-table-column>
-        <el-table-column
-            prop="updateTime"
-            label="更新时间">
         </el-table-column>
         <el-table-column
             align="center"
@@ -93,9 +82,6 @@
 
     <el-dialog title="新增管理员" :visible.sync="addVisible">
       <el-form :model="addForm" label-position="right" label-width="120px">
-        <el-form-item label="账号">
-          <el-input v-model="addForm.account" placeHolder="请输入" style="width: 300px"/>
-        </el-form-item>
         <el-form-item label="用户名">
           <el-input v-model="addForm.username" placeHolder="请输入" style="width: 300px"/>
         </el-form-item>
@@ -118,9 +104,6 @@
 
     <el-dialog title="编辑管理员" :visible.sync="editVisible">
       <el-form :model="editForm" label-position="right" label-width="120px">
-        <el-form-item label="账号">
-          <el-input v-model="editForm.account" placeHolder="请输入" style="width: 300px"/>
-        </el-form-item>
         <el-form-item label="用户名">
           <el-input v-model="editForm.username" placeHolder="请输入" style="width: 300px"/>
         </el-form-item>
@@ -146,14 +129,13 @@
 
 <script>
 import {CONSTANTS} from '@/api/common'
-import {getAdministratorList, addAdministrator, updateAdministrator, removeAdministrator} from '@/api/admin'
+import {getAdministratorList, addAdministrator, updateAdministrator, removeAdministrator} from '@/api/administrator'
 
 export default {
   name: 'Administrator',
   data() {
     return {
       dataForm: {
-        account: "",
         username: "",
         email: "",
         pageNo: 1,
@@ -169,15 +151,13 @@ export default {
       tableLoading: false,
       addVisible: false,
       addForm: {
-        account: null,
         username: null,
         password: null,
         email: null
       },
       editVisible: false,
       editForm: {
-        id: null,
-        account: null,
+        administratorId: null,
         username: null,
         password: null,
         email: null
@@ -196,7 +176,6 @@ export default {
       this.pageData();
     },
     reset() {
-      this.dataForm.account = "";
       this.dataForm.username = "";
       this.dataForm.email = "";
     },
@@ -214,7 +193,6 @@ export default {
           })
     },
     showAdd() {
-      this.addForm.account = null
       this.addForm.username = null
       this.addForm.email = null
       this.addForm.password = null
@@ -226,7 +204,6 @@ export default {
             if (response.code === CONSTANTS.SUCCESS_CODE) {
               this.search();
               this.addVisible = false
-              this.addForm.account = null
               this.addForm.username = null
               this.addForm.email = null
               this.addForm.password = null
@@ -237,8 +214,7 @@ export default {
           })
     },
     showEdit(row) {
-      this.editForm.id = row.id
-      this.editForm.account = row.account
+      this.editForm.administratorId = row.administratorId
       this.editForm.username = row.username
       this.editForm.email = row.email
       this.editForm.password = row.password
@@ -250,8 +226,7 @@ export default {
             if (response.code === CONSTANTS.SUCCESS_CODE) {
               this.search();
               this.editVisible = false
-              this.editForm.id = null
-              this.editForm.account = null
+              this.editForm.administratorId = null
               this.editForm.username = null
               this.editForm.email = null
               this.editForm.password = null
@@ -262,7 +237,7 @@ export default {
           })
     },
     remove(row) {
-      removeAdministrator({id: row.id})
+      removeAdministrator({administratorId: row.administratorId})
           .then((response) => {
             if (response.code === CONSTANTS.SUCCESS_CODE) {
               this.search();

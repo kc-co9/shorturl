@@ -44,8 +44,9 @@ public class ShorturlConfig {
     }
 
     @Bean
-    public ShorturlQueryService shorturlQueryService(UrlMappingService urlMappingService) {
-        return new ShorturlQueryMySqlService(urlMappingService);
+    public ShorturlQueryService shorturlQueryService(UrlMappingService urlMappingService,
+                                                     ShortDomainProvider shortDomainProvider) {
+        return new ShorturlQueryMySqlService(urlMappingService, shortDomainProvider);
     }
 
     @Bean

@@ -55,3 +55,5 @@ mybatis-plus:
     localCacheScope: STATEMENT
     cacheEnabled: false
 
+shorturl:
+  shortDomain: http://127.0.0.1:9095

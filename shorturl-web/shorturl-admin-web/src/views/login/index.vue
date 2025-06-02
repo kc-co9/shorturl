@@ -3,18 +3,18 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">登陆</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="email">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
           ref="account"
-          v-model="loginForm.account"
-          placeholder="账号"
-          name="username"
+          v-model="loginForm.email"
+          placeholder="邮箱"
+          name="邮箱"
           type="text"
           tabindex="1"
           auto-complete="on"
@@ -31,7 +31,7 @@
           v-model="loginForm.password"
           :type="passwordType"
           placeholder="密码"
-          name="password"
+          name="密码"
           tabindex="2"
           auto-complete="on"
           @keyup.enter.native="handleLogin"
@@ -44,8 +44,8 @@
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
       <div class="tips">
-        <span style="margin-right:20px;">account: admin</span>
-        <span> password: any</span>
+        <span style="margin-right:20px;">邮箱: root@shorturl.com</span>
+        <span> 密码: root</span>
       </div>
 
     </el-form>
@@ -53,20 +53,20 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import {validEmail} from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+    const validateEmail = (rule, value, callback) => {
+      if (!validEmail(value)) {
+        callback(new Error('Please enter the correct email'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
+      if (value.length <= 0) {
         callback(new Error('The password can not be less than 6 digits'))
       } else {
         callback()
@@ -74,11 +74,11 @@ export default {
     }
     return {
       loginForm: {
-        account: 'admin',
-        password: '111111'
+        email: '',
+        password: ''
       },
       loginRules: {
-        account: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        email: [{ required: true, trigger: 'blur', validator: validateEmail }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       loading: false,
@@ -112,7 +112,8 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
-          }).catch(() => {
+          }).catch((err) => {
+            console.info(err)
             this.loading = false
           })
         } else {

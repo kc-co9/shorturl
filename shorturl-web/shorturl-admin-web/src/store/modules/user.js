@@ -1,6 +1,6 @@
 import {getToken, setToken, removeToken} from '@/utils/auth'
 import {resetRouter} from '@/router'
-import {signIn, getAdministratorDetail, signOut} from "@/api/admin";
+import {signIn, getAccountDetail, signOut} from "@/api/account";
 
 const getDefaultState = () => {
     return {
@@ -29,15 +29,16 @@ const mutations = {
 
 const actions = {
     // user login
-    login({commit}, userInfo) {
-        const {account, password} = userInfo
+    login({commit}, account) {
+        const {email, password} = account
         return new Promise((resolve, reject) => {
-            signIn({account: account.trim(), password: password}).then(response => {
+            signIn({email: email.trim(), password: password}).then(response => {
                 const {data} = response
                 commit('SET_TOKEN', data.authToken)
                 setToken(data.authToken)
                 resolve()
             }).catch(error => {
+                console.error(error)
                 reject(error)
             })
         })
@@ -46,7 +47,7 @@ const actions = {
     // get user info
     getInfo({commit, state}) {
         return new Promise((resolve, reject) => {
-            getAdministratorDetail(state.token).then(response => {
+            getAccountDetail(state.token).then(response => {
                 const {data} = response
 
                 if (!data) {

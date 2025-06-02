@@ -87,4 +87,4 @@ knife4j:
     enableGroup: true
 
 shorturl:
-  host:
+  shortDomain: http://127.0.0.1:9095

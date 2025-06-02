@@ -13,6 +13,7 @@ import com.co.kc.shortening.admin.assembler.AdministratorListVoAssembler;
 import com.co.kc.shortening.admin.model.response.AdministratorDetailVO;
 import com.co.kc.shortening.admin.model.response.AdministratorListVO;
 import com.co.kc.shortening.application.annotation.Auth;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author kc
  */
+@Api(tags = "管理员路由")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/administrator")

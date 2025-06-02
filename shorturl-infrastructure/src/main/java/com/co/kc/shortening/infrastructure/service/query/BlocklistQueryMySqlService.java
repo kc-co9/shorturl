@@ -11,6 +11,7 @@ import com.co.kc.shortening.infrastructure.mybatis.service.UrlBlocklistService;
 import com.co.kc.shortening.common.utils.FunctionUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author kc
@@ -24,9 +25,9 @@ public class BlocklistQueryMySqlService implements BlocklistQueryService {
 
     @Override
     public PagingResult<BlocklistQueryDTO> queryBlocklist(BlocklistQuery query) {
-        IPage<UrlBlocklist> blocklistPage =
-                urlBlocklistService.page(new Page<>(query.getPageNo(), query.getPageSize()),
-                        urlBlocklistService.getQueryWrapper().orderByDesc(UrlBlocklist::getId));
+        IPage<UrlBlocklist> blocklistPage = urlBlocklistService.page(new Page<>(query.getPageNo(), query.getPageSize()), urlBlocklistService.getQueryWrapper()
+                .eq(Objects.nonNull(query.getStatus()), UrlBlocklist::getStatus, query.getStatus())
+                .orderByDesc(UrlBlocklist::getId));
         List<BlocklistQueryDTO> blocklistList = FunctionUtils.mappingList(blocklistPage.getRecords(), blocklist -> {
             BlocklistQueryDTO blocklistQueryDTO = new BlocklistQueryDTO();
             blocklistQueryDTO.setBlockId(blocklist.getBlockId());

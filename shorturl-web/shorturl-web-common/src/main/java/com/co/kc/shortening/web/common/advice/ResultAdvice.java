@@ -16,7 +16,7 @@ import java.util.Optional;
  * @author kc
  */
 @ConditionalOnWebApplication
-@RestControllerAdvice(basePackages = {"com.co.kc.shorturl"})
+@RestControllerAdvice(basePackages = {"com.co.kc.shortening"})
 public class ResultAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {

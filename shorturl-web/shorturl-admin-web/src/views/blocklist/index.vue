@@ -9,7 +9,19 @@
           type="flex"
           justify="center"
       >
+        <el-form-item label="状态：" prop="serverCode">
+          <el-select v-model="dataForm.status" filterable placeholder="状态">
+            <el-option label="全部" value=""/>
+            <el-option v-for="(value, key) in statusEnum" :key="key" :label="value" :value="key"/>
+          </el-select>
+        </el-form-item>
         <el-form-item>
+          <el-button type="primary" @click="reset">
+            重置
+          </el-button>
+          <el-button type="primary" @click="search">
+            搜索
+          </el-button>
           <el-button type="primary" @click="showAdd">
             新增
           </el-button>
@@ -28,12 +40,18 @@
           style="width: 100%">
 
         <el-table-column
-            prop="url"
+            prop="blockLink"
             label="被禁链接">
         </el-table-column>
         <el-table-column
             prop="remark"
             label="备注">
+        </el-table-column>
+        <el-table-column
+            label="状态">
+          <template slot-scope="scope">
+            {{ statusEnum[scope.row.status] }}
+          </template>
         </el-table-column>
         <el-table-column
             prop="createTime"
@@ -62,13 +80,18 @@
       />
     </el-row>
 
-    <el-dialog title="创建短链" :visible.sync="addVisible">
+    <el-dialog title="添加黑名单" :visible.sync="addVisible">
       <el-form :model="addForm" label-position="right" label-width="120px">
-        <el-form-item label="原始链接">
-          <el-input v-model="addForm.url" placeHolder="请输入" style="width: 300px"/>
+        <el-form-item label="链接">
+          <el-input v-model="addForm.blockLink" placeHolder="请输入" style="width: 300px"/>
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="addForm.remark" placeHolder="请输入" style="width: 300px"/>
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="addForm.status" filterable placeholder="状态">
+            <el-option v-for="(value, key) in statusEnum" :key="key" :label="value" :value="key"/>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -85,6 +108,11 @@
       <el-form :model="editForm" label-position="right" label-width="120px">
         <el-form-item label="备注">
           <el-input v-model="editForm.remark" placeHolder="请输入" style="width: 300px"/>
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="editForm.status" filterable placeholder="状态">
+            <el-option v-for="(value, key) in statusEnum" :key="key" :label="value" :value="key"/>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -109,7 +137,6 @@ export default {
   data() {
     return {
       dataForm: {
-        key: "",
         status: "",
         pageNo: 1,
         pageSize: 10
@@ -126,16 +153,20 @@ export default {
       tableLoading: false,
       addVisible: false,
       addForm: {
-        url: null,
+        blockLink: null,
         remark: null,
+        status: null,
       },
       editVisible: false,
       editForm: {
-        id: null,
-        url: null,
+        blockId: null,
+        blockLink: null,
+        remark: null,
         status: null,
-        validStart: null,
-        validEnd: null
+      },
+      statusEnum: {
+        1: '已激活',
+        2: '已失效'
       }
     }
   },
@@ -149,6 +180,9 @@ export default {
     pageChange(e) {
       this.dataForm.pageNo = e
       this.pageData();
+    },
+    reset() {
+      this.dataForm.status = "";
     },
     async pageData() {
       this.tableLoading = true
@@ -165,8 +199,9 @@ export default {
           })
     },
     showAdd() {
-      this.addForm.url = null
+      this.addForm.blockLink = null
       this.addForm.remark = null
+      this.addForm.status = null
       this.addVisible = true;
     },
     add() {
@@ -175,7 +210,8 @@ export default {
             if (response.code === CONSTANTS.SUCCESS_CODE) {
               this.search();
               this.addVisible = false
-              this.addForm.url = null
+              this.addForm.blockLink = null
+              this.addForm.status = null
               this.addForm.remark = null
             }
           })
@@ -184,8 +220,9 @@ export default {
           })
     },
     showEdit(row) {
-      this.editForm.id = row.id
+      this.editForm.blockId = row.blockId
       this.editForm.remark = row.remark
+      this.editForm.status = row.status + ''
       this.editVisible = true
     },
     edit() {
@@ -194,8 +231,9 @@ export default {
             if (response.code === CONSTANTS.SUCCESS_CODE) {
               this.search();
               this.editVisible = false
-              this.editForm.id = null
+              this.editForm.blockId = null
               this.editForm.remark = null
+              this.editForm.status = null
             }
           })
           .catch((err) => {
@@ -203,7 +241,7 @@ export default {
           })
     },
     remove(row) {
-      removeBlocklist({id: row.id})
+      removeBlocklist({blockId: row.blockId})
           .then((response) => {
             if (response.code === CONSTANTS.SUCCESS_CODE) {
               this.search();

@@ -1,11 +1,8 @@
 package com.co.kc.shortening.web.common.advice;
 
 import com.co.kc.shortening.common.exception.*;
-import com.co.kc.shorturl.common.exception.*;
 import com.co.kc.shortening.web.common.Result;
 import com.co.kc.shortening.web.common.constants.ResultCode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,8 +19,6 @@ import java.util.Optional;
 @RestControllerAdvice
 @ResponseStatus(HttpStatus.OK)
 public class ErrorAdvice {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ErrorAdvice.class);
 
     @ExceptionHandler(IllegalArgumentException.class)
     public Result<Map<String, Object>> illegalArgumentExceptionHandler(IllegalArgumentException ex) {
@@ -65,7 +60,6 @@ public class ErrorAdvice {
 
     @ExceptionHandler(Exception.class)
     public Result<Map<String, Object>> exceptionHandler(Exception ex) {
-        LOG.error("unknown error,", ex);
         return Result.error(ResultCode.ERROR);
     }
 

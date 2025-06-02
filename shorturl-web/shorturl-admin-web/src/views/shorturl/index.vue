@@ -9,8 +9,8 @@
           type="flex"
           justify="center"
       >
-        <el-form-item label="短链KEY：" prop="serverId">
-          <el-input v-model="dataForm.key" placeholder="请输入内容" clearable/>
+        <el-form-item label="短链CODE：" prop="serverId">
+          <el-input v-model="dataForm.code" placeholder="请输入内容" clearable/>
         </el-form-item>
         <el-form-item label="状态：" prop="serverCode">
           <el-select v-model="dataForm.status" filterable placeholder="状态">
@@ -44,11 +44,11 @@
           style="width: 100%">
 
         <el-table-column
-            prop="url"
+            prop="rawLink"
             label="原始链接">
         </el-table-column>
         <el-table-column
-            prop="shorturl"
+            prop="shortLink"
             label="短链">
         </el-table-column>
         <el-table-column
@@ -60,7 +60,7 @@
         <el-table-column
             label="有效期">
           <template slot-scope="scope">
-            {{ scope.row.validStart }} - {{ scope.row.validEnd }}
+            {{ scope.row.validTimeStart }} - {{ scope.row.validTimeEnd }}
           </template>
         </el-table-column>
 
@@ -89,18 +89,23 @@
     <el-dialog title="创建短链" :visible.sync="addVisible">
       <el-form :model="addForm" label-position="right" label-width="120px">
         <el-form-item label="原始链接">
-          <el-input v-model="addForm.url" placeHolder="请输入" style="width: 300px"/>
+          <el-input v-model="addForm.rawLink" placeHolder="请输入" style="width: 300px"/>
         </el-form-item>
         <el-form-item label="有效期">
           <el-date-picker
-              v-model="addForm.validRange"
+              v-model="addForm.validTimeRange"
               type="datetimerange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd HH:mm:ss"
-              @change="addFormValidRangeChange">
+              @change="addFormvalidTimeRangeChange">
           </el-date-picker>
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="addForm.status" filterable placeholder="状态">
+            <el-option v-for="(value, key) in statusEnum" :key="key" :label="value" :value="key"/>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -116,7 +121,7 @@
     <el-dialog title="编辑短链" :visible.sync="editVisible">
       <el-form :model="editForm" label-position="right" label-width="120px">
         <el-form-item label="原始链接">
-          <el-input v-model="editForm.url" placeHolder="请输入" style="width: 300px"/>
+          <el-input v-model="editForm.rawLink" placeHolder="请输入" style="width: 300px"/>
         </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="editForm.status" filterable placeholder="状态">
@@ -125,13 +130,13 @@
         </el-form-item>
         <el-form-item label="有效期">
           <el-date-picker
-              v-model="editForm.validRange"
+              v-model="editForm.validTimeRange"
               type="datetimerange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd HH:mm:ss"
-              @change="editFormValidRangeChange">
+              @change="editFormvalidTimeRangeChange">
           </el-date-picker>
         </el-form-item>
       </el-form>
@@ -153,11 +158,11 @@ import {CONSTANTS} from '@/api/common'
 import {getShorturlList, createShorturl, updateShorturl} from '@/api/shorturl'
 
 export default {
-  name: 'Server',
+  name: 'Shorturl',
   data() {
     return {
       dataForm: {
-        key: "",
+        code: "",
         status: "",
         pageNo: 1,
         pageSize: 10
@@ -174,19 +179,20 @@ export default {
       tableLoading: false,
       addVisible: false,
       addForm: {
-        url: null,
-        validRange: null,
-        validStart: null,
-        validEnd: null
+        rawLink: null,
+        status: null,
+        validTimeRange: null,
+        validTimeStart: null,
+        validTimeEnd: null
       },
       editVisible: false,
       editForm: {
-        id: null,
-        url: null,
+        shortId: null,
+        rawLink: null,
         status: null,
-        validRange: null,
-        validStart: null,
-        validEnd: null
+        validTimeRange: null,
+        validTimeStart: null,
+        validTimeEnd: null
       },
       statusEnum: {
         1: '已激活',
@@ -206,7 +212,7 @@ export default {
       this.pageData();
     },
     reset() {
-      this.dataForm.key = "";
+      this.dataForm.code = "";
       this.dataForm.status = "";
     },
     async pageData() {
@@ -224,10 +230,10 @@ export default {
           })
     },
     showAdd() {
-      this.addForm.url = null
-      this.addForm.validRange = null
-      this.addForm.validStart = null
-      this.addForm.validEnd = null
+      this.addForm.rawLink = null
+      this.addForm.validTimeRange = null
+      this.addForm.validTimeStart = null
+      this.addForm.validTimeEnd = null
       this.addVisible = true;
     },
     add() {
@@ -236,10 +242,10 @@ export default {
             if (response.code === CONSTANTS.SUCCESS_CODE) {
               this.search();
               this.addVisible = false
-              this.addForm.url = null
-              this.addForm.validRange = null
-              this.addForm.validStart = null
-              this.addForm.validEnd = null
+              this.addForm.rawLink = null
+              this.addForm.validTimeRange = null
+              this.addForm.validTimeStart = null
+              this.addForm.validTimeEnd = null
             }
           })
           .catch((err) => {
@@ -247,12 +253,12 @@ export default {
           })
     },
     showEdit(row) {
-      this.editForm.id = row.id
-      this.editForm.url = row.url
+      this.editForm.shortId = row.shortId
+      this.editForm.rawLink = row.rawLink
       this.editForm.status = row.status + ''
-      this.editForm.validStart = row.validStart
-      this.editForm.validEnd = row.validEnd
-      this.editForm.validRange = [row.validStart, row.validEnd]
+      this.editForm.validTimeStart = row.validTimeStart
+      this.editForm.validTimeEnd = row.validTimeEnd
+      this.editForm.validTimeRange = [row.validTimeStart, row.validTimeEnd]
       this.editVisible = true
     },
     edit() {
@@ -261,28 +267,28 @@ export default {
             if (response.code === CONSTANTS.SUCCESS_CODE) {
               this.search();
               this.editVisible = false
-              this.editForm.id = null
-              this.editForm.url = null
+              this.editForm.shortId = null
+              this.editForm.rawLink = null
               this.editForm.status = null
-              this.editForm.validRange = null
-              this.editForm.validStart = null
-              this.editForm.validEnd = null
+              this.editForm.validTimeRange = null
+              this.editForm.validTimeStart = null
+              this.editForm.validTimeEnd = null
             }
           })
           .catch((err) => {
             console.error(err)
           })
     },
-    addFormValidRangeChange(timeRange) {
+    addFormvalidTimeRangeChange(timeRange) {
       if (timeRange != null && timeRange.length === 2) {
-        this.addForm.validStart = timeRange[0]
-        this.addForm.validEnd = timeRange[1]
+        this.addForm.validTimeStart = timeRange[0]
+        this.addForm.validTimeEnd = timeRange[1]
       }
     },
-    editFormValidRangeChange(timeRange) {
+    editFormvalidTimeRangeChange(timeRange) {
       if (timeRange != null && timeRange.length === 2) {
-        this.editForm.validStart = timeRange[0]
-        this.editForm.validEnd = timeRange[1]
+        this.editForm.validTimeStart = timeRange[0]
+        this.editForm.validTimeEnd = timeRange[1]
       }
     }
   }

@@ -15,6 +15,7 @@ import com.co.kc.shortening.admin.model.request.BlocklistUpdateRequest;
 import com.co.kc.shortening.admin.model.response.BlocklistListVO;
 import com.co.kc.shortening.application.annotation.Auth;
 import com.co.kc.shortening.application.model.io.PagingResult;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author kc
  */
+@Api(tags = "黑名单路由")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/blocklist")
@@ -36,6 +38,7 @@ public class BlocklistController {
     @ApiOperation(value = "链接黑名单列表")
     public PagingResult<BlocklistListVO> blocklistList(@ModelAttribute @Validated BlocklistListRequest request) {
         BlocklistQuery query = new BlocklistQuery();
+        query.setStatus(request.getStatus());
         query.setPageNo(request.getPageNo());
         query.setPageSize(request.getPageSize());
         PagingResult<BlocklistQueryDTO> pagingResult = blocklistQueryService.queryBlocklist(query);
@@ -47,7 +50,7 @@ public class BlocklistController {
     @ApiOperation(value = "链接黑名单新增")
     public void addBlocklist(@RequestBody @Validated BlocklistAddRequest request) {
         BlocklistAddCommand blocklistAddCommand = new BlocklistAddCommand();
-        blocklistAddCommand.setBlockLink(request.getUrl());
+        blocklistAddCommand.setBlockLink(request.getBlockLink());
         blocklistAddCommand.setRemark(request.getRemark());
         blocklistAddCommand.setStatus(request.getStatus());
         blocklistAppService.add(blocklistAddCommand);
@@ -58,7 +61,7 @@ public class BlocklistController {
     @ApiOperation(value = "链接黑名单更新")
     public void updateBlocklist(@RequestBody @Validated BlocklistUpdateRequest request) {
         BlocklistUpdateCommand command = new BlocklistUpdateCommand();
-        command.setBlockId(request.getId());
+        command.setBlockId(request.getBlockId());
         command.setRemark(request.getRemark());
         command.setStatus(request.getStatus());
         blocklistAppService.update(command);
@@ -69,7 +72,7 @@ public class BlocklistController {
     @ApiOperation(value = "链接黑名单移除")
     public void removeBlocklist(@RequestBody @Validated BlocklistRemoveRequest request) {
         BlocklistRemoveCommand command = new BlocklistRemoveCommand();
-        command.setBlockId(request.getId());
+        command.setBlockId(request.getBlockId());
         blocklistAppService.remove(command);
     }
 

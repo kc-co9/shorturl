@@ -15,6 +15,7 @@ import com.co.kc.shortening.admin.model.response.ShorturlAddVO;
 import com.co.kc.shortening.admin.model.response.ShorturlListVO;
 import com.co.kc.shortening.application.annotation.Auth;
 import com.co.kc.shortening.application.model.io.PagingResult;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author kc
  */
+@Api(tags = "短链路由")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/shorturl")
@@ -50,7 +52,7 @@ public class ShorturlController {
     @ApiOperation(value = "短链创建")
     public ShorturlAddVO addShorturl(@RequestBody @Validated ShorturlAddRequest request) {
         ShorturlAddCommand command = new ShorturlAddCommand();
-        command.setRawLink(request.getUrl());
+        command.setRawLink(request.getRawLink());
         command.setStatus(request.getStatus());
         command.setValidTimeStart(request.getValidTimeStart());
         command.setValidTimeEnd(request.getValidTimeEnd());

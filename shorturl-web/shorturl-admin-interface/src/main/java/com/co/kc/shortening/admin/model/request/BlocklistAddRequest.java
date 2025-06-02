@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author kc
@@ -12,7 +13,14 @@ import javax.validation.constraints.NotBlank;
 public class BlocklistAddRequest {
     @NotBlank(message = "被禁链接不能为空")
     @ApiModelProperty(value = "被禁链接")
-    private String url;
+    private String blockLink;
+
+    /**
+     * 状态
+     */
+    @NotNull(message = "状态为空")
+    @ApiModelProperty(value = "状态")
+    private Integer status;
 
     /**
      * 备注
@@ -20,9 +28,5 @@ public class BlocklistAddRequest {
     @ApiModelProperty(value = "备注")
     private String remark;
 
-    /**
-     * 状态
-     */
-    @ApiModelProperty(value = "状态")
-    private Integer status;
+
 }

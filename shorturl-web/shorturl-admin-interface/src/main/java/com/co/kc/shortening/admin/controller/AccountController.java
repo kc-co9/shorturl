@@ -11,17 +11,16 @@ import com.co.kc.shortening.application.service.appservice.UserAppService;
 import com.co.kc.shortening.admin.model.request.AdministratorSignInRequest;
 import com.co.kc.shortening.admin.model.response.AdministratorSignInVO;
 import com.co.kc.shortening.application.annotation.Auth;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author kc
  */
+@Api(tags = "帐号路由")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/account")
@@ -47,7 +46,7 @@ public class AccountController {
 
     @Auth
     @ApiOperation(value = "帐号详情")
-    @PostMapping(value = "/v1/accountDetail")
+    @GetMapping(value = "/v1/accountDetail")
     public AdministratorDetailVO accountDetail() {
         Long administratorId = AdministratorHolder.getAdministratorId();
         UserDetailQuery userDetailQuery = new UserDetailQuery(administratorId);

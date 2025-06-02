@@ -12,7 +12,7 @@ public class AdministratorListVoAssembler {
 
     public static AdministratorListVO userQueryDTOToVO(UserQueryDTO userQueryDTO) {
         AdministratorListVO administratorListVO = new AdministratorListVO();
-        administratorListVO.setUserId(userQueryDTO.getUserId());
+        administratorListVO.setAdministratorId(userQueryDTO.getUserId());
         administratorListVO.setEmail(userQueryDTO.getEmail());
         administratorListVO.setUsername(userQueryDTO.getUsername());
         administratorListVO.setCreateTime(userQueryDTO.getCreateTime());

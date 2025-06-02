@@ -1,6 +1,6 @@
 'use strict'
 const path = require('path')
-const defaultSettings = require('@/settings.js')
+const defaultSettings = require('./src/settings.js')
 
 function resolve(dir) {
     return path.join(__dirname, dir)

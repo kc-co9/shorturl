@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.co.kc.shortening.application.model.cqrs.dto.ShorturlQueryDTO;
 import com.co.kc.shortening.application.model.cqrs.query.ShorturlQuery;
 import com.co.kc.shortening.application.model.io.PagingResult;
+import com.co.kc.shortening.application.provider.ShortDomainProvider;
 import com.co.kc.shortening.application.service.queryservice.ShorturlQueryService;
 import com.co.kc.shortening.infrastructure.mybatis.entity.UrlMapping;
 import com.co.kc.shortening.infrastructure.mybatis.service.UrlMappingService;
@@ -19,9 +20,11 @@ import java.util.Objects;
  */
 public class ShorturlQueryMySqlService implements ShorturlQueryService {
     private final UrlMappingService urlMappingService;
+    private final ShortDomainProvider shortDomainProvider;
 
-    public ShorturlQueryMySqlService(UrlMappingService urlMappingService) {
+    public ShorturlQueryMySqlService(UrlMappingService urlMappingService, ShortDomainProvider shortDomainProvider) {
         this.urlMappingService = urlMappingService;
+        this.shortDomainProvider = shortDomainProvider;
     }
 
     @Override
@@ -36,6 +39,7 @@ public class ShorturlQueryMySqlService implements ShorturlQueryService {
             shorturlQueryDTO.setShortId(urlMapping.getShortId());
             shorturlQueryDTO.setCode(urlMapping.getCode());
             shorturlQueryDTO.setRawLink(urlMapping.getUrl());
+            shorturlQueryDTO.setShortLink(shortDomainProvider.getDomain() + "/" + urlMapping.getCode());
             shorturlQueryDTO.setStatus(urlMapping.getStatus().getCode());
             shorturlQueryDTO.setValidStart(urlMapping.getValidStart());
             shorturlQueryDTO.setValidEnd(urlMapping.getValidEnd());

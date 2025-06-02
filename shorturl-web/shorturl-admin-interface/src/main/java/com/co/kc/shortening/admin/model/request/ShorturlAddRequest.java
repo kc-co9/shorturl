@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 public class ShorturlAddRequest {
     @NotBlank(message = "原始链接不能为空")
     @ApiModelProperty(value = "原始链接")
-    private String url;
+    private String rawLink;
 
-    @NotBlank(message = "状态不能为空")
+    @NotNull(message = "状态不能为空")
     @ApiModelProperty(value = "状态")
     private Integer status;
 

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class AdministratorListVO {
 
     @ApiModelProperty(value = "用户id")
-    private Long userId;
+    private Long administratorId;
 
     @ApiModelProperty(value = "管理者邮箱")
     private String email;
