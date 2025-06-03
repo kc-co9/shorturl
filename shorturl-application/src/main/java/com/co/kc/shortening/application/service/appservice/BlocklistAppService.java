@@ -1,6 +1,5 @@
 package com.co.kc.shortening.application.service.appservice;
 
-import com.co.kc.shortening.application.adapter.BlocklistAdapter;
 import com.co.kc.shortening.application.model.cqrs.command.blocklist.BlocklistAddCommand;
 import com.co.kc.shortening.application.model.cqrs.command.blocklist.BlocklistRemoveCommand;
 import com.co.kc.shortening.application.model.cqrs.command.blocklist.BlocklistUpdateCommand;
@@ -30,7 +29,7 @@ public class BlocklistAppService {
         BlockId blockId = new BlockId(blockIdClient.next());
         Link blockedLink = new Link(command.getBlockLink());
         BlockRemark blockRemark = new BlockRemark(command.getRemark());
-        BlockStatus status = BlocklistAdapter.convertStatus(command.getStatus());
+        BlockStatus status = command.getStatus();
 
         Blocklist blocklist = blocklistRepository.find(blockedLink);
         if (blocklist != null) {
@@ -46,7 +45,7 @@ public class BlocklistAppService {
     public void update(BlocklistUpdateCommand command) {
         BlockId blockId = new BlockId(command.getBlockId());
         BlockRemark blockRemark = new BlockRemark(command.getRemark());
-        BlockStatus status = BlocklistAdapter.convertStatus(command.getStatus());
+        BlockStatus status = command.getStatus();
 
         Blocklist blocklist = blocklistRepository.find(blockId);
         if (blocklist == null) {

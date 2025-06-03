@@ -1,5 +1,7 @@
 package com.co.kc.shortening.application.model.cqrs.dto;
 
+import com.co.kc.shortening.blocklist.domain.model.BlockStatus;
+import com.co.kc.shortening.shorturl.domain.model.ShorturlStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -26,7 +28,7 @@ public class BlocklistQueryDTO {
     /**
      * 状态
      */
-    private Integer status;
+    private BlockStatus status;
     /**
      * 创建时间
      */

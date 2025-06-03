@@ -59,10 +59,6 @@ public class User extends Identification {
         this.roleIds = roleIds;
     }
 
-    public boolean validatePassword(UserPassword password) {
-        return Objects.equals(password, this.password);
-    }
-
     public boolean validateRawPassword(UserRawPassword rawPassword, PasswordService passwordService) {
         return passwordService.verify(rawPassword, this.password);
     }

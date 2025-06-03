@@ -1,6 +1,5 @@
 package com.co.kc.shortening.infrastructure.repository;
 
-import com.co.kc.shortening.application.adapter.BlocklistAdapter;
 import com.co.kc.shortening.blocklist.domain.model.*;
 import com.co.kc.shortening.infrastructure.mybatis.entity.UrlBlocklist;
 import com.co.kc.shortening.infrastructure.mybatis.enums.UrlBlocklistStatus;
@@ -32,7 +31,7 @@ public class BlocklistMySqlRepository implements BlocklistRepository {
                 new BlockId(urlBlocklist.getBlockId()),
                 new Link(urlBlocklist.getUrl()),
                 new BlockRemark(urlBlocklist.getRemark()),
-                BlocklistAdapter.convertStatus(urlBlocklist.getStatus().getCode()));
+                UrlBlocklistStatus.convert(urlBlocklist.getStatus()));
         blocklist.setId(urlBlocklist.getId());
         return blocklist;
     }
@@ -48,7 +47,7 @@ public class BlocklistMySqlRepository implements BlocklistRepository {
                 new BlockId(urlBlocklist.getBlockId()),
                 new Link(urlBlocklist.getUrl()),
                 new BlockRemark(urlBlocklist.getRemark()),
-                BlocklistAdapter.convertStatus(urlBlocklist.getStatus().getCode()));
+                UrlBlocklistStatus.convert(urlBlocklist.getStatus()));
         blocklist.setId(urlBlocklist.getId());
         return blocklist;
     }
@@ -60,7 +59,7 @@ public class BlocklistMySqlRepository implements BlocklistRepository {
         urlBlocklist.setUrl(blocklist.getLink().getUrl());
         urlBlocklist.setHash(blocklist.getLink().getHash());
         urlBlocklist.setRemark(blocklist.getRemark().getRemark());
-        urlBlocklist.setStatus(blocklist.isActive() ? UrlBlocklistStatus.ACTIVE : UrlBlocklistStatus.INVALID);
+        urlBlocklist.setStatus(UrlBlocklistStatus.convert(blocklist.getStatus()));
         urlBlocklistService.save(urlBlocklist);
     }
 

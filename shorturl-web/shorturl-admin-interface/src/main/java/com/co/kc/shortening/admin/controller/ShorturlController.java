@@ -15,6 +15,7 @@ import com.co.kc.shortening.admin.model.response.ShorturlAddVO;
 import com.co.kc.shortening.admin.model.response.ShorturlListVO;
 import com.co.kc.shortening.application.annotation.Auth;
 import com.co.kc.shortening.application.model.io.PagingResult;
+import com.co.kc.shortening.web.common.constants.enums.ShorturlFacadeStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class ShorturlController {
     public ShorturlAddVO addShorturl(@RequestBody @Validated ShorturlAddRequest request) {
         ShorturlAddCommand command = new ShorturlAddCommand();
         command.setRawLink(request.getRawLink());
-        command.setStatus(request.getStatus());
+        command.setStatus(ShorturlFacadeStatus.convert(request.getStatus()));
         command.setValidTimeStart(request.getValidTimeStart());
         command.setValidTimeEnd(request.getValidTimeEnd());
         ShorturlDTO shorturlDTO = shorturlAppService.add(command);
@@ -66,7 +67,7 @@ public class ShorturlController {
     public void updateShorturl(@RequestBody @Validated ShorturlUpdateRequest request) {
         ShorturlUpdateCommand command = new ShorturlUpdateCommand();
         command.setShortId(request.getShortId());
-        command.setStatus(request.getStatus());
+        command.setStatus(ShorturlFacadeStatus.convert(request.getStatus()));
         command.setValidTimeStart(request.getValidStart());
         command.setValidTimeEnd(request.getValidEnd());
         shorturlAppService.update(command);

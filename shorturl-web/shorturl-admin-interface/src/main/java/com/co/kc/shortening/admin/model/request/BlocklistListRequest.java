@@ -1,5 +1,6 @@
 package com.co.kc.shortening.admin.model.request;
 
+import com.co.kc.shortening.web.common.constants.enums.BlockFacadeStatus;
 import com.co.kc.shortening.application.model.io.Paging;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -12,5 +13,5 @@ import lombok.EqualsAndHashCode;
 @Data
 public class BlocklistListRequest extends Paging {
     @ApiModelProperty(value = "状态")
-    private Integer status;
+    private BlockFacadeStatus status;
 }

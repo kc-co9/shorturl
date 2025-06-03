@@ -4,9 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 /**
  * @author kc
  */
@@ -15,48 +12,44 @@ public class UserTests {
 
     @Before
     public void initUser() {
-        user = new User(new UserId(10L),
-                new UserEmail("username@test.com"),
-                new UserName("testName"),
-                new UserPassword("testPassword"),
-                Collections.emptyList());
+        user = UserFactory.createTestUser();
     }
 
     @Test
-    public void testCreateUserSuccessfully() {
-        Assert.assertEquals(new UserId(10L), user.getUserId());
-        Assert.assertEquals(new UserEmail("username@test.com"), user.getEmail());
-        Assert.assertEquals(new UserName("testName"), user.getName());
-        Assert.assertTrue(user.validatePassword(new UserPassword("testPassword")));
-        Assert.assertFalse(user.validatePassword(new UserPassword("testWrongPassword")));
-        Assert.assertEquals(Collections.emptyList(), user.getRoleIds());
+    public void testUserPropertiesSucceedToSet() {
+        Assert.assertEquals(UserFactory.getTestUserId(), user.getUserId());
+        Assert.assertEquals(UserFactory.getTestUserEmail(), user.getEmail());
+        Assert.assertEquals(UserFactory.getTestUserName(), user.getName());
+        Assert.assertTrue(user.validateRawPassword(UserFactory.getTestUserRawPassword(), UserFactory.testPasswordService));
+        Assert.assertFalse(user.validateRawPassword(UserFactory.getTestUserWrongRawPassword(), UserFactory.testPasswordService));
+        Assert.assertEquals(UserFactory.getTestRoleIds(), user.getRoleIds());
     }
 
     @Test
     public void testUserChangeUserName() {
-        Assert.assertEquals(new UserName("testName"), user.getName());
-        user.changeUserName(new UserName("testOtherName"));
-        Assert.assertEquals(new UserName("testOtherName"), user.getName());
+        Assert.assertEquals(UserFactory.getTestUserName(), user.getName());
+        user.changeUserName(UserFactory.getTestUserChangedName());
+        Assert.assertEquals(UserFactory.getTestUserChangedName(), user.getName());
     }
 
     @Test
     public void testUserChangeUserEmail() {
-        Assert.assertEquals(new UserEmail("username@test.com"), user.getEmail());
-        user.changeEmail(new UserEmail("otherusername@test.com"));
-        Assert.assertEquals(new UserEmail("otherusername@test.com"), user.getEmail());
+        Assert.assertEquals(UserFactory.getTestUserEmail(), user.getEmail());
+        user.changeEmail(UserFactory.getTestUserChangedEmail());
+        Assert.assertEquals(UserFactory.getTestUserChangedEmail(), user.getEmail());
     }
 
     @Test
     public void testUserChangeUserPassword() {
-        Assert.assertTrue(user.validatePassword(new UserPassword("testPassword")));
-        user.changePassword(new UserPassword("testChangePassword"));
-        Assert.assertTrue(user.validatePassword(new UserPassword("testChangePassword")));
+        Assert.assertTrue(user.validateRawPassword(UserFactory.getTestUserRawPassword(), UserFactory.testPasswordService));
+        user.changePassword(UserFactory.getTestUserChangedPassword());
+        Assert.assertTrue(user.validateRawPassword(UserFactory.getTestUserChangedRawPassword(), UserFactory.testPasswordService));
     }
 
     @Test
     public void testUserChangeUserRole() {
-        Assert.assertEquals(Collections.emptyList(), user.getRoleIds());
-        user.changeRole(Arrays.asList(new RoleId(1L), new RoleId(2L)));
-        Assert.assertEquals(Arrays.asList(new RoleId(1L), new RoleId(2L)), user.getRoleIds());
+        Assert.assertEquals(UserFactory.getTestRoleIds(), user.getRoleIds());
+        user.changeRole(UserFactory.getTestChangedRoleIds());
+        Assert.assertEquals(UserFactory.getTestChangedRoleIds(), user.getRoleIds());
     }
 }

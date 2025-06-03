@@ -1,5 +1,6 @@
 package com.co.kc.shortening.admin.model.response;
 
+import com.co.kc.shortening.web.common.constants.enums.ShorturlFacadeStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class ShorturlListVO {
      * 状态 0-未知 1-激活 2-失效
      */
     @ApiModelProperty(value = "状态")
-    private Integer status;
+    private ShorturlFacadeStatus status;
     /**
      * 有效期-开始时间
      */

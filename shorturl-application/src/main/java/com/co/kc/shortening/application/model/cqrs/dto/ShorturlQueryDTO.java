@@ -1,5 +1,6 @@
 package com.co.kc.shortening.application.model.cqrs.dto;
 
+import com.co.kc.shortening.shorturl.domain.model.ShorturlStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -28,9 +29,9 @@ public class ShorturlQueryDTO {
      */
     private String shortLink;
     /**
-     * 状态 0-未知 1-激活 2-失效
+     * 状态
      */
-    private Integer status;
+    private ShorturlStatus status;
     /**
      * 有效期-开始时间
      */

@@ -7,6 +7,7 @@ import com.co.kc.shortening.application.model.cqrs.query.BlocklistQuery;
 import com.co.kc.shortening.application.model.io.PagingResult;
 import com.co.kc.shortening.application.service.queryservice.BlocklistQueryService;
 import com.co.kc.shortening.infrastructure.mybatis.entity.UrlBlocklist;
+import com.co.kc.shortening.infrastructure.mybatis.enums.UrlBlocklistStatus;
 import com.co.kc.shortening.infrastructure.mybatis.service.UrlBlocklistService;
 import com.co.kc.shortening.common.utils.FunctionUtils;
 
@@ -33,7 +34,7 @@ public class BlocklistQueryMySqlService implements BlocklistQueryService {
             blocklistQueryDTO.setBlockId(blocklist.getBlockId());
             blocklistQueryDTO.setBlockLink(blocklist.getUrl());
             blocklistQueryDTO.setRemark(blocklist.getRemark());
-            blocklistQueryDTO.setStatus(blocklist.getStatus().getCode());
+            blocklistQueryDTO.setStatus(UrlBlocklistStatus.convert(blocklist.getStatus()));
             blocklistQueryDTO.setCreateTime(blocklist.getCreateTime());
             return blocklistQueryDTO;
         });

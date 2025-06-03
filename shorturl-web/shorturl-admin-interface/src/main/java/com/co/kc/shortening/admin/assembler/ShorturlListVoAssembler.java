@@ -2,6 +2,7 @@ package com.co.kc.shortening.admin.assembler;
 
 import com.co.kc.shortening.application.model.cqrs.dto.ShorturlQueryDTO;
 import com.co.kc.shortening.admin.model.response.ShorturlListVO;
+import com.co.kc.shortening.web.common.constants.enums.ShorturlFacadeStatus;
 
 /**
  * @author kc
@@ -15,7 +16,7 @@ public class ShorturlListVoAssembler {
         shorturlListVO.setShortId(shorturlQueryDTO.getShortId());
         shorturlListVO.setRawLink(shorturlQueryDTO.getRawLink());
         shorturlListVO.setShortLink(shorturlQueryDTO.getShortLink());
-        shorturlListVO.setStatus(shorturlQueryDTO.getStatus());
+        shorturlListVO.setStatus(ShorturlFacadeStatus.convert(shorturlQueryDTO.getStatus()));
         shorturlListVO.setValidTimeStart(shorturlQueryDTO.getValidStart());
         shorturlListVO.setValidTimeEnd(shorturlQueryDTO.getValidEnd());
         return shorturlListVO;

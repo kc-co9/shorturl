@@ -1,5 +1,6 @@
 package com.co.kc.shortening.admin.model.response;
 
+import com.co.kc.shortening.web.common.constants.enums.BlockFacadeStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -31,7 +32,7 @@ public class BlocklistListVO {
      * 状态
      */
     @ApiModelProperty(value = "状态")
-    private Integer status;
+    private BlockFacadeStatus status;
 
     /**
      * 创建时间

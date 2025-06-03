@@ -6,20 +6,23 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
-
 public class ShorturlTests {
     private Shorturl shorturl;
 
     @Before
     public void initShorturl() {
-        ShortId shortId = new ShortId(10L);
-        ShortCode code = new ShortCode("testCode");
-        Link rawLink = new Link("http://www.test.com");
-        ShorturlStatus status = ShorturlStatus.ONLINE;
-        ValidTimeInterval validTime = new ValidTimeInterval(LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1));
-        shorturl = new Shorturl(shortId, code, rawLink, status, validTime);
+        shorturl = ShorturlFactory.createShorturl();
     }
+
+    @Test
+    public void testShorturlPropertiesSucceedToSet() {
+        Assert.assertEquals(ShorturlFactory.getTestShortId(), shorturl.getShortId());
+        Assert.assertEquals(ShorturlFactory.getTestShortCode(), shorturl.getShortCode());
+        Assert.assertEquals(ShorturlFactory.testValidTime, shorturl.getValidTime());
+        Assert.assertEquals(ShorturlFactory.getTestRawLink(), shorturl.getRawLink());
+        Assert.assertEquals(ShorturlFactory.testStatus, shorturl.getStatus());
+    }
+
 
     @Test
     public void testActivate() {
@@ -41,18 +44,14 @@ public class ShorturlTests {
 
     @Test
     public void testUpdateValidTime() {
-        ValidTimeInterval validTime = new ValidTimeInterval(LocalDateTime.now().minusDays(10), LocalDateTime.now().minusDays(1));
-        shorturl.changeValidTime(validTime);
-
-        Assert.assertEquals(validTime, shorturl.getValidTime());
+        shorturl.changeValidTime(ShorturlFactory.testChangedValidTime);
+        Assert.assertEquals(ShorturlFactory.testChangedValidTime, shorturl.getValidTime());
     }
 
     @Test
     public void testIsInValidTime() {
         Assert.assertTrue(shorturl.isInValidTime());
-
-        ValidTimeInterval validTime = new ValidTimeInterval(LocalDateTime.now().minusDays(10), LocalDateTime.now().minusDays(1));
-        shorturl.changeValidTime(validTime);
+        shorturl.changeValidTime(ShorturlFactory.testExpiredValidTime);
         Assert.assertFalse(shorturl.isInValidTime());
     }
 
@@ -60,20 +59,14 @@ public class ShorturlTests {
     public void testAutoInactivateWhenUpdateExpiredValidTime() {
         shorturl.activate();
         Assert.assertTrue(shorturl.isActive());
-
-        ValidTimeInterval expiredValidTime =
-                new ValidTimeInterval(LocalDateTime.now().minusDays(10), LocalDateTime.now().minusDays(1));
-        shorturl.changeValidTime(expiredValidTime);
+        shorturl.changeValidTime(ShorturlFactory.testExpiredValidTime);
         Assert.assertFalse(shorturl.isInValidTime());
         Assert.assertFalse(shorturl.isActive());
     }
 
     @Test
     public void testFailActivateBecauseOfNotInValidTime() {
-        ValidTimeInterval expiredValidTime =
-                new ValidTimeInterval(LocalDateTime.now().minusDays(10), LocalDateTime.now().minusDays(1));
-        shorturl.changeValidTime(expiredValidTime);
-
+        shorturl.changeValidTime(ShorturlFactory.testExpiredValidTime);
         try {
             shorturl.activate();
         } catch (BusinessException e) {
@@ -84,9 +77,8 @@ public class ShorturlTests {
     }
 
     @Test
-    public void testGetLink() {
-        Link shortHost = new Link("http://www.short.com");
-        Link shortLink = shorturl.getLink(shortHost);
-        Assert.assertEquals("http://www.short.com/testCode", shortLink.getUrl());
+    public void testGetShortLink() {
+        Link shortLink = shorturl.getLink(ShorturlFactory.getTestShortDomain());
+        Assert.assertEquals(ShorturlFactory.testShortLink, shortLink.getUrl());
     }
 }

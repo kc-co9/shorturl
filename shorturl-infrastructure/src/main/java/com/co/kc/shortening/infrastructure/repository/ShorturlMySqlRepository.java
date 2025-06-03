@@ -1,6 +1,5 @@
 package com.co.kc.shortening.infrastructure.repository;
 
-import com.co.kc.shortening.application.adapter.ShorturlAdapter;
 import com.co.kc.shortening.infrastructure.mybatis.entity.UrlMapping;
 import com.co.kc.shortening.infrastructure.mybatis.enums.UrlMappingStatus;
 import com.co.kc.shortening.infrastructure.mybatis.service.UrlMappingService;
@@ -30,7 +29,7 @@ public class ShorturlMySqlRepository implements ShorturlRepository {
                 new ShortId(urlMapping.getShortId()),
                 new ShortCode(urlMapping.getCode()),
                 new Link(urlMapping.getUrl()),
-                ShorturlAdapter.convertStatus(urlMapping.getStatus().getCode()),
+                UrlMappingStatus.convert(urlMapping.getStatus()),
                 new ValidTimeInterval(urlMapping.getValidStart(), urlMapping.getValidEnd()));
         shorturl.setId(urlMapping.getId());
         return shorturl;
@@ -47,7 +46,7 @@ public class ShorturlMySqlRepository implements ShorturlRepository {
                 new ShortId(urlMapping.getShortId()),
                 new ShortCode(urlMapping.getCode()),
                 new Link(urlMapping.getUrl()),
-                ShorturlAdapter.convertStatus(urlMapping.getStatus().getCode()),
+                UrlMappingStatus.convert(urlMapping.getStatus()),
                 new ValidTimeInterval(urlMapping.getValidStart(), urlMapping.getValidEnd()));
         shorturl.setId(urlMapping.getId());
         return shorturl;
@@ -60,7 +59,7 @@ public class ShorturlMySqlRepository implements ShorturlRepository {
         urlMapping.setUrl(shorturl.getRawLink().getUrl());
         urlMapping.setCode(shorturl.getShortCode().getCode());
         urlMapping.setHash(shorturl.getRawLink().getHash());
-        urlMapping.setStatus(shorturl.isActive() ? UrlMappingStatus.ACTIVE : UrlMappingStatus.INVALID);
+        urlMapping.setStatus(UrlMappingStatus.convert(shorturl.getStatus()));
         urlMapping.setValidStart(shorturl.getValidTime().getStartTime());
         urlMapping.setValidEnd(shorturl.getValidTime().getEndTime());
         urlMappingService.save(urlMapping);

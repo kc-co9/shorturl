@@ -8,6 +8,7 @@ import com.co.kc.shortening.application.model.io.PagingResult;
 import com.co.kc.shortening.application.provider.ShortDomainProvider;
 import com.co.kc.shortening.application.service.queryservice.ShorturlQueryService;
 import com.co.kc.shortening.infrastructure.mybatis.entity.UrlMapping;
+import com.co.kc.shortening.infrastructure.mybatis.enums.UrlMappingStatus;
 import com.co.kc.shortening.infrastructure.mybatis.service.UrlMappingService;
 import com.co.kc.shortening.common.utils.FunctionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +41,7 @@ public class ShorturlQueryMySqlService implements ShorturlQueryService {
             shorturlQueryDTO.setCode(urlMapping.getCode());
             shorturlQueryDTO.setRawLink(urlMapping.getUrl());
             shorturlQueryDTO.setShortLink(shortDomainProvider.getDomain() + "/" + urlMapping.getCode());
-            shorturlQueryDTO.setStatus(urlMapping.getStatus().getCode());
+            shorturlQueryDTO.setStatus(UrlMappingStatus.convert(urlMapping.getStatus()));
             shorturlQueryDTO.setValidStart(urlMapping.getValidStart());
             shorturlQueryDTO.setValidEnd(urlMapping.getValidEnd());
             return shorturlQueryDTO;

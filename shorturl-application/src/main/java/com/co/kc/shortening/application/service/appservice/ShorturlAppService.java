@@ -1,6 +1,5 @@
 package com.co.kc.shortening.application.service.appservice;
 
-import com.co.kc.shortening.application.adapter.ShorturlAdapter;
 import com.co.kc.shortening.application.model.cqrs.command.shorturl.ShorturlAddCommand;
 import com.co.kc.shortening.application.model.cqrs.command.shorturl.ShorturlUpdateCommand;
 import com.co.kc.shortening.application.model.cqrs.dto.ShorturlDTO;
@@ -40,7 +39,7 @@ public class ShorturlAppService {
 
     public ShorturlDTO add(ShorturlAddCommand command) {
         Link rawLink = new Link(command.getRawLink());
-        ShorturlStatus status = ShorturlAdapter.convertStatus(command.getStatus());
+        ShorturlStatus status = command.getStatus();
         ValidTimeInterval validTime = new ValidTimeInterval(command.getValidTimeStart(), command.getValidTimeEnd());
         blocklistService.validate(rawLink);
 
@@ -56,7 +55,7 @@ public class ShorturlAppService {
 
     public void update(ShorturlUpdateCommand command) {
         ShortId shortId = new ShortId(command.getShortId());
-        ShorturlStatus status = ShorturlAdapter.convertStatus(command.getStatus());
+        ShorturlStatus status = command.getStatus();
         ValidTimeInterval validTime = new ValidTimeInterval(command.getValidTimeStart(), command.getValidTimeEnd());
 
         Shorturl shorturl = shorturlRepository.find(shortId);

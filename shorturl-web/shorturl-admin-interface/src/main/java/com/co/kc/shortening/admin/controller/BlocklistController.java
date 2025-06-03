@@ -15,6 +15,7 @@ import com.co.kc.shortening.admin.model.request.BlocklistUpdateRequest;
 import com.co.kc.shortening.admin.model.response.BlocklistListVO;
 import com.co.kc.shortening.application.annotation.Auth;
 import com.co.kc.shortening.application.model.io.PagingResult;
+import com.co.kc.shortening.web.common.constants.enums.BlockFacadeStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class BlocklistController {
     @ApiOperation(value = "链接黑名单列表")
     public PagingResult<BlocklistListVO> blocklistList(@ModelAttribute @Validated BlocklistListRequest request) {
         BlocklistQuery query = new BlocklistQuery();
-        query.setStatus(request.getStatus());
+        query.setStatus(BlockFacadeStatus.convert(request.getStatus()));
         query.setPageNo(request.getPageNo());
         query.setPageSize(request.getPageSize());
         PagingResult<BlocklistQueryDTO> pagingResult = blocklistQueryService.queryBlocklist(query);
@@ -52,7 +53,7 @@ public class BlocklistController {
         BlocklistAddCommand blocklistAddCommand = new BlocklistAddCommand();
         blocklistAddCommand.setBlockLink(request.getBlockLink());
         blocklistAddCommand.setRemark(request.getRemark());
-        blocklistAddCommand.setStatus(request.getStatus());
+        blocklistAddCommand.setStatus(BlockFacadeStatus.convert(request.getStatus()));
         blocklistAppService.add(blocklistAddCommand);
     }
 
@@ -63,7 +64,7 @@ public class BlocklistController {
         BlocklistUpdateCommand command = new BlocklistUpdateCommand();
         command.setBlockId(request.getBlockId());
         command.setRemark(request.getRemark());
-        command.setStatus(request.getStatus());
+        command.setStatus(BlockFacadeStatus.convert(request.getStatus()));
         blocklistAppService.update(command);
     }
 
@@ -75,6 +76,5 @@ public class BlocklistController {
         command.setBlockId(request.getBlockId());
         blocklistAppService.remove(command);
     }
-
 
 }

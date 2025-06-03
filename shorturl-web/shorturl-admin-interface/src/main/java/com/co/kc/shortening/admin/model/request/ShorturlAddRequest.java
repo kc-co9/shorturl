@@ -1,5 +1,6 @@
 package com.co.kc.shortening.admin.model.request;
 
+import com.co.kc.shortening.web.common.constants.enums.ShorturlFacadeStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class ShorturlAddRequest {
 
     @NotNull(message = "状态不能为空")
     @ApiModelProperty(value = "状态")
-    private Integer status;
+    private ShorturlFacadeStatus status;
 
     @NotNull(message = "有效期开始时间不能为空")
     @ApiModelProperty(value = "有效期开始时间")

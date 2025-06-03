@@ -1,6 +1,7 @@
 package com.co.kc.shortening.application.model.cqrs.query;
 
 import com.co.kc.shortening.application.model.io.Paging;
+import com.co.kc.shortening.blocklist.domain.model.BlockStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,5 +18,5 @@ public class BlocklistQuery extends Paging {
     /**
      * 状态
      */
-    private Integer status;
+    private BlockStatus status;
 }

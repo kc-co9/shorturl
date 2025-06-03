@@ -4,9 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 /**
  * @author kc
  */
@@ -15,27 +12,27 @@ public class RoleTests {
 
     @Before
     public void initRole() {
-        role = new Role(new RoleId(10L), new RoleName("testRole"), Collections.emptyList());
+        role = RoleFactory.createRole();
     }
 
     @Test
-    public void testCreateRoleSuccessfully() {
-        Assert.assertEquals(new RoleId(10L), role.getRoleId());
-        Assert.assertEquals(new RoleName("testRole"), role.getName());
-        Assert.assertEquals(Collections.emptyList(), role.getPermissionIds());
+    public void testRolePropertiesSucceedToSet() {
+        Assert.assertEquals(RoleFactory.getTestRoleId(), role.getRoleId());
+        Assert.assertEquals(RoleFactory.getTestRoleName(), role.getName());
+        Assert.assertEquals(RoleFactory.getTestPermissionIds(), role.getPermissionIds());
     }
 
     @Test
     public void testRoleChangeName() {
-        Assert.assertEquals(new RoleName("testRole"), role.getName());
-        role.changeName(new RoleName("testChangeRole"));
-        Assert.assertEquals(new RoleName("testChangeRole"), role.getName());
+        Assert.assertEquals(RoleFactory.getTestRoleName(), role.getName());
+        role.changeName(RoleFactory.getTestRoleChangedName());
+        Assert.assertEquals(RoleFactory.getTestRoleChangedName(), role.getName());
     }
 
     @Test
     public void testRolePermission() {
-        Assert.assertEquals(Collections.emptyList(), role.getPermissionIds());
-        role.changePermission(Arrays.asList(new PermissionId(1L), new PermissionId(2L)));
-        Assert.assertEquals(Arrays.asList(new PermissionId(1L), new PermissionId(2L)), role.getPermissionIds());
+        Assert.assertEquals(RoleFactory.getTestPermissionIds(), role.getPermissionIds());
+        role.changePermission(RoleFactory.getTestChangedPermissionIds());
+        Assert.assertEquals(RoleFactory.getTestChangedPermissionIds(), role.getPermissionIds());
     }
 }

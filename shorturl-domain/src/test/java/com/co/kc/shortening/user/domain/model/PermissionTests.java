@@ -12,28 +12,27 @@ public class PermissionTests {
 
     @Before
     public void initPermission() {
-        permission = new Permission(
-                new PermissionId(10L), new PermissionValue("perm:test"), new PermissionDesc("permission desc"));
+        permission = PermissionFactory.createPermission();
     }
 
     @Test
-    public void testCreatePermissionSuccessfully() {
-        Assert.assertEquals(new PermissionId(10L), permission.getPermissionId());
-        Assert.assertEquals(new PermissionValue("perm:test"), permission.getPermissionValue());
-        Assert.assertEquals(new PermissionDesc("permission desc"), permission.getPermissionDesc());
+    public void testPermissionPropertiesSucceedToSet() {
+        Assert.assertEquals(PermissionFactory.getTestPermissionId(), permission.getPermissionId());
+        Assert.assertEquals(PermissionFactory.getTestPermissionValue(), permission.getPermissionValue());
+        Assert.assertEquals(PermissionFactory.getTestPermissionDesc(), permission.getPermissionDesc());
     }
 
     @Test
     public void testPermissionChangePermissionValue() {
-        Assert.assertEquals(new PermissionValue("perm:test"), permission.getPermissionValue());
-        permission.changePermission(new PermissionValue("perm:other:test"));
-        Assert.assertEquals(new PermissionValue("perm:other:test"), permission.getPermissionValue());
+        Assert.assertEquals(PermissionFactory.getTestPermissionValue(), permission.getPermissionValue());
+        permission.changePermission(PermissionFactory.getTestChangedPermissionValue());
+        Assert.assertEquals(PermissionFactory.getTestChangedPermissionValue(), permission.getPermissionValue());
     }
 
     @Test
     public void testPermissionChangePermissionDesc() {
-        Assert.assertEquals(new PermissionDesc("permission desc"), permission.getPermissionDesc());
-        permission.changeDescription(new PermissionDesc("permission other desc"));
-        Assert.assertEquals(new PermissionDesc("permission other desc"), permission.getPermissionDesc());
+        Assert.assertEquals(PermissionFactory.getTestPermissionDesc(), permission.getPermissionDesc());
+        permission.changeDescription(PermissionFactory.getTestChangedPermissionDesc());
+        Assert.assertEquals(PermissionFactory.getTestChangedPermissionDesc(), permission.getPermissionDesc());
     }
 }

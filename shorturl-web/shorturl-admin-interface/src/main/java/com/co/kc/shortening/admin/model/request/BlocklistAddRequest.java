@@ -1,5 +1,6 @@
 package com.co.kc.shortening.admin.model.request;
 
+import com.co.kc.shortening.web.common.constants.enums.BlockFacadeStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -20,7 +21,7 @@ public class BlocklistAddRequest {
      */
     @NotNull(message = "状态为空")
     @ApiModelProperty(value = "状态")
-    private Integer status;
+    private BlockFacadeStatus status;
 
     /**
      * 备注
