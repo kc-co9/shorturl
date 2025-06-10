@@ -16,7 +16,7 @@ public class BlocklistListVoAssembler {
         blocklistListVO.setBlockId(blocklistQueryDTO.getBlockId());
         blocklistListVO.setBlockLink(blocklistQueryDTO.getBlockLink());
         blocklistListVO.setRemark(blocklistQueryDTO.getRemark());
-        blocklistListVO.setStatus(BlockFacadeStatus.convert(blocklistQueryDTO.getStatus()));
+        blocklistListVO.setStatus(BlockFacadeStatus.convert(blocklistQueryDTO.getStatus()).orElse(null));
         blocklistListVO.setCreateTime(blocklistQueryDTO.getCreateTime());
         return blocklistListVO;
     }

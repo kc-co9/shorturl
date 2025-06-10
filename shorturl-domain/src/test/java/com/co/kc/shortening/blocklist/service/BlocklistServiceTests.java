@@ -40,7 +40,7 @@ public class BlocklistServiceTests {
         try {
             blocklistService.validate(new Link("http://www.active.com"));
         } catch (BusinessException ex) {
-            Assert.assertEquals("短链已被禁用", ex.getMessage());
+            Assert.assertEquals("短链已被禁用", ex.getMsg());
             return;
         }
         Assert.fail();

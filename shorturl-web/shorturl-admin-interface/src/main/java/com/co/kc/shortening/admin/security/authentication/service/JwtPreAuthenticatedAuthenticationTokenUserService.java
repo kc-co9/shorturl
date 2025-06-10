@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.AuthenticationUserDetailsSe
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -16,7 +15,6 @@ import java.util.Objects;
 /**
  * @author kc
  */
-@Component
 public class JwtPreAuthenticatedAuthenticationTokenUserService implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
     private final SessionClient sessionClient;
 

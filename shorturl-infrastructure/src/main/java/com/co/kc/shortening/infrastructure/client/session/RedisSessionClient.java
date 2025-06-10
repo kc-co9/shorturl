@@ -1,8 +1,8 @@
 package com.co.kc.shortening.infrastructure.client.session;
 
-import com.alibaba.fastjson2.JSON;
 import com.co.kc.shortening.application.client.SessionClient;
 import com.co.kc.shortening.application.model.client.SessionDTO;
+import com.co.kc.shortening.common.utils.JsonUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.concurrent.TimeUnit;
@@ -20,12 +20,12 @@ public class RedisSessionClient implements SessionClient {
     @Override
     public SessionDTO get(String sessionId) {
         String session = redisTemplate.opsForValue().get(sessionId);
-        return JSON.parseObject(session, SessionDTO.class);
+        return JsonUtils.fromJson(session, SessionDTO.class);
     }
 
     @Override
     public void save(String sessionId, SessionDTO sessionDTO, Long expired, TimeUnit timeUnit) {
-        redisTemplate.opsForValue().set(sessionId, JSON.toJSONString(sessionDTO), expired, timeUnit);
+        redisTemplate.opsForValue().set(sessionId, JsonUtils.toJson(sessionDTO), expired, timeUnit);
     }
 
     @Override

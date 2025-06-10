@@ -1,9 +1,10 @@
 package com.co.kc.shortening.web.common.constants.enums;
 
-import com.co.kc.shortening.application.model.enums.BaseEnum;
 import com.co.kc.shortening.blocklist.domain.model.BlockStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.Optional;
 
 /**
  * 黑名单门面状态
@@ -24,19 +25,31 @@ public enum BlockFacadeStatus implements BaseEnum {
 
     private final Integer code;
 
-    public static BlockStatus convert(BlockFacadeStatus status) {
-        if (BlockFacadeStatus.ONLINE.equals(status)) {
-            return BlockStatus.ONLINE;
-        } else {
-            return BlockStatus.OFFLINE;
+    public static Optional<BlockStatus> convert(BlockFacadeStatus status) {
+        if (status == null) {
+            return Optional.empty();
+        }
+        switch (status) {
+            case ONLINE:
+                return Optional.of(BlockStatus.ONLINE);
+            case OFFLINE:
+                return Optional.of(BlockStatus.OFFLINE);
+            default:
+                return Optional.empty();
         }
     }
 
-    public static BlockFacadeStatus convert(BlockStatus status) {
-        if (BlockStatus.ONLINE.equals(status)) {
-            return BlockFacadeStatus.ONLINE;
-        } else {
-            return BlockFacadeStatus.OFFLINE;
+    public static Optional<BlockFacadeStatus> convert(BlockStatus status) {
+        if (status == null) {
+            return Optional.empty();
+        }
+        switch (status) {
+            case ONLINE:
+                return Optional.of(BlockFacadeStatus.ONLINE);
+            case OFFLINE:
+                return Optional.of(BlockFacadeStatus.OFFLINE);
+            default:
+                return Optional.empty();
         }
     }
 }

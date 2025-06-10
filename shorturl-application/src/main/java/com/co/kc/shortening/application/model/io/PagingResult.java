@@ -1,5 +1,6 @@
 package com.co.kc.shortening.application.model.io;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.util.Assert;
 
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
  * @author kc
  */
 @Getter
+@AllArgsConstructor
 public class PagingResult<T> {
     /**
      * 当前分页

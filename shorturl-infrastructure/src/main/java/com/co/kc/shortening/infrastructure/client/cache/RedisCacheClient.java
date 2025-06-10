@@ -1,8 +1,8 @@
 package com.co.kc.shortening.infrastructure.client.cache;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.TypeReference;
 import com.co.kc.shortening.application.client.CacheClient;
+import com.co.kc.shortening.common.utils.JsonUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,13 +28,13 @@ public class RedisCacheClient implements CacheClient {
     @Override
     public void set(String key, Object value) {
         Assert.isTrue(StringUtils.isNotBlank(key), "cache key is null");
-        redisTemplate.opsForValue().set(key, JSON.toJSONString(value));
+        redisTemplate.opsForValue().set(key, JsonUtils.toJson(value));
     }
 
     @Override
     public void set(String key, Object value, long timeout, TimeUnit timeUnit) {
         Assert.isTrue(StringUtils.isNotBlank(key), "cache key is null");
-        redisTemplate.opsForValue().set(key, JSON.toJSONString(value), timeout, timeUnit);
+        redisTemplate.opsForValue().set(key, JsonUtils.toJson(value), timeout, timeUnit);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class RedisCacheClient implements CacheClient {
             return Optional.empty();
         }
 
-        return Optional.ofNullable(JSON.parseObject(value, clazz));
+        return Optional.ofNullable(JsonUtils.fromJson(value, clazz));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class RedisCacheClient implements CacheClient {
             return Optional.empty();
         }
 
-        return Optional.ofNullable(JSON.parseObject(value, typeReference));
+        return Optional.ofNullable(JsonUtils.fromJson(value, typeReference));
     }
 
     @Override

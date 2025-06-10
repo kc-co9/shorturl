@@ -1,6 +1,6 @@
 package com.co.kc.shortening.infrastructure.utils;
 
-import com.alibaba.fastjson2.JSON;
+import com.co.kc.shortening.common.utils.JsonUtils;
 import com.co.kc.shortening.common.utils.ReflectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -59,6 +59,6 @@ public class SpELUtils {
         if (ReflectUtils.isPrimitive(value.getClass())) {
             return String.valueOf(value);
         }
-        return JSON.toJSONString(value);
+        return JsonUtils.toJson(value);
     }
 }

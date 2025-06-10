@@ -1,6 +1,6 @@
 package com.co.kc.shortening.admin.security.deniedhandler;
 
-import com.alibaba.fastjson2.JSON;
+import com.co.kc.shortening.common.utils.JsonUtils;
 import com.co.kc.shortening.web.common.Result;
 import com.co.kc.shortening.web.common.constants.ResultCode;
 import org.springframework.security.core.AuthenticationException;
@@ -27,6 +27,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         Result<?> response = Result.error(ResultCode.AUTH_FAIL, "身份认证失败");
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType("application/json;charset=UTF-8");
-        httpServletResponse.getWriter().print(JSON.toJSONString(response));
+        httpServletResponse.getWriter().print(JsonUtils.toJson(response));
     }
 }

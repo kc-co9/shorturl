@@ -12,6 +12,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class BlocklistListRequest extends Paging {
+    @ApiModelProperty(value = "黑名单ID")
+    private Long blockId;
+
     @ApiModelProperty(value = "状态")
     private BlockFacadeStatus status;
 }

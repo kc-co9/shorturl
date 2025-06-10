@@ -12,6 +12,7 @@ public class RoleFactory {
     public static final String testRoleChangedName = "testChangedRole";
     public static final List<Long> testPermissionIds = Collections.emptyList();
     public static final List<Long> testChangedPermissionIds = Arrays.asList(1L, 2L);
+    public static final List<String> testPermissionValueList = Collections.emptyList();
 
     public static Role createRole() {
         return new Role(

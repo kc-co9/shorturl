@@ -37,8 +37,7 @@ public class AdministratorController {
         UserQuery query = new UserQuery();
         query.setEmail(request.getEmail());
         query.setUsername(request.getUsername());
-        query.setPageNo(request.getPageNo());
-        query.setPageSize(request.getPageSize());
+        query.setPaging(request.getPaging());
         PagingResult<UserQueryDTO> pagingResult = userQueryService.queryUser(query);
         return pagingResult.mapping(AdministratorListVoAssembler::userQueryDTOToVO);
     }

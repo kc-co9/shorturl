@@ -70,7 +70,7 @@ public class ShorturlTests {
         try {
             shorturl.activate();
         } catch (BusinessException e) {
-            Assert.assertEquals("短链已过期，激活失败", e.getMessage());
+            Assert.assertEquals("短链已过期，激活失败", e.getMsg());
             return;
         }
         Assert.fail();

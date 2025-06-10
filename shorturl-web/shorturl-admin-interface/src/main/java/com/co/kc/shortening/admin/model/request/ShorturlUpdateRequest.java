@@ -24,10 +24,10 @@ public class ShorturlUpdateRequest {
     @NotNull(message = "有效期开始时间不能为空")
     @ApiModelProperty(value = "有效期开始时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime validStart;
+    private LocalDateTime validTimeStart;
 
     @NotNull(message = "有效期结束时间不能为空")
     @ApiModelProperty(value = "有效期结束时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime validEnd;
+    private LocalDateTime validTimeEnd;
 }

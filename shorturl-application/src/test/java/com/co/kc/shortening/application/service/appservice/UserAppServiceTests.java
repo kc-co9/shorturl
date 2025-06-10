@@ -38,7 +38,7 @@ public class UserAppServiceTests {
             UserDetailQuery query = new UserDetailQuery(signInDTO.getUserId());
             userAppService.userDetail(query);
         } catch (AuthException ex) {
-            Assert.assertEquals("用户尚未登陆", ex.getMessage());
+            Assert.assertEquals("用户尚未登陆", ex.getMsg());
             return;
         }
         Assert.fail();
@@ -87,7 +87,7 @@ public class UserAppServiceTests {
         try {
             userAppService.signIn(new SignInCommand(UserFactory.testUserEmail, UserFactory.testUserRawPassword));
         } catch (AuthException ex) {
-            Assert.assertEquals("user is not exist", ex.getMessage());
+            Assert.assertEquals("user is not exist", ex.getMsg());
             return;
         }
         Assert.fail();

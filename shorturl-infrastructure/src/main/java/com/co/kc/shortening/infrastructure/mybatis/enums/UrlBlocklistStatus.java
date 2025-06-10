@@ -5,6 +5,8 @@ import com.co.kc.shortening.blocklist.domain.model.BlockStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Optional;
+
 /**
  * @author kc
  */
@@ -27,21 +29,32 @@ public enum UrlBlocklistStatus {
     @EnumValue
     private final Integer code;
 
-    public static BlockStatus convert(UrlBlocklistStatus status) {
-        if (ACTIVE.equals(status)) {
-            return BlockStatus.ONLINE;
-        } else if (INVALID.equals(status)) {
-            return BlockStatus.OFFLINE;
-        } else {
-            return null;
+    public static Optional<BlockStatus> convert(UrlBlocklistStatus status) {
+        if (status == null) {
+            return Optional.empty();
+        }
+        switch (status) {
+            case ACTIVE:
+                return Optional.of(BlockStatus.ONLINE);
+            case INVALID:
+                return Optional.of(BlockStatus.OFFLINE);
+            case NONE:
+            default:
+                return Optional.empty();
         }
     }
 
-    public static UrlBlocklistStatus convert(BlockStatus status) {
-        if (BlockStatus.ONLINE.equals(status)) {
-            return UrlBlocklistStatus.ACTIVE;
-        } else {
-            return UrlBlocklistStatus.INVALID;
+    public static Optional<UrlBlocklistStatus> convert(BlockStatus status) {
+        if (status == null) {
+            return Optional.empty();
+        }
+        switch (status) {
+            case ONLINE:
+                return Optional.of(UrlBlocklistStatus.ACTIVE);
+            case OFFLINE:
+                return Optional.of(UrlBlocklistStatus.INVALID);
+            default:
+                return Optional.empty();
         }
     }
 

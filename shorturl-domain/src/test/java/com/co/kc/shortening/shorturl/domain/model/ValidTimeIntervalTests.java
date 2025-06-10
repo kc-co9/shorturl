@@ -14,7 +14,7 @@ public class ValidTimeIntervalTests {
         try {
             new ValidTimeInterval(null, LocalDateTime.MAX);
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "startTime is null");
+            Assert.assertEquals("startTime is null", e.getMessage());
             return;
         }
         Assert.fail();
@@ -25,7 +25,7 @@ public class ValidTimeIntervalTests {
         try {
             new ValidTimeInterval(LocalDateTime.MIN, null);
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "endTime is null");
+            Assert.assertEquals("endTime is null", e.getMessage());
             return;
         }
         Assert.fail();
@@ -36,7 +36,7 @@ public class ValidTimeIntervalTests {
         try {
             new ValidTimeInterval(LocalDateTime.MAX, LocalDateTime.MIN);
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "endTime is less than startTime");
+            Assert.assertEquals("endTime is less than startTime", e.getMessage());
             return;
         }
         Assert.fail();

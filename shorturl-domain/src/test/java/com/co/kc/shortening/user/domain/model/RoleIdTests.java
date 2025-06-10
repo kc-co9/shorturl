@@ -12,7 +12,7 @@ public class RoleIdTests {
         try {
             new RoleId(null);
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "id is null");
+            Assert.assertEquals("id is null", e.getMessage());
             return;
         }
         Assert.fail();
@@ -23,7 +23,7 @@ public class RoleIdTests {
         try {
             new RoleId(-1L);
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "id is less than or equal to 0");
+            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
             return;
         }
         Assert.fail();
@@ -34,7 +34,7 @@ public class RoleIdTests {
         try {
             new RoleId(0L);
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "id is less than or equal to 0");
+            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
             return;
         }
         Assert.fail();

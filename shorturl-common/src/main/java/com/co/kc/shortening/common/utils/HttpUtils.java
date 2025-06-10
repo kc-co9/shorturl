@@ -1,7 +1,5 @@
 package com.co.kc.shortening.common.utils;
 
-
-import com.alibaba.fastjson2.JSON;
 import com.co.kc.shortening.common.exception.HttpException;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -71,7 +69,7 @@ public class HttpUtils {
         Headers.Builder headerBuilder = new Headers.Builder();
         headers.forEach(headerBuilder::add);
         Headers requestHeaders = headerBuilder.build();
-        RequestBody requestBody = RequestBody.create(JSON.toJSONString(body), MEDIA_JSON);
+        RequestBody requestBody = RequestBody.create(JsonUtils.toJson(body), MEDIA_JSON);
         Request request = new Request.Builder()
                 .url(path)
                 .headers(requestHeaders)

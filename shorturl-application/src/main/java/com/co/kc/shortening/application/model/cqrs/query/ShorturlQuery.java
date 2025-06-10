@@ -1,6 +1,7 @@
 package com.co.kc.shortening.application.model.cqrs.query;
 
 import com.co.kc.shortening.application.model.io.Paging;
+import com.co.kc.shortening.shorturl.domain.model.ShorturlStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,7 +26,7 @@ public class ShorturlQuery extends Paging {
     /**
      * 状态
      */
-    private Integer status;
+    private ShorturlStatus status;
 
     /**
      * 有效期开始

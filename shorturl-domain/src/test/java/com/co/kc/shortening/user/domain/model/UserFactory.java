@@ -1,6 +1,6 @@
 package com.co.kc.shortening.user.domain.model;
 
-import com.co.kc.shortening.user.service.BcryptPasswordService;
+import com.co.kc.shortening.user.service.Sha256PasswordService;
 import com.co.kc.shortening.user.service.PasswordService;
 
 import java.util.Arrays;
@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class UserFactory {
     public static final Long testUserId = 10L;
+    public static final String testUserToken = "testToken";
     public static final String testUserEmail = "test_name@test.com";
     public static final String testUserWrongEmail = "test_wrong_name@test.com";
     public static final String testUserChangedEmail = "test_changed_name@test.com";
@@ -21,7 +22,7 @@ public class UserFactory {
     public static final List<Long> testUserRoleIds = Collections.emptyList();
     public static final List<Long> testUserChangedRoleIds = Arrays.asList(1L, 2L);
 
-    public static final PasswordService testPasswordService = new BcryptPasswordService();
+    public static final PasswordService testPasswordService = new Sha256PasswordService();
 
     public static User createTestUser() {
         return new User(

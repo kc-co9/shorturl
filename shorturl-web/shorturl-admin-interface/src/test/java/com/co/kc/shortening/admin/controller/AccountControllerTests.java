@@ -1,30 +1,184 @@
 package com.co.kc.shortening.admin.controller;
 
-import com.co.kc.shortening.application.client.IdClient;
+import com.co.kc.shortening.admin.mock.SecurityMock;
+import com.co.kc.shortening.admin.model.request.AdministratorSignInRequest;
+import com.co.kc.shortening.admin.model.response.AdministratorDetailVO;
+import com.co.kc.shortening.admin.model.response.AdministratorSignInVO;
+import com.co.kc.shortening.admin.security.MethodSecurityConfig;
+import com.co.kc.shortening.admin.security.WebSecurityConfig;
+import com.co.kc.shortening.admin.security.constant.ParamsConstants;
+import com.co.kc.shortening.admin.starter.ShortUrlAdminTestApplication;
 import com.co.kc.shortening.application.client.SessionClient;
 import com.co.kc.shortening.application.client.TokenClient;
+import com.co.kc.shortening.application.model.cqrs.command.user.SignInCommand;
+import com.co.kc.shortening.application.model.cqrs.command.user.SignOutCommand;
+import com.co.kc.shortening.application.model.cqrs.dto.SignInDTO;
+import com.co.kc.shortening.application.model.cqrs.dto.UserDetailDTO;
+import com.co.kc.shortening.application.model.cqrs.query.UserDetailQuery;
 import com.co.kc.shortening.application.service.appservice.UserAppService;
-import com.co.kc.shortening.user.domain.model.UserMemoryRepository;
-import com.co.kc.shortening.user.domain.model.UserRepository;
-import com.co.kc.shortening.user.service.AuthService;
-import com.co.kc.shortening.user.service.PasswordService;
-import com.co.kc.shortening.user.service.UserService;
+import com.co.kc.shortening.common.exception.AuthException;
+import com.co.kc.shortening.common.utils.JsonUtils;
+import com.co.kc.shortening.user.domain.model.UserFactory;
+import com.co.kc.shortening.web.common.Result;
+import com.co.kc.shortening.web.common.constants.ResultCode;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@RunWith(SpringRunner.class)
+@WebMvcTest(AccountController.class)
+@Import({MethodSecurityConfig.class, WebSecurityConfig.class})
+@ContextConfiguration(classes = ShortUrlAdminTestApplication.class)
 public class AccountControllerTests {
-    private AccountController accountController;
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private TokenClient tokenClient;
+    @MockBean
+    private SessionClient sessionClient;
+    @MockBean
+    private UserAppService userAppService;
 
+    private MockHttpServletRequestBuilder signInRequest;
+    private MockHttpServletRequestBuilder signOutRequest;
+    private MockHttpServletRequestBuilder accountDetailRequest;
 
     @Before
-    public void initAccountController() {
-//        UserRepository userRepository = new UserMemoryRepository();
-//        AuthService authService = new AuthService();
-//        UserService userService;
-//        PasswordService passwordService;
-//        IdClient<Long> userIdClient;
-//        SessionClient sessionClient;
-//        TokenClient tokenClient;
-//        UserAppService userAppService = new UserAppService();
-//        accountController = new AccountController(userAppService);
+    public void initMockRequestBuilder() {
+        signInRequest = post("/account/v1/signIn").contentType(MediaType.APPLICATION_JSON).characterEncoding(UTF_8.name());
+        signOutRequest = post("/account/v1/signOut").contentType(MediaType.APPLICATION_JSON).characterEncoding(UTF_8.name());
+        accountDetailRequest = get("/account/v1/accountDetail").contentType(MediaType.APPLICATION_JSON).characterEncoding(UTF_8.name());
+    }
+
+    @Test
+    public void testSignInWhenAccountIsCorrect() throws Exception {
+        SignInDTO signInDTO = new SignInDTO(UserFactory.testUserId, UserFactory.testUserToken);
+        doReturn(signInDTO).when(userAppService).signIn(any(SignInCommand.class));
+
+        AdministratorSignInRequest body = new AdministratorSignInRequest(UserFactory.testUserEmail, UserFactory.testUserRawPassword);
+        MockHttpServletRequestBuilder httpPost = signInRequest.content(JsonUtils.toJson(body));
+        mockMvc.perform(httpPost)
+                .andExpect(status().isOk())
+                .andExpect(mvcResult -> {
+                    Result<AdministratorSignInVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<AdministratorSignInVO>>() {
+                    });
+                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assert.assertEquals(UserFactory.testUserToken, result.getData().getAuthToken());
+                });
+
+        ArgumentCaptor<SignInCommand> argumentCaptor = ArgumentCaptor.forClass(SignInCommand.class);
+        verify(userAppService).signIn(argumentCaptor.capture());
+        SignInCommand signInCommand = argumentCaptor.getValue();
+        Assert.assertEquals(UserFactory.testUserEmail, signInCommand.getEmail());
+        Assert.assertEquals(UserFactory.testUserRawPassword, signInCommand.getPassword());
+    }
+
+    @Test
+    public void testSignInWhenEmailIsWrong() throws Exception {
+        doThrow(new AuthException("user is not exist")).when(userAppService).signIn(any(SignInCommand.class));
+
+
+        AdministratorSignInRequest body = new AdministratorSignInRequest(UserFactory.testUserWrongEmail, UserFactory.testUserRawPassword);
+        MockHttpServletRequestBuilder httpPost = signInRequest.content(JsonUtils.toJson(body));
+        mockMvc.perform(httpPost)
+                .andExpect(status().isOk())
+                .andExpect(mvcResult -> {
+                    Result<AdministratorSignInVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<AdministratorSignInVO>>() {
+                    });
+                    Assert.assertEquals(ResultCode.AUTH_FAIL.getCode(), result.getCode());
+                    Assert.assertEquals("user is not exist", result.getMsg());
+                });
+
+        ArgumentCaptor<SignInCommand> argumentCaptor = ArgumentCaptor.forClass(SignInCommand.class);
+        verify(userAppService).signIn(argumentCaptor.capture());
+        SignInCommand signInCommand = argumentCaptor.getValue();
+        Assert.assertEquals(UserFactory.testUserWrongEmail, signInCommand.getEmail());
+        Assert.assertEquals(UserFactory.testUserRawPassword, signInCommand.getPassword());
+    }
+
+    @Test
+    public void testSignInWhenPasswordIsWrong() throws Exception {
+        doThrow(new AuthException("user is failed to authenticate")).when(userAppService).signIn(any(SignInCommand.class));
+
+        AdministratorSignInRequest body = new AdministratorSignInRequest(UserFactory.testUserEmail, UserFactory.testUserWrongRawPassword);
+        MockHttpServletRequestBuilder httpPost = signInRequest.content(JsonUtils.toJson(body));
+        mockMvc.perform(httpPost)
+                .andExpect(status().isOk())
+                .andExpect(mvcResult -> {
+                    Result<AdministratorSignInVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<AdministratorSignInVO>>() {
+                    });
+                    Assert.assertEquals(ResultCode.AUTH_FAIL.getCode(), result.getCode());
+                    Assert.assertEquals("user is failed to authenticate", result.getMsg());
+                });
+
+        ArgumentCaptor<SignInCommand> argumentCaptor = ArgumentCaptor.forClass(SignInCommand.class);
+        verify(userAppService).signIn(argumentCaptor.capture());
+        SignInCommand signInCommand = argumentCaptor.getValue();
+        Assert.assertEquals(UserFactory.testUserEmail, signInCommand.getEmail());
+        Assert.assertEquals(UserFactory.testUserWrongRawPassword, signInCommand.getPassword());
+    }
+
+    @Test
+    public void testSignOut() throws Exception {
+        SecurityMock.mockTestUserHasAuthenticated(tokenClient, sessionClient);
+
+        doNothing().when(userAppService).signOut(any(SignOutCommand.class));
+
+        MockHttpServletRequestBuilder httpPost = signOutRequest.header(ParamsConstants.TOKEN, UserFactory.testUserToken);
+        mockMvc.perform(httpPost)
+                .andExpect(status().isOk())
+                .andExpect(mvcResult -> {
+                    Result<?> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<?>>() {
+                    });
+                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                });
+
+        ArgumentCaptor<SignOutCommand> argumentCaptor = ArgumentCaptor.forClass(SignOutCommand.class);
+        verify(userAppService).signOut(argumentCaptor.capture());
+        SignOutCommand signOutCommand = argumentCaptor.getValue();
+        Assert.assertEquals(UserFactory.testUserId, signOutCommand.getUserId());
+    }
+
+    @Test
+    public void testAccountDetail() throws Exception {
+        SecurityMock.mockTestUserHasAuthenticated(tokenClient, sessionClient);
+
+        UserDetailDTO userDetailDTO = new UserDetailDTO(UserFactory.testUserId, UserFactory.testUserName);
+        doReturn(userDetailDTO).when(userAppService).userDetail(any(UserDetailQuery.class));
+
+        MockHttpServletRequestBuilder httpGet = accountDetailRequest.header(ParamsConstants.TOKEN, UserFactory.testUserToken);
+        mockMvc.perform(httpGet)
+                .andExpect(status().isOk())
+                .andExpect(mvcResult -> {
+                    Result<AdministratorDetailVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<AdministratorDetailVO>>() {
+                    });
+                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assert.assertEquals(UserFactory.testUserId, result.getData().getAdministratorId());
+                    Assert.assertEquals(UserFactory.testUserName, result.getData().getAdministratorName());
+                });
+
+        ArgumentCaptor<UserDetailQuery> argumentCaptor = ArgumentCaptor.forClass(UserDetailQuery.class);
+        verify(userAppService).userDetail(argumentCaptor.capture());
+        UserDetailQuery userDetailQuery = argumentCaptor.getValue();
+        Assert.assertEquals(UserFactory.testUserId, userDetailQuery.getUserId());
     }
 }

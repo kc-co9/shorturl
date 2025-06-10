@@ -6,8 +6,9 @@ import com.co.kc.shortening.application.model.cqrs.command.blocklist.BlocklistUp
 import com.co.kc.shortening.application.client.IdClient;
 import com.co.kc.shortening.application.model.cqrs.dto.BlocklistDTO;
 import com.co.kc.shortening.blocklist.domain.model.*;
+import com.co.kc.shortening.common.exception.AlreadyExistsException;
+import com.co.kc.shortening.common.exception.NotFoundException;
 import com.co.kc.shortening.shared.domain.model.Link;
-import com.co.kc.shortening.common.exception.BusinessException;
 
 /**
  * 黑名单-应用服务
@@ -33,7 +34,7 @@ public class BlocklistAppService {
 
         Blocklist blocklist = blocklistRepository.find(blockedLink);
         if (blocklist != null) {
-            throw new BusinessException("黑名单已存在");
+            throw new AlreadyExistsException("黑名单已存在");
         }
 
         blocklist = new Blocklist(blockId, blockedLink, blockRemark, status);
@@ -49,7 +50,7 @@ public class BlocklistAppService {
 
         Blocklist blocklist = blocklistRepository.find(blockId);
         if (blocklist == null) {
-            throw new BusinessException("黑名单不存在");
+            throw new NotFoundException("黑名单不存在");
         }
 
         blocklist.changeStatus(status);
@@ -61,7 +62,7 @@ public class BlocklistAppService {
         BlockId blockId = new BlockId(command.getBlockId());
         Blocklist blocklist = blocklistRepository.find(blockId);
         if (blocklist == null) {
-            throw new BusinessException("黑名单不存在");
+            throw new NotFoundException("黑名单不存在");
         }
         blocklistRepository.remove(blocklist);
     }

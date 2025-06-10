@@ -16,7 +16,7 @@ public class ShorturlListVoAssembler {
         shorturlListVO.setShortId(shorturlQueryDTO.getShortId());
         shorturlListVO.setRawLink(shorturlQueryDTO.getRawLink());
         shorturlListVO.setShortLink(shorturlQueryDTO.getShortLink());
-        shorturlListVO.setStatus(ShorturlFacadeStatus.convert(shorturlQueryDTO.getStatus()));
+        shorturlListVO.setStatus(ShorturlFacadeStatus.convert(shorturlQueryDTO.getStatus()).orElse(null));
         shorturlListVO.setValidTimeStart(shorturlQueryDTO.getValidStart());
         shorturlListVO.setValidTimeEnd(shorturlQueryDTO.getValidEnd());
         return shorturlListVO;

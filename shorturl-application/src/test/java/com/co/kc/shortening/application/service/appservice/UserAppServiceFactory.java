@@ -17,7 +17,7 @@ public class UserAppServiceFactory {
 
         IdClient<Long> userIdClient = new RandomIdClient();
         SessionClient sessionClient = new MemorySessionClient();
-        TokenClient tokenClient = new JwtTokenClient();
+        TokenClient tokenClient = new MemoryTokenClient();
 
         return new UserAppService(
                 userRepository,
@@ -39,7 +39,7 @@ public class UserAppServiceFactory {
 
         IdClient<Long> userIdClient = new RandomIdClient();
         SessionClient sessionClient = new MemorySessionClient();
-        TokenClient tokenClient = new JwtTokenClient();
+        TokenClient tokenClient = new MemoryTokenClient();
 
         User user = UserFactory.createTestUser();
         userRepository.save(user);

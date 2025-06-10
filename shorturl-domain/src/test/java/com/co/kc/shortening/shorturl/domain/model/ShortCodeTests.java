@@ -12,7 +12,7 @@ public class ShortCodeTests {
         try {
             new ShortCode(null);
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "code is null");
+            Assert.assertEquals("code is null", e.getMessage());
             return;
         }
         Assert.fail();
@@ -23,7 +23,7 @@ public class ShortCodeTests {
         try {
             new ShortCode("");
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "code is null");
+            Assert.assertEquals("code is null", e.getMessage());
             return;
         }
         Assert.fail();

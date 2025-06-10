@@ -14,7 +14,7 @@ public class LinkTests {
         try {
             new Link(null);
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "url is null");
+            Assert.assertEquals("url is null", e.getMessage());
             return;
         }
         Assert.fail();
@@ -25,7 +25,7 @@ public class LinkTests {
         try {
             new Link("");
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "url is null");
+            Assert.assertEquals("url is null", e.getMessage());
             return;
         }
         Assert.fail();

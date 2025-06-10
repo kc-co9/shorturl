@@ -73,7 +73,7 @@ public class MemoryCacheClientTests {
         try {
             cacheClient.increment("testKey");
         } catch (BusinessException ex) {
-            Assert.assertEquals("非法操作", ex.getMessage());
+            Assert.assertEquals("非法操作", ex.getMsg());
             return;
         }
         Assert.fail();
@@ -133,7 +133,7 @@ public class MemoryCacheClientTests {
         try {
             cacheClient.increment("testKey");
         } catch (BusinessException ex) {
-            Assert.assertEquals("非法操作", ex.getMessage());
+            Assert.assertEquals("非法操作", ex.getMsg());
             return;
         }
         Assert.fail();

@@ -25,6 +25,8 @@ public class ResultAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+        // 设置 Content-Type（不再需要显式指定 UTF-8，JSON 默认使用 UTF-8）
+        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         if (body instanceof Result) {
             @SuppressWarnings("unchecked")
             Result<Object> result = (Result<Object>) body;

@@ -6,10 +6,10 @@ import com.co.kc.shortening.application.model.cqrs.dto.ShorturlDTO;
 import com.co.kc.shortening.application.provider.ShortDomainProvider;
 import com.co.kc.shortening.application.client.IdClient;
 import com.co.kc.shortening.blocklist.service.BlocklistService;
+import com.co.kc.shortening.common.exception.NotFoundException;
 import com.co.kc.shortening.shorturl.domain.model.ShortCode;
 import com.co.kc.shortening.shared.domain.model.Link;
 import com.co.kc.shortening.shorturl.domain.model.*;
-import com.co.kc.shortening.common.exception.BusinessException;
 
 /**
  * 短链-应用服务
@@ -60,7 +60,7 @@ public class ShorturlAppService {
 
         Shorturl shorturl = shorturlRepository.find(shortId);
         if (shorturl == null) {
-            throw new BusinessException("短链不存在");
+            throw new NotFoundException("短链不存在");
         }
 
         shorturl.changeStatus(status);
@@ -71,7 +71,7 @@ public class ShorturlAppService {
     public String redirect(String shortCode) {
         Shorturl shorturl = shorturlRepository.find(new ShortCode(shortCode));
         if (shorturl == null) {
-            throw new BusinessException("短链不存在");
+            throw new NotFoundException("短链不存在");
         }
 
         Link rawLink = shorturl.resolveToRawLink();

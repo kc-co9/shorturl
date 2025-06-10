@@ -33,7 +33,7 @@ public class AuthServiceTests {
         try {
             authService.authenticate(UserFactory.getTestUserWrongEmail(), UserFactory.getTestUserRawPassword());
         } catch (AuthException ex) {
-            Assert.assertEquals("user is not exist", ex.getMessage());
+            Assert.assertEquals("user is not exist", ex.getMsg());
             return;
         }
         Assert.fail();
@@ -45,7 +45,7 @@ public class AuthServiceTests {
         try {
             authService.authenticate(UserFactory.getTestUserEmail(), UserFactory.getTestUserWrongRawPassword());
         } catch (AuthException ex) {
-            Assert.assertEquals("user is failed to authenticate", ex.getMessage());
+            Assert.assertEquals("user is failed to authenticate", ex.getMsg());
             return;
         }
         Assert.fail();

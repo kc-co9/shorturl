@@ -1,8 +1,10 @@
 package com.co.kc.shortening.admin.security;
 
 import com.co.kc.shortening.admin.security.authentication.JwtPreAuthenticatedProcessingFilter;
+import com.co.kc.shortening.admin.security.authentication.service.JwtPreAuthenticatedAuthenticationTokenUserService;
 import com.co.kc.shortening.admin.security.deniedhandler.JwtAccessDeniedHandler;
 import com.co.kc.shortening.admin.security.deniedhandler.JwtAuthenticationEntryPoint;
+import com.co.kc.shortening.application.client.SessionClient;
 import com.co.kc.shortening.application.client.TokenClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -79,6 +81,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().permitAll()
         ;
+    }
+
+    @Bean
+    public static AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> JwtPreAuthenticatedAuthenticationTokenUserService(SessionClient sessionClient) {
+        return new JwtPreAuthenticatedAuthenticationTokenUserService(sessionClient);
     }
 
     @Bean

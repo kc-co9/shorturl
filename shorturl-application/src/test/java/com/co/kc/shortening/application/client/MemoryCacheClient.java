@@ -1,8 +1,8 @@
 package com.co.kc.shortening.application.client;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.TypeReference;
 import com.co.kc.shortening.common.exception.BusinessException;
+import com.co.kc.shortening.common.utils.JsonUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -21,12 +21,12 @@ public class MemoryCacheClient implements CacheClient {
 
     @Override
     public synchronized void set(String key, Object value) {
-        cache.put(key, JSON.toJSONString(value));
+        cache.put(key, JsonUtils.toJson(value));
     }
 
     @Override
     public synchronized void set(String key, Object value, long timeout, TimeUnit timeUnit) {
-        cache.put(key, JSON.toJSONString(value));
+        cache.put(key, JsonUtils.toJson(value));
         expired.put(key, System.currentTimeMillis() + timeUnit.toMillis(timeout));
     }
 
@@ -41,7 +41,7 @@ public class MemoryCacheClient implements CacheClient {
             expired.remove(key);
             return Optional.empty();
         }
-        return Optional.of(JSON.parseObject(jsonVal, clazz));
+        return Optional.of(JsonUtils.fromJson(jsonVal, clazz));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class MemoryCacheClient implements CacheClient {
             expired.remove(key);
             return Optional.empty();
         }
-        return Optional.of(JSON.parseObject(jsonVal, typeReference));
+        return Optional.of(JsonUtils.fromJson(jsonVal, typeReference));
     }
 
     @Override

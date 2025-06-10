@@ -15,6 +15,7 @@ import com.co.kc.shortening.admin.model.request.BlocklistUpdateRequest;
 import com.co.kc.shortening.admin.model.response.BlocklistListVO;
 import com.co.kc.shortening.application.annotation.Auth;
 import com.co.kc.shortening.application.model.io.PagingResult;
+import com.co.kc.shortening.common.exception.NotFoundException;
 import com.co.kc.shortening.web.common.constants.enums.BlockFacadeStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,9 +40,9 @@ public class BlocklistController {
     @ApiOperation(value = "链接黑名单列表")
     public PagingResult<BlocklistListVO> blocklistList(@ModelAttribute @Validated BlocklistListRequest request) {
         BlocklistQuery query = new BlocklistQuery();
-        query.setStatus(BlockFacadeStatus.convert(request.getStatus()));
-        query.setPageNo(request.getPageNo());
-        query.setPageSize(request.getPageSize());
+        query.setBlockId(request.getBlockId());
+        query.setStatus(BlockFacadeStatus.convert(request.getStatus()).orElse(null));
+        query.setPaging(request.getPaging());
         PagingResult<BlocklistQueryDTO> pagingResult = blocklistQueryService.queryBlocklist(query);
         return pagingResult.mapping(BlocklistListVoAssembler::blocklistQueryDTOToVO);
     }
@@ -53,7 +54,8 @@ public class BlocklistController {
         BlocklistAddCommand blocklistAddCommand = new BlocklistAddCommand();
         blocklistAddCommand.setBlockLink(request.getBlockLink());
         blocklistAddCommand.setRemark(request.getRemark());
-        blocklistAddCommand.setStatus(BlockFacadeStatus.convert(request.getStatus()));
+        blocklistAddCommand.setStatus(
+                BlockFacadeStatus.convert(request.getStatus()).orElseThrow(() -> new NotFoundException("状态为空")));
         blocklistAppService.add(blocklistAddCommand);
     }
 
@@ -64,7 +66,8 @@ public class BlocklistController {
         BlocklistUpdateCommand command = new BlocklistUpdateCommand();
         command.setBlockId(request.getBlockId());
         command.setRemark(request.getRemark());
-        command.setStatus(BlockFacadeStatus.convert(request.getStatus()));
+        command.setStatus(
+                BlockFacadeStatus.convert(request.getStatus()).orElseThrow(() -> new NotFoundException("状态为空")));
         blocklistAppService.update(command);
     }
 

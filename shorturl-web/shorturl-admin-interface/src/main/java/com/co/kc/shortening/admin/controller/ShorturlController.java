@@ -38,12 +38,12 @@ public class ShorturlController {
     @ApiOperation(value = "短链列表")
     public PagingResult<ShorturlListVO> shorturlList(@ModelAttribute @Validated ShorturlListRequest request) {
         ShorturlQuery query = new ShorturlQuery();
+        query.setShortId(request.getShortId());
         query.setCode(request.getCode());
-        query.setStatus(request.getStatus());
+        query.setStatus(ShorturlFacadeStatus.convert(request.getStatus()).orElse(null));
         query.setValidTimeStart(request.getValidTimeStart());
         query.setValidTimeEnd(request.getValidTimeEnd());
-        query.setPageNo(request.getPageNo());
-        query.setPageSize(request.getPageSize());
+        query.setPaging(request.getPaging());
         PagingResult<ShorturlQueryDTO> pagingResult = shorturlQueryService.queryShorturl(query);
         return pagingResult.mapping(ShorturlListVoAssembler::shorturlQueryDTOToVO);
     }
@@ -54,7 +54,7 @@ public class ShorturlController {
     public ShorturlAddVO addShorturl(@RequestBody @Validated ShorturlAddRequest request) {
         ShorturlAddCommand command = new ShorturlAddCommand();
         command.setRawLink(request.getRawLink());
-        command.setStatus(ShorturlFacadeStatus.convert(request.getStatus()));
+        command.setStatus(ShorturlFacadeStatus.convert(request.getStatus()).get());
         command.setValidTimeStart(request.getValidTimeStart());
         command.setValidTimeEnd(request.getValidTimeEnd());
         ShorturlDTO shorturlDTO = shorturlAppService.add(command);
@@ -67,9 +67,9 @@ public class ShorturlController {
     public void updateShorturl(@RequestBody @Validated ShorturlUpdateRequest request) {
         ShorturlUpdateCommand command = new ShorturlUpdateCommand();
         command.setShortId(request.getShortId());
-        command.setStatus(ShorturlFacadeStatus.convert(request.getStatus()));
-        command.setValidTimeStart(request.getValidStart());
-        command.setValidTimeEnd(request.getValidEnd());
+        command.setStatus(ShorturlFacadeStatus.convert(request.getStatus()).get());
+        command.setValidTimeStart(request.getValidTimeStart());
+        command.setValidTimeEnd(request.getValidTimeEnd());
         shorturlAppService.update(command);
     }
 

@@ -13,12 +13,12 @@ import com.co.kc.shortening.application.model.cqrs.dto.UserDetailDTO;
 import com.co.kc.shortening.application.model.client.SessionDTO;
 import com.co.kc.shortening.application.client.IdClient;
 import com.co.kc.shortening.application.client.SessionClient;
+import com.co.kc.shortening.common.exception.NotFoundException;
 import com.co.kc.shortening.user.domain.model.*;
 import com.co.kc.shortening.user.service.AuthService;
 import com.co.kc.shortening.user.service.PasswordService;
 import com.co.kc.shortening.user.service.UserService;
 import com.co.kc.shortening.common.exception.AuthException;
-import com.co.kc.shortening.common.exception.BusinessException;
 
 import java.util.Collections;
 import java.util.List;
@@ -87,7 +87,7 @@ public class UserAppService {
 
         User user = userRepository.find(userId);
         if (user == null) {
-            throw new BusinessException("用户不存在");
+            throw new NotFoundException("用户不存在");
         }
 
         String sessionId = String.valueOf(user.getUserId().getId());
@@ -114,7 +114,7 @@ public class UserAppService {
         UserId userId = new UserId(command.getUserId());
         User user = userRepository.find(userId);
         if (user == null) {
-            throw new BusinessException("用户不存在");
+            throw new NotFoundException("用户不存在");
         }
 
         UserEmail userEmail = new UserEmail(command.getEmail());
@@ -132,7 +132,7 @@ public class UserAppService {
         UserId userId = new UserId(command.getUserId());
         User user = userRepository.find(userId);
         if (user == null) {
-            throw new BusinessException("用户不存在");
+            throw new NotFoundException("用户不存在");
         }
 
         userRepository.remove(user);

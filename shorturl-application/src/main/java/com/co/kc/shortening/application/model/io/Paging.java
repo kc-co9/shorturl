@@ -1,6 +1,5 @@
 package com.co.kc.shortening.application.model.io;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,8 +30,19 @@ public class Paging {
      */
     @Transient
     @JsonIgnore
-    @JSONField(serialize = false, deserialize = false)
     public Paging getPaging() {
         return this;
+    }
+
+    /**
+     * set Paging Info
+     *
+     * @param paging is set
+     */
+    @Transient
+    @JsonIgnore
+    public void setPaging(Paging paging) {
+        this.pageNo = paging.getPageNo();
+        this.pageSize = paging.getPageSize();
     }
 }

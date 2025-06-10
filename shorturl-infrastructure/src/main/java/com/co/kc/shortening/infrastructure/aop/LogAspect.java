@@ -1,7 +1,7 @@
 package com.co.kc.shortening.infrastructure.aop;
 
-import com.alibaba.fastjson2.JSON;
 import com.co.kc.shortening.application.annotation.LogPrint;
+import com.co.kc.shortening.common.utils.JsonUtils;
 import com.co.kc.shortening.infrastructure.utils.AopUtils;
 import com.co.kc.shortening.common.utils.NetworkUtils;
 import com.google.common.base.Throwables;
@@ -89,12 +89,12 @@ public class LogAspect {
             Set<LogPrint.LogField> fieldSet = Arrays.stream(fields).collect(Collectors.toSet());
 
             StringBuilder info = new StringBuilder()
-                    .append(fieldSet.contains(LogPrint.LogField.ORIGIN_HEADER) ? printLine(LogPrint.LogField.ORIGIN_HEADER, JSON.toJSONString(header)) : "")
-                    .append(fieldSet.contains(LogPrint.LogField.ORIGIN_BODY) ? printLine(LogPrint.LogField.ORIGIN_BODY, JSON.toJSONString(body)) : "")
+                    .append(fieldSet.contains(LogPrint.LogField.ORIGIN_HEADER) ? printLine(LogPrint.LogField.ORIGIN_HEADER, JsonUtils.toJson(header)) : "")
+                    .append(fieldSet.contains(LogPrint.LogField.ORIGIN_BODY) ? printLine(LogPrint.LogField.ORIGIN_BODY, JsonUtils.toJson(body)) : "")
                     .append(fieldSet.contains(LogPrint.LogField.CLASS) ? printLine(LogPrint.LogField.CLASS, clazz.getName()) : "")
                     .append(fieldSet.contains(LogPrint.LogField.METHOD) ? printLine(LogPrint.LogField.METHOD, method.getName()) : "")
-                    .append(fieldSet.contains(LogPrint.LogField.METHOD_PARAMETER) ? printLine(LogPrint.LogField.METHOD_PARAMETER, JSON.toJSONString(params)) : "")
-                    .append(fieldSet.contains(LogPrint.LogField.METHOD_RETURN) ? printLine(LogPrint.LogField.METHOD_RETURN, JSON.toJSONString(returnVal)) : "")
+                    .append(fieldSet.contains(LogPrint.LogField.METHOD_PARAMETER) ? printLine(LogPrint.LogField.METHOD_PARAMETER, JsonUtils.toJson(params)) : "")
+                    .append(fieldSet.contains(LogPrint.LogField.METHOD_RETURN) ? printLine(LogPrint.LogField.METHOD_RETURN, JsonUtils.toJson(returnVal)) : "")
                     .append(fieldSet.contains(LogPrint.LogField.EXCEPTION) ? printLine(LogPrint.LogField.EXCEPTION, Optional.ofNullable(error).map(Throwables::getStackTraceAsString).orElse("")) : "")
                     .append(fieldSet.contains(LogPrint.LogField.DURATION) ? printLine(LogPrint.LogField.DURATION, String.format("%s毫秒", duration)) : "");
             LOGGER.info("LogAspect print request log: {}", info);

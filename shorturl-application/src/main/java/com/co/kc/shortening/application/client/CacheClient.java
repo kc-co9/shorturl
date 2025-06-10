@@ -1,6 +1,6 @@
 package com.co.kc.shortening.application.client;
 
-import com.alibaba.fastjson2.TypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
 import java.util.Optional;

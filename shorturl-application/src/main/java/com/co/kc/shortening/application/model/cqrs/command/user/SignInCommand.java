@@ -1,5 +1,6 @@
 package com.co.kc.shortening.application.model.cqrs.command.user;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author kc
  */
 @Getter
+@EqualsAndHashCode
 public class SignInCommand {
     private final String email;
     private final String password;

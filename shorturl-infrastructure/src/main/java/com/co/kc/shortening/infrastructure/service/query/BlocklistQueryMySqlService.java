@@ -27,14 +27,14 @@ public class BlocklistQueryMySqlService implements BlocklistQueryService {
     @Override
     public PagingResult<BlocklistQueryDTO> queryBlocklist(BlocklistQuery query) {
         IPage<UrlBlocklist> blocklistPage = urlBlocklistService.page(new Page<>(query.getPageNo(), query.getPageSize()), urlBlocklistService.getQueryWrapper()
-                .eq(Objects.nonNull(query.getStatus()), UrlBlocklist::getStatus, query.getStatus())
+                .eq(Objects.nonNull(query.getStatus()), UrlBlocklist::getStatus, UrlBlocklistStatus.convert(query.getStatus()).orElse(null))
                 .orderByDesc(UrlBlocklist::getId));
         List<BlocklistQueryDTO> blocklistList = FunctionUtils.mappingList(blocklistPage.getRecords(), blocklist -> {
             BlocklistQueryDTO blocklistQueryDTO = new BlocklistQueryDTO();
             blocklistQueryDTO.setBlockId(blocklist.getBlockId());
             blocklistQueryDTO.setBlockLink(blocklist.getUrl());
             blocklistQueryDTO.setRemark(blocklist.getRemark());
-            blocklistQueryDTO.setStatus(UrlBlocklistStatus.convert(blocklist.getStatus()));
+            blocklistQueryDTO.setStatus(UrlBlocklistStatus.convert(blocklist.getStatus()).get());
             blocklistQueryDTO.setCreateTime(blocklist.getCreateTime());
             return blocklistQueryDTO;
         });

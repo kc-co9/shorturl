@@ -50,5 +50,15 @@ public class DateUtils {
         return time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
+    public static boolean equals(LocalDateTime t1, LocalDateTime t2) {
+        if (t1 == t2) {
+            return true;
+        }
+        if (t1 == null || t2 == null) {
+            return false;
+        }
+        return t1.truncatedTo(ChronoUnit.SECONDS).compareTo(t2.truncatedTo(ChronoUnit.SECONDS)) == 0;
+    }
+
 
 }

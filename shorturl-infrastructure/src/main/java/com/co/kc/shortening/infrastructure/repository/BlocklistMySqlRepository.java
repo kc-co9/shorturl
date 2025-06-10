@@ -31,7 +31,7 @@ public class BlocklistMySqlRepository implements BlocklistRepository {
                 new BlockId(urlBlocklist.getBlockId()),
                 new Link(urlBlocklist.getUrl()),
                 new BlockRemark(urlBlocklist.getRemark()),
-                UrlBlocklistStatus.convert(urlBlocklist.getStatus()));
+                UrlBlocklistStatus.convert(urlBlocklist.getStatus()).get());
         blocklist.setId(urlBlocklist.getId());
         return blocklist;
     }
@@ -47,7 +47,7 @@ public class BlocklistMySqlRepository implements BlocklistRepository {
                 new BlockId(urlBlocklist.getBlockId()),
                 new Link(urlBlocklist.getUrl()),
                 new BlockRemark(urlBlocklist.getRemark()),
-                UrlBlocklistStatus.convert(urlBlocklist.getStatus()));
+                UrlBlocklistStatus.convert(urlBlocklist.getStatus()).get());
         blocklist.setId(urlBlocklist.getId());
         return blocklist;
     }
@@ -59,7 +59,7 @@ public class BlocklistMySqlRepository implements BlocklistRepository {
         urlBlocklist.setUrl(blocklist.getLink().getUrl());
         urlBlocklist.setHash(blocklist.getLink().getHash());
         urlBlocklist.setRemark(blocklist.getRemark().getRemark());
-        urlBlocklist.setStatus(UrlBlocklistStatus.convert(blocklist.getStatus()));
+        urlBlocklist.setStatus(UrlBlocklistStatus.convert(blocklist.getStatus()).get());
         urlBlocklistService.save(urlBlocklist);
     }
 
