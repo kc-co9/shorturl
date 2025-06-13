@@ -1,38 +1,38 @@
 package com.co.kc.shortening.user.domain.model;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class RoleTests {
+class RoleTests {
     private Role role;
 
-    @Before
-    public void initRole() {
+    @BeforeEach
+    void initRole() {
         role = RoleFactory.createRole();
     }
 
     @Test
-    public void testRolePropertiesSucceedToSet() {
-        Assert.assertEquals(RoleFactory.getTestRoleId(), role.getRoleId());
-        Assert.assertEquals(RoleFactory.getTestRoleName(), role.getName());
-        Assert.assertEquals(RoleFactory.getTestPermissionIds(), role.getPermissionIds());
+    void testRolePropertiesSucceedToSet() {
+        Assertions.assertEquals(RoleFactory.getTestRoleId(), role.getRoleId());
+        Assertions.assertEquals(RoleFactory.getTestRoleName(), role.getName());
+        Assertions.assertEquals(RoleFactory.getTestPermissionIds(), role.getPermissionIds());
     }
 
     @Test
-    public void testRoleChangeName() {
-        Assert.assertEquals(RoleFactory.getTestRoleName(), role.getName());
+    void testRoleChangeName() {
+        Assertions.assertEquals(RoleFactory.getTestRoleName(), role.getName());
         role.changeName(RoleFactory.getTestRoleChangedName());
-        Assert.assertEquals(RoleFactory.getTestRoleChangedName(), role.getName());
+        Assertions.assertEquals(RoleFactory.getTestRoleChangedName(), role.getName());
     }
 
     @Test
-    public void testRolePermission() {
-        Assert.assertEquals(RoleFactory.getTestPermissionIds(), role.getPermissionIds());
+    void testRolePermission() {
+        Assertions.assertEquals(RoleFactory.getTestPermissionIds(), role.getPermissionIds());
         role.changePermission(RoleFactory.getTestChangedPermissionIds());
-        Assert.assertEquals(RoleFactory.getTestChangedPermissionIds(), role.getPermissionIds());
+        Assertions.assertEquals(RoleFactory.getTestChangedPermissionIds(), role.getPermissionIds());
     }
 }

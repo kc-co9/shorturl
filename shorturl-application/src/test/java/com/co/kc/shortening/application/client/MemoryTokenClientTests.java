@@ -2,34 +2,34 @@ package com.co.kc.shortening.application.client;
 
 import com.co.kc.shortening.application.model.client.TokenDTO;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class MemoryTokenClientTests {
+class MemoryTokenClientTests {
     private TokenClient tokenClient;
 
-    @Before
+    @BeforeEach
     public void initTokenClient() {
         tokenClient = new MemoryTokenClient();
     }
 
     @Test
-    public void testCreateToken() {
+    void testCreateToken() {
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setUserId(10L);
         String token = tokenClient.create(tokenDTO);
-        Assert.assertTrue(StringUtils.isNotBlank(token));
+        Assertions.assertTrue(StringUtils.isNotBlank(token));
     }
 
     @Test
-    public void testParseTokenAfterCreatingToken() {
+    void testParseTokenAfterCreatingToken() {
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setUserId(10L);
         String token = tokenClient.create(tokenDTO);
-        Assert.assertTrue(StringUtils.isNotBlank(token));
+        Assertions.assertTrue(StringUtils.isNotBlank(token));
 
         TokenDTO parseTokenDTO = tokenClient.parse(token);
-        Assert.assertEquals(10L, parseTokenDTO.getUserId().longValue());
+        Assertions.assertEquals(10L, parseTokenDTO.getUserId().longValue());
     }
 }

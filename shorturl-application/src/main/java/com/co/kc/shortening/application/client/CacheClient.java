@@ -65,24 +65,6 @@ public interface CacheClient {
     void remove(List<String> keyList);
 
     /**
-     * 自增,用于数字类型缓存
-     *
-     * @param key 缓存KEY
-     * @return 返回自增后的值
-     */
-    Long increment(String key);
-
-    /**
-     * 自增,用于数字类型缓存
-     *
-     * @param key        缓存KEY
-     * @param step       自增步数
-     * @param expireTime 过期时间(单位:秒)
-     * @return 返回自增后的值
-     */
-    Long increment(String key, long step, long expireTime);
-
-    /**
      * 是否存在KEY
      *
      * @param key 缓存KEY

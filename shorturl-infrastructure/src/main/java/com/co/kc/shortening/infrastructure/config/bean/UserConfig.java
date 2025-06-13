@@ -3,8 +3,7 @@ package com.co.kc.shortening.infrastructure.config.bean;
 import com.co.kc.shortening.application.client.IdClient;
 import com.co.kc.shortening.application.client.SessionClient;
 import com.co.kc.shortening.application.client.TokenClient;
-import com.co.kc.shortening.application.service.appservice.UserAppService;
-import com.co.kc.shortening.application.service.queryservice.UserQueryService;
+import com.co.kc.shortening.application.service.app.UserAppService;
 import com.co.kc.shortening.infrastructure.client.id.bizid.UserIdClient;
 import com.co.kc.shortening.infrastructure.client.session.RedisSessionClient;
 import com.co.kc.shortening.infrastructure.client.token.JwtTokenClient;
@@ -36,27 +35,27 @@ public class UserConfig {
     }
 
     @Bean
-    public SessionClient sessionClient(RedisTemplate<String, String> sessionRedisTemplate) {
+    public RedisSessionClient sessionClient(RedisTemplate<String, String> sessionRedisTemplate) {
         return new RedisSessionClient(sessionRedisTemplate);
     }
 
     @Bean
-    public TokenClient tokenClient() {
+    public JwtTokenClient tokenClient() {
         return new JwtTokenClient();
     }
 
     @Bean
-    public UserRepository userRepository(AdministratorService administratorService) {
+    public UserMySqlRepository userRepository(AdministratorService administratorService) {
         return new UserMySqlRepository(administratorService);
     }
 
     @Bean
-    public RoleRepository roleRepository() {
+    public RoleMySqlRepository roleRepository() {
         return new RoleMySqlRepository();
     }
 
     @Bean
-    public PermissionRepository permissionRepository() {
+    public PermissionMySqlRepository permissionRepository() {
         return new PermissionMySqlRepository();
     }
 
@@ -66,12 +65,12 @@ public class UserConfig {
     }
 
     @Bean
-    public UserQueryService userQueryService(AdministratorService administratorService) {
+    public UserQueryMySqlService userQueryService(AdministratorService administratorService) {
         return new UserQueryMySqlService(administratorService);
     }
 
     @Bean
-    public PasswordService passwordService() {
+    public BcryptPasswordService bcryptPasswordService() {
         return new BcryptPasswordService();
     }
 

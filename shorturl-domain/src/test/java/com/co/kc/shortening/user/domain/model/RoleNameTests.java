@@ -1,51 +1,41 @@
 package com.co.kc.shortening.user.domain.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class RoleNameTests {
+class RoleNameTests {
     @Test
-    public void testCreateNullRoleName() {
-        try {
-            new RoleName(null);
-        } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("name is null or empty", ex.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateNullRoleName() {
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new RoleName(null));
+        Assertions.assertEquals("name is null or empty", ex.getMessage());
     }
 
     @Test
-    public void testCreateEmptyRoleName() {
-        try {
-            new RoleName("");
-        } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("name is null or empty", ex.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateEmptyRoleName() {
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new RoleName(""));
+        Assertions.assertEquals("name is null or empty", ex.getMessage());
     }
 
     @Test
-    public void testCreateRoleNameSuccessfully() {
+    void testCreateRoleNameSuccessfully() {
         RoleName roleName = new RoleName("testRoleName");
-        Assert.assertEquals("testRoleName", roleName.getName());
+        Assertions.assertEquals("testRoleName", roleName.getName());
     }
 
     @Test
-    public void testSameRoleNameIsEqual() {
+    void testSameRoleNameIsEqual() {
         RoleName roleName1 = new RoleName("testRoleName");
         RoleName roleName2 = new RoleName("testRoleName");
-        Assert.assertEquals(roleName1, roleName2);
+        Assertions.assertEquals(roleName1, roleName2);
     }
 
     @Test
-    public void testDifferentRoleNameIsNotEqual() {
+    void testDifferentRoleNameIsNotEqual() {
         RoleName roleName1 = new RoleName("testRoleName1");
         RoleName roleName2 = new RoleName("testRoleName2");
-        Assert.assertNotEquals(roleName1, roleName2);
+        Assertions.assertNotEquals(roleName1, roleName2);
     }
 }

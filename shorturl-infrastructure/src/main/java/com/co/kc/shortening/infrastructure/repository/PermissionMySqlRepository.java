@@ -18,6 +18,5 @@ public class PermissionMySqlRepository implements PermissionRepository {
 
     @Override
     public void save(Permission permission) {
-
     }
 }

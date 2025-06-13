@@ -18,6 +18,5 @@ public class RoleMySqlRepository implements RoleRepository {
 
     @Override
     public void save(Role role) {
-
     }
 }

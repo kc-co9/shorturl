@@ -5,11 +5,11 @@ import com.co.kc.shortening.admin.model.request.ShorturlListRequest;
 import com.co.kc.shortening.admin.model.request.ShorturlUpdateRequest;
 import com.co.kc.shortening.application.model.cqrs.command.shorturl.ShorturlAddCommand;
 import com.co.kc.shortening.application.model.cqrs.command.shorturl.ShorturlUpdateCommand;
-import com.co.kc.shortening.application.model.cqrs.dto.ShorturlDTO;
+import com.co.kc.shortening.application.model.cqrs.dto.ShorturlAddDTO;
 import com.co.kc.shortening.application.model.cqrs.dto.ShorturlQueryDTO;
 import com.co.kc.shortening.application.model.cqrs.query.ShorturlQuery;
-import com.co.kc.shortening.application.service.appservice.ShorturlAppService;
-import com.co.kc.shortening.application.service.queryservice.ShorturlQueryService;
+import com.co.kc.shortening.application.service.app.ShorturlAppService;
+import com.co.kc.shortening.application.service.query.ShorturlQueryService;
 import com.co.kc.shortening.admin.assembler.ShorturlListVoAssembler;
 import com.co.kc.shortening.admin.model.response.ShorturlAddVO;
 import com.co.kc.shortening.admin.model.response.ShorturlListVO;
@@ -57,8 +57,8 @@ public class ShorturlController {
         command.setStatus(ShorturlFacadeStatus.convert(request.getStatus()).get());
         command.setValidTimeStart(request.getValidTimeStart());
         command.setValidTimeEnd(request.getValidTimeEnd());
-        ShorturlDTO shorturlDTO = shorturlAppService.add(command);
-        return new ShorturlAddVO(shorturlDTO.getShorturl());
+        ShorturlAddDTO shorturlAddDTO = shorturlAppService.add(command);
+        return new ShorturlAddVO(shorturlAddDTO.getShorturl());
     }
 
     @Auth

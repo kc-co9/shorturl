@@ -1,62 +1,47 @@
 package com.co.kc.shortening.user.domain.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class UserIdTests {
+class UserIdTests {
     @Test
-    public void testCreateNullUserId() {
-        try {
-            new UserId(null);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is null", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateNullUserId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new UserId(null));
+        Assertions.assertEquals("id is null", e.getMessage());
     }
 
     @Test
-    public void testCreateLessThanZeroUserId() {
-        try {
-            new UserId(-1L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateLessThanZeroUserId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new UserId(-1L));
+        Assertions.assertEquals("id is less than or equal to 0", e.getMessage());
     }
 
     @Test
-    public void testCreateEqualToZeroUserId() {
-        try {
-            new UserId(0L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateEqualToZeroUserId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new UserId(0L));
+        Assertions.assertEquals("id is less than or equal to 0", e.getMessage());
     }
 
     @Test
-    public void testCreateUserIdSuccessfully() {
+    void testCreateUserIdSuccessfully() {
         UserId userId = new UserId(10L);
-        Assert.assertEquals(10L, userId.getId().longValue());
+        Assertions.assertEquals(10L, userId.getId().longValue());
     }
 
     @Test
-    public void testSameUserIdIsEqual() {
+    void testSameUserIdIsEqual() {
         UserId userId1 = new UserId(10L);
         UserId userId2 = new UserId(10L);
-        Assert.assertEquals(userId1, userId2);
+        Assertions.assertEquals(userId1, userId2);
     }
 
     @Test
-    public void testDifferentUserIdIsNotEqual() {
+    void testDifferentUserIdIsNotEqual() {
         UserId userId1 = new UserId(10L);
         UserId userId2 = new UserId(20L);
-        Assert.assertNotEquals(userId1, userId2);
+        Assertions.assertNotEquals(userId1, userId2);
     }
 }

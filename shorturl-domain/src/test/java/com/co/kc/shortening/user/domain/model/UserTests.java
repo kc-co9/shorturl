@@ -1,55 +1,55 @@
 package com.co.kc.shortening.user.domain.model;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class UserTests {
+class UserTests {
     private User user;
 
-    @Before
+    @BeforeEach
     public void initUser() {
         user = UserFactory.createTestUser();
     }
 
     @Test
-    public void testUserPropertiesSucceedToSet() {
-        Assert.assertEquals(UserFactory.getTestUserId(), user.getUserId());
-        Assert.assertEquals(UserFactory.getTestUserEmail(), user.getEmail());
-        Assert.assertEquals(UserFactory.getTestUserName(), user.getName());
-        Assert.assertTrue(user.validateRawPassword(UserFactory.getTestUserRawPassword(), UserFactory.testPasswordService));
-        Assert.assertFalse(user.validateRawPassword(UserFactory.getTestUserWrongRawPassword(), UserFactory.testPasswordService));
-        Assert.assertEquals(UserFactory.getTestRoleIds(), user.getRoleIds());
+    void testUserPropertiesSucceedToSet() {
+        Assertions.assertEquals(UserFactory.getTestUserId(), user.getUserId());
+        Assertions.assertEquals(UserFactory.getTestUserEmail(), user.getEmail());
+        Assertions.assertEquals(UserFactory.getTestUserName(), user.getName());
+        Assertions.assertTrue(user.validateRawPassword(UserFactory.getTestUserRawPassword(), UserFactory.testPasswordService));
+        Assertions.assertFalse(user.validateRawPassword(UserFactory.getTestUserWrongRawPassword(), UserFactory.testPasswordService));
+        Assertions.assertEquals(UserFactory.getTestRoleIds(), user.getRoleIds());
     }
 
     @Test
-    public void testUserChangeUserName() {
-        Assert.assertEquals(UserFactory.getTestUserName(), user.getName());
+    void testUserChangeUserName() {
+        Assertions.assertEquals(UserFactory.getTestUserName(), user.getName());
         user.changeUserName(UserFactory.getTestUserChangedName());
-        Assert.assertEquals(UserFactory.getTestUserChangedName(), user.getName());
+        Assertions.assertEquals(UserFactory.getTestUserChangedName(), user.getName());
     }
 
     @Test
-    public void testUserChangeUserEmail() {
-        Assert.assertEquals(UserFactory.getTestUserEmail(), user.getEmail());
+    void testUserChangeUserEmail() {
+        Assertions.assertEquals(UserFactory.getTestUserEmail(), user.getEmail());
         user.changeEmail(UserFactory.getTestUserChangedEmail());
-        Assert.assertEquals(UserFactory.getTestUserChangedEmail(), user.getEmail());
+        Assertions.assertEquals(UserFactory.getTestUserChangedEmail(), user.getEmail());
     }
 
     @Test
-    public void testUserChangeUserPassword() {
-        Assert.assertTrue(user.validateRawPassword(UserFactory.getTestUserRawPassword(), UserFactory.testPasswordService));
+    void testUserChangeUserPassword() {
+        Assertions.assertTrue(user.validateRawPassword(UserFactory.getTestUserRawPassword(), UserFactory.testPasswordService));
         user.changePassword(UserFactory.getTestUserChangedPassword());
-        Assert.assertTrue(user.validateRawPassword(UserFactory.getTestUserChangedRawPassword(), UserFactory.testPasswordService));
+        Assertions.assertTrue(user.validateRawPassword(UserFactory.getTestUserChangedRawPassword(), UserFactory.testPasswordService));
     }
 
     @Test
-    public void testUserChangeUserRole() {
-        Assert.assertEquals(UserFactory.getTestRoleIds(), user.getRoleIds());
+    void testUserChangeUserRole() {
+        Assertions.assertEquals(UserFactory.getTestRoleIds(), user.getRoleIds());
         user.changeRole(UserFactory.getTestChangedRoleIds());
-        Assert.assertEquals(UserFactory.getTestChangedRoleIds(), user.getRoleIds());
+        Assertions.assertEquals(UserFactory.getTestChangedRoleIds(), user.getRoleIds());
     }
 }

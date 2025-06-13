@@ -1,7 +1,7 @@
 package com.co.kc.shortening.application.provider;
 
 /**
- * 锻炼
+ * 短链
  */
 public class StaticShortDomainProvider implements ShortDomainProvider {
     @Override

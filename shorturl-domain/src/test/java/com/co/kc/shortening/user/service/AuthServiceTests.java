@@ -2,52 +2,44 @@ package com.co.kc.shortening.user.service;
 
 import com.co.kc.shortening.user.domain.model.*;
 import com.co.kc.shortening.common.exception.AuthException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
 /**
  * @author kc
  */
-public class AuthServiceTests {
-    private final UserRepository userRepository = new UserMemoryRepository();
+class AuthServiceTests {
+    private AuthService authService;
 
-    @Before
+    @BeforeEach
     public void initUserRepository() {
-        User user = UserFactory.createTestUser();
-        userRepository.save(user);
+        UserRepository userRepository = new UserMemoryRepository();
+        userRepository.save(UserFactory.createTestUser());
+        authService = new AuthService(userRepository, UserFactory.testPasswordService);
     }
 
     @Test
-    public void testAuthenticateSuccessfully() {
-        AuthService authService = new AuthService(userRepository, UserFactory.testPasswordService);
+    void testAuthenticateSuccessfully() {
         User user = authService.authenticate(UserFactory.getTestUserEmail(), UserFactory.getTestUserRawPassword());
-        Assert.assertNotNull(user);
+        Assertions.assertNotNull(user);
     }
 
     @Test
-    public void testFailToAuthenticateBecauseOfErrorEmail() {
-        AuthService authService = new AuthService(userRepository, UserFactory.testPasswordService);
-        try {
-            authService.authenticate(UserFactory.getTestUserWrongEmail(), UserFactory.getTestUserRawPassword());
-        } catch (AuthException ex) {
-            Assert.assertEquals("user is not exist", ex.getMsg());
-            return;
-        }
-        Assert.fail();
+    void testFailToAuthenticateBecauseOfErrorEmail() {
+        UserEmail userWrongEmail = UserFactory.getTestUserWrongEmail();
+        UserRawPassword userRawPassword = UserFactory.getTestUserRawPassword();
+        AuthException ex = Assertions.assertThrows(AuthException.class, () -> authService.authenticate(userWrongEmail, userRawPassword));
+        Assertions.assertEquals("user is not exist", ex.getMsg());
     }
 
     @Test
-    public void testFailToAuthenticateBecauseOfErrorPassword() {
-        AuthService authService = new AuthService(userRepository, UserFactory.testPasswordService);
-        try {
-            authService.authenticate(UserFactory.getTestUserEmail(), UserFactory.getTestUserWrongRawPassword());
-        } catch (AuthException ex) {
-            Assert.assertEquals("user is failed to authenticate", ex.getMsg());
-            return;
-        }
-        Assert.fail();
+    void testFailToAuthenticateBecauseOfErrorPassword() {
+        UserEmail userEmail = UserFactory.getTestUserEmail();
+        UserRawPassword userWrongRawPassword = UserFactory.getTestUserWrongRawPassword();
+        AuthException ex = Assertions.assertThrows(AuthException.class, () -> authService.authenticate(userEmail, userWrongRawPassword));
+        Assertions.assertEquals("user is failed to authenticate", ex.getMsg());
     }
 }

@@ -1,48 +1,48 @@
 package com.co.kc.shortening.blocklist.domain.model;
 
 import com.co.kc.shortening.shared.domain.model.Link;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class BlocklistMemoryRepositoryTests {
+class BlocklistMemoryRepositoryTests {
     private BlocklistRepository blocklistRepository;
 
-    @Before
+    @BeforeEach
     public void initBlocklistRepository() {
         blocklistRepository = new BlocklistMemoryRepository();
     }
 
     @Test
-    public void testFindNullByBlockId() {
+    void testFindNullByBlockId() {
         Blocklist blocklist = blocklistRepository.find(new BlockId(10L));
-        Assert.assertNull(blocklist);
+        Assertions.assertNull(blocklist);
     }
 
     @Test
-    public void testFindNullByLink() {
+    void testFindNullByLink() {
         Blocklist blocklist = blocklistRepository.find(new Link("http://www.test.com"));
-        Assert.assertNull(blocklist);
+        Assertions.assertNull(blocklist);
     }
 
     @Test
-    public void testSaveBlocklistSuccessfully() {
+    void testSaveBlocklistSuccessfully() {
         Blocklist blocklist = saveTestBlocklist();
 
-        Assert.assertNotNull(blocklistRepository.find(blocklist.getBlockId()));
-        Assert.assertNotNull(blocklistRepository.find(blocklist.getLink()));
+        Assertions.assertNotNull(blocklistRepository.find(blocklist.getBlockId()));
+        Assertions.assertNotNull(blocklistRepository.find(blocklist.getLink()));
 
-        Assert.assertEquals(blocklist.getBlockId(), blocklistRepository.find(blocklist.getBlockId()).getBlockId());
-        Assert.assertEquals(blocklist.getBlockId(), blocklistRepository.find(blocklist.getLink()).getBlockId());
+        Assertions.assertEquals(blocklist.getBlockId(), blocklistRepository.find(blocklist.getBlockId()).getBlockId());
+        Assertions.assertEquals(blocklist.getBlockId(), blocklistRepository.find(blocklist.getLink()).getBlockId());
     }
 
     @Test
-    public void testRemoveBlocklist() {
+    void testRemoveBlocklist() {
         Blocklist blocklist = saveTestBlocklist();
 
         blocklistRepository.remove(blocklist);
-        Assert.assertNull(blocklistRepository.find(blocklist.getBlockId()));
-        Assert.assertNull(blocklistRepository.find(blocklist.getLink()));
+        Assertions.assertNull(blocklistRepository.find(blocklist.getBlockId()));
+        Assertions.assertNull(blocklistRepository.find(blocklist.getLink()));
     }
 
     private Blocklist saveTestBlocklist() {

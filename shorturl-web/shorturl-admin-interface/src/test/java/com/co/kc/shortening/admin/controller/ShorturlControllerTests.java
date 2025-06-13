@@ -13,12 +13,12 @@ import com.co.kc.shortening.application.client.SessionClient;
 import com.co.kc.shortening.application.client.TokenClient;
 import com.co.kc.shortening.application.model.cqrs.command.shorturl.ShorturlAddCommand;
 import com.co.kc.shortening.application.model.cqrs.command.shorturl.ShorturlUpdateCommand;
-import com.co.kc.shortening.application.model.cqrs.dto.ShorturlDTO;
+import com.co.kc.shortening.application.model.cqrs.dto.ShorturlAddDTO;
 import com.co.kc.shortening.application.model.cqrs.dto.ShorturlQueryDTO;
 import com.co.kc.shortening.application.model.cqrs.query.ShorturlQuery;
 import com.co.kc.shortening.application.model.io.PagingResult;
-import com.co.kc.shortening.application.service.appservice.ShorturlAppService;
-import com.co.kc.shortening.application.service.queryservice.ShorturlQueryService;
+import com.co.kc.shortening.application.service.app.ShorturlAppService;
+import com.co.kc.shortening.application.service.query.ShorturlQueryService;
 import com.co.kc.shortening.common.utils.DateUtils;
 import com.co.kc.shortening.common.utils.JsonUtils;
 import com.co.kc.shortening.shorturl.domain.model.ShorturlFactory;
@@ -30,11 +30,10 @@ import com.co.kc.shortening.web.common.constants.enums.ShorturlFacadeStatus;
 import com.co.kc.shortening.web.common.serializer.BaseEnumSerializer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -42,7 +41,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -57,11 +55,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(ShorturlController.class)
 @Import({MethodSecurityConfig.class, WebSecurityConfig.class})
 @ContextConfiguration(classes = ShortUrlAdminTestApplication.class)
-public class ShorturlControllerTests {
+class ShorturlControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -78,15 +75,15 @@ public class ShorturlControllerTests {
     private MockHttpServletRequestBuilder addShorturlRequest;
     private MockHttpServletRequestBuilder updateShorturlRequest;
 
-    @BeforeClass
-    public static void initBlocklistController() {
+    @BeforeAll
+    static void initBlocklistController() {
         // 用于在Request对象序列化为JSON时，将Enum类型的对象转化为CODE
         SimpleModule baseEnumModule = new SimpleModule();
         baseEnumModule.addSerializer(BaseEnum.class, new BaseEnumSerializer());
         JsonUtils.getMapper().registerModule(baseEnumModule);
     }
 
-    @Before
+    @BeforeEach
     public void initMockRequestBuilder() {
         SecurityMock.mockTestUserHasAuthenticated(tokenClient, sessionClient);
 
@@ -108,7 +105,7 @@ public class ShorturlControllerTests {
     }
 
     @Test
-    public void testShorturlListByShortId() throws Exception {
+    void testShorturlListByShortId() throws Exception {
         mockOnlyTestShorturlInShorturlList();
 
         MockHttpServletRequestBuilder httpGet =
@@ -127,17 +124,17 @@ public class ShorturlControllerTests {
         ArgumentCaptor<ShorturlQuery> argumentCaptor = ArgumentCaptor.forClass(ShorturlQuery.class);
         verify(shorturlQueryService).queryShorturl(argumentCaptor.capture());
         ShorturlQuery shorturlQuery = argumentCaptor.getValue();
-        Assert.assertEquals(ShorturlFactory.testShortId, shorturlQuery.getShortId());
-        Assert.assertEquals("", shorturlQuery.getCode());
-        Assert.assertNull(shorturlQuery.getStatus());
-        Assert.assertNull(shorturlQuery.getValidTimeStart());
-        Assert.assertNull(shorturlQuery.getValidTimeEnd());
-        Assert.assertEquals(1L, shorturlQuery.getPageNo().longValue());
-        Assert.assertEquals(10L, shorturlQuery.getPageSize().longValue());
+        Assertions.assertEquals(ShorturlFactory.testShortId, shorturlQuery.getShortId());
+        Assertions.assertEquals("", shorturlQuery.getCode());
+        Assertions.assertNull(shorturlQuery.getStatus());
+        Assertions.assertNull(shorturlQuery.getValidTimeStart());
+        Assertions.assertNull(shorturlQuery.getValidTimeEnd());
+        Assertions.assertEquals(1L, shorturlQuery.getPageNo().longValue());
+        Assertions.assertEquals(10L, shorturlQuery.getPageSize().longValue());
     }
 
     @Test
-    public void testShorturlListByShortCode() throws Exception {
+    void testShorturlListByShortCode() throws Exception {
         mockOnlyTestShorturlInShorturlList();
 
         MockHttpServletRequestBuilder httpGet =
@@ -157,17 +154,17 @@ public class ShorturlControllerTests {
         ArgumentCaptor<ShorturlQuery> argumentCaptor = ArgumentCaptor.forClass(ShorturlQuery.class);
         verify(shorturlQueryService).queryShorturl(argumentCaptor.capture());
         ShorturlQuery shorturlQuery = argumentCaptor.getValue();
-        Assert.assertNull(shorturlQuery.getShortId());
-        Assert.assertEquals(ShorturlFactory.testShortCode, shorturlQuery.getCode());
-        Assert.assertNull(shorturlQuery.getStatus());
-        Assert.assertNull(shorturlQuery.getValidTimeStart());
-        Assert.assertNull(shorturlQuery.getValidTimeEnd());
-        Assert.assertEquals(1L, shorturlQuery.getPageNo().longValue());
-        Assert.assertEquals(10L, shorturlQuery.getPageSize().longValue());
+        Assertions.assertNull(shorturlQuery.getShortId());
+        Assertions.assertEquals(ShorturlFactory.testShortCode, shorturlQuery.getCode());
+        Assertions.assertNull(shorturlQuery.getStatus());
+        Assertions.assertNull(shorturlQuery.getValidTimeStart());
+        Assertions.assertNull(shorturlQuery.getValidTimeEnd());
+        Assertions.assertEquals(1L, shorturlQuery.getPageNo().longValue());
+        Assertions.assertEquals(10L, shorturlQuery.getPageSize().longValue());
     }
 
     @Test
-    public void testShorturlListByStatus() throws Exception {
+    void testShorturlListByStatus() throws Exception {
         mockOnlyTestShorturlInShorturlList();
 
         ShorturlFacadeStatus shorturlFacadeStatus = ShorturlFacadeStatus.convert(ShorturlFactory.testStatus).get();
@@ -188,17 +185,17 @@ public class ShorturlControllerTests {
         ArgumentCaptor<ShorturlQuery> argumentCaptor = ArgumentCaptor.forClass(ShorturlQuery.class);
         verify(shorturlQueryService).queryShorturl(argumentCaptor.capture());
         ShorturlQuery shorturlQuery = argumentCaptor.getValue();
-        Assert.assertNull(shorturlQuery.getShortId());
-        Assert.assertEquals("", shorturlQuery.getCode());
-        Assert.assertEquals(ShorturlFactory.testStatus, shorturlQuery.getStatus());
-        Assert.assertNull(shorturlQuery.getValidTimeStart());
-        Assert.assertNull(shorturlQuery.getValidTimeEnd());
-        Assert.assertEquals(1L, shorturlQuery.getPageNo().longValue());
-        Assert.assertEquals(10L, shorturlQuery.getPageSize().longValue());
+        Assertions.assertNull(shorturlQuery.getShortId());
+        Assertions.assertEquals("", shorturlQuery.getCode());
+        Assertions.assertEquals(ShorturlFactory.testStatus, shorturlQuery.getStatus());
+        Assertions.assertNull(shorturlQuery.getValidTimeStart());
+        Assertions.assertNull(shorturlQuery.getValidTimeEnd());
+        Assertions.assertEquals(1L, shorturlQuery.getPageNo().longValue());
+        Assertions.assertEquals(10L, shorturlQuery.getPageSize().longValue());
     }
 
     @Test
-    public void testShorturlListByValidTime() throws Exception {
+    void testShorturlListByValidTime() throws Exception {
         mockOnlyTestShorturlInShorturlList();
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.FORMAT_COMMON_DATETIME);
@@ -219,9 +216,9 @@ public class ShorturlControllerTests {
 
 
     @Test
-    public void testAddShorturl() throws Exception {
-        ShorturlDTO shorturlDTO = new ShorturlDTO(ShorturlFactory.testShortId, ShorturlFactory.testShortLink);
-        doReturn(shorturlDTO).when(shorturlAppService).add(any(ShorturlAddCommand.class));
+    void testAddShorturl() throws Exception {
+        ShorturlAddDTO shorturlAddDTO = new ShorturlAddDTO(ShorturlFactory.testShortId, ShorturlFactory.testShortCode, ShorturlFactory.testShortLink);
+        doReturn(shorturlAddDTO).when(shorturlAppService).add(any(ShorturlAddCommand.class));
 
         ShorturlAddRequest body = new ShorturlAddRequest();
         body.setRawLink(ShorturlFactory.testRawLink);
@@ -234,21 +231,21 @@ public class ShorturlControllerTests {
                 .andExpect(mvcResult -> {
                     Result<ShorturlAddVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<ShorturlAddVO>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
-                    Assert.assertEquals(ShorturlFactory.testShortLink, result.getData().getShorturl());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(ShorturlFactory.testShortLink, result.getData().getShorturl());
                 });
 
         ArgumentCaptor<ShorturlAddCommand> argumentCaptor = ArgumentCaptor.forClass(ShorturlAddCommand.class);
         verify(shorturlAppService).add(argumentCaptor.capture());
         ShorturlAddCommand addCommand = argumentCaptor.getValue();
-        Assert.assertEquals(ShorturlFactory.testRawLink, addCommand.getRawLink());
-        Assert.assertEquals(ShorturlFactory.testStatus, addCommand.getStatus());
-        Assert.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getStartTime(), addCommand.getValidTimeStart()));
-        Assert.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getEndTime(), addCommand.getValidTimeEnd()));
+        Assertions.assertEquals(ShorturlFactory.testRawLink, addCommand.getRawLink());
+        Assertions.assertEquals(ShorturlFactory.testStatus, addCommand.getStatus());
+        Assertions.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getStartTime(), addCommand.getValidTimeStart()));
+        Assertions.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getEndTime(), addCommand.getValidTimeEnd()));
     }
 
     @Test
-    public void testUpdateShorturl() throws Exception {
+    void testUpdateShorturl() throws Exception {
         doNothing().when(shorturlAppService).update(any(ShorturlUpdateCommand.class));
 
         ShorturlUpdateRequest body = new ShorturlUpdateRequest();
@@ -262,16 +259,16 @@ public class ShorturlControllerTests {
                 .andExpect(mvcResult -> {
                     Result<ShorturlAddVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<ShorturlAddVO>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
                 });
 
         ArgumentCaptor<ShorturlUpdateCommand> argumentCaptor = ArgumentCaptor.forClass(ShorturlUpdateCommand.class);
         verify(shorturlAppService).update(argumentCaptor.capture());
         ShorturlUpdateCommand updateCommand = argumentCaptor.getValue();
-        Assert.assertEquals(ShorturlFactory.testShortId, updateCommand.getShortId());
-        Assert.assertEquals(ShorturlFactory.testStatus, updateCommand.getStatus());
-        Assert.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getStartTime(), updateCommand.getValidTimeStart()));
-        Assert.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getEndTime(), updateCommand.getValidTimeEnd()));
+        Assertions.assertEquals(ShorturlFactory.testShortId, updateCommand.getShortId());
+        Assertions.assertEquals(ShorturlFactory.testStatus, updateCommand.getStatus());
+        Assertions.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getStartTime(), updateCommand.getValidTimeStart()));
+        Assertions.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getEndTime(), updateCommand.getValidTimeEnd()));
     }
 
     private void mockOnlyTestShorturlInShorturlList() {
@@ -293,14 +290,12 @@ public class ShorturlControllerTests {
                 return PagingResult.<ShorturlQueryDTO>newBuilder()
                         .paging(invocationParams.getPaging())
                         .records(Collections.singletonList(shorturlQueryDTO))
-                        .totalPages(1L)
                         .totalCount(1L)
                         .build();
             }
             return PagingResult.newBuilder()
                     .paging(invocationParams.getPaging())
                     .records(Collections.emptyList())
-                    .totalPages(0L)
                     .totalCount(0L)
                     .build();
         }).when(shorturlQueryService).queryShorturl(any(ShorturlQuery.class));
@@ -310,19 +305,19 @@ public class ShorturlControllerTests {
         String resultJson = mvcResult.getResponse().getContentAsString();
         Result<PagingResult<ShorturlListVO>> result = JsonUtils.fromJson(resultJson, new TypeReference<Result<PagingResult<ShorturlListVO>>>() {
         });
-        Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
-        Assert.assertEquals(1L, result.getData().getTotalPages().longValue());
-        Assert.assertEquals(1L, result.getData().getTotalCount().longValue());
-        Assert.assertEquals(1L, result.getData().getPaging().getPageNo().longValue());
-        Assert.assertEquals(10L, result.getData().getPaging().getPageSize().longValue());
-        Assert.assertEquals(1L, result.getData().getRecords().size());
+        Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+        Assertions.assertEquals(1L, result.getData().getTotalPages().longValue());
+        Assertions.assertEquals(1L, result.getData().getTotalCount().longValue());
+        Assertions.assertEquals(1L, result.getData().getPaging().getPageNo().longValue());
+        Assertions.assertEquals(10L, result.getData().getPaging().getPageSize().longValue());
+        Assertions.assertEquals(1L, result.getData().getRecords().size());
 
         ShorturlListVO shorturlListVO = result.getData().getRecords().get(0);
-        Assert.assertEquals(ShorturlFactory.testShortId, shorturlListVO.getShortId());
-        Assert.assertEquals(ShorturlFactory.testRawLink, shorturlListVO.getRawLink());
-        Assert.assertEquals(ShorturlFactory.testShortLink, shorturlListVO.getShortLink());
-        Assert.assertEquals(ShorturlFacadeStatus.convert(ShorturlFactory.testStatus).get(), shorturlListVO.getStatus());
-        Assert.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getStartTime(), shorturlListVO.getValidTimeStart()));
-        Assert.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getEndTime(), shorturlListVO.getValidTimeEnd()));
+        Assertions.assertEquals(ShorturlFactory.testShortId, shorturlListVO.getShortId());
+        Assertions.assertEquals(ShorturlFactory.testRawLink, shorturlListVO.getRawLink());
+        Assertions.assertEquals(ShorturlFactory.testShortLink, shorturlListVO.getShortLink());
+        Assertions.assertEquals(ShorturlFacadeStatus.convert(ShorturlFactory.testStatus).get(), shorturlListVO.getStatus());
+        Assertions.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getStartTime(), shorturlListVO.getValidTimeStart()));
+        Assertions.assertTrue(DateUtils.equals(ShorturlFactory.testValidTime.getEndTime(), shorturlListVO.getValidTimeEnd()));
     }
 }

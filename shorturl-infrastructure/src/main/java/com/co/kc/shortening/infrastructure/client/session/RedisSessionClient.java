@@ -3,6 +3,7 @@ package com.co.kc.shortening.infrastructure.client.session;
 import com.co.kc.shortening.application.client.SessionClient;
 import com.co.kc.shortening.application.model.client.SessionDTO;
 import com.co.kc.shortening.common.utils.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.concurrent.TimeUnit;
@@ -20,6 +21,9 @@ public class RedisSessionClient implements SessionClient {
     @Override
     public SessionDTO get(String sessionId) {
         String session = redisTemplate.opsForValue().get(sessionId);
+        if (StringUtils.isBlank(session)) {
+            return null;
+        }
         return JsonUtils.fromJson(session, SessionDTO.class);
     }
 

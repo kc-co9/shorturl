@@ -14,12 +14,12 @@ import com.co.kc.shortening.application.client.TokenClient;
 import com.co.kc.shortening.application.model.cqrs.command.blocklist.BlocklistAddCommand;
 import com.co.kc.shortening.application.model.cqrs.command.blocklist.BlocklistRemoveCommand;
 import com.co.kc.shortening.application.model.cqrs.command.blocklist.BlocklistUpdateCommand;
-import com.co.kc.shortening.application.model.cqrs.dto.BlocklistDTO;
+import com.co.kc.shortening.application.model.cqrs.dto.BlocklistAddDTO;
 import com.co.kc.shortening.application.model.cqrs.dto.BlocklistQueryDTO;
 import com.co.kc.shortening.application.model.cqrs.query.BlocklistQuery;
 import com.co.kc.shortening.application.model.io.PagingResult;
-import com.co.kc.shortening.application.service.appservice.BlocklistAppService;
-import com.co.kc.shortening.application.service.queryservice.BlocklistQueryService;
+import com.co.kc.shortening.application.service.app.BlocklistAppService;
+import com.co.kc.shortening.application.service.query.BlocklistQueryService;
 import com.co.kc.shortening.blocklist.domain.model.BlocklistFactory;
 import com.co.kc.shortening.common.utils.JsonUtils;
 import com.co.kc.shortening.user.domain.model.UserFactory;
@@ -30,11 +30,10 @@ import com.co.kc.shortening.web.common.constants.enums.BlockFacadeStatus;
 import com.co.kc.shortening.web.common.serializer.BaseEnumSerializer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -42,7 +41,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -57,11 +55,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(BlocklistController.class)  // 仅加载控制器和相关Bean
 @Import({MethodSecurityConfig.class, WebSecurityConfig.class})
 @ContextConfiguration(classes = ShortUrlAdminTestApplication.class)
-public class BlocklistControllerTests {
+class BlocklistControllerTests {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -78,15 +75,15 @@ public class BlocklistControllerTests {
     private MockHttpServletRequestBuilder updateBlocklistRequest;
     private MockHttpServletRequestBuilder removeBlocklistRequest;
 
-    @BeforeClass
-    public static void initBlocklistController() {
+    @BeforeAll
+    static void initBlocklistController() {
         // 用于在Request对象序列化为JSON时，将Enum类型的对象转化为CODE
         SimpleModule baseEnumModule = new SimpleModule();
         baseEnumModule.addSerializer(BaseEnum.class, new BaseEnumSerializer());
         JsonUtils.getMapper().registerModule(baseEnumModule);
     }
 
-    @Before
+    @BeforeEach
     public void initMockRequestBuilder() {
         SecurityMock.mockTestUserHasAuthenticated(tokenClient, sessionClient);
 
@@ -113,7 +110,7 @@ public class BlocklistControllerTests {
     }
 
     @Test
-    public void testBlocklistListByBlockId() throws Exception {
+    void testBlocklistListByBlockId() throws Exception {
         mockOnlyTestBlocklistInBlocklistList();
 
         MockHttpServletRequestBuilder httpGet =
@@ -130,14 +127,14 @@ public class BlocklistControllerTests {
         ArgumentCaptor<BlocklistQuery> argumentCaptor = ArgumentCaptor.forClass(BlocklistQuery.class);
         verify(blocklistQueryService).queryBlocklist(argumentCaptor.capture());
         BlocklistQuery blocklistQuery = argumentCaptor.getValue();
-        Assert.assertEquals(BlocklistFactory.testBlockId, blocklistQuery.getBlockId());
-        Assert.assertNull(blocklistQuery.getStatus());
-        Assert.assertEquals(1L, blocklistQuery.getPageNo().longValue());
-        Assert.assertEquals(10L, blocklistQuery.getPageSize().longValue());
+        Assertions.assertEquals(BlocklistFactory.testBlockId, blocklistQuery.getBlockId());
+        Assertions.assertNull(blocklistQuery.getStatus());
+        Assertions.assertEquals(1L, blocklistQuery.getPageNo().longValue());
+        Assertions.assertEquals(10L, blocklistQuery.getPageSize().longValue());
     }
 
     @Test
-    public void testBlocklistListByStatus() throws Exception {
+    void testBlocklistListByStatus() throws Exception {
         mockOnlyTestBlocklistInBlocklistList();
 
         Integer status = BlockFacadeStatus.convert(BlocklistFactory.testBlockStatus).get().getCode();
@@ -155,16 +152,16 @@ public class BlocklistControllerTests {
         ArgumentCaptor<BlocklistQuery> argumentCaptor = ArgumentCaptor.forClass(BlocklistQuery.class);
         verify(blocklistQueryService).queryBlocklist(argumentCaptor.capture());
         BlocklistQuery blocklistQuery = argumentCaptor.getValue();
-        Assert.assertNull(blocklistQuery.getBlockId());
-        Assert.assertEquals(BlocklistFactory.testBlockStatus, blocklistQuery.getStatus());
-        Assert.assertEquals(1L, blocklistQuery.getPageNo().longValue());
-        Assert.assertEquals(10L, blocklistQuery.getPageSize().longValue());
+        Assertions.assertNull(blocklistQuery.getBlockId());
+        Assertions.assertEquals(BlocklistFactory.testBlockStatus, blocklistQuery.getStatus());
+        Assertions.assertEquals(1L, blocklistQuery.getPageNo().longValue());
+        Assertions.assertEquals(10L, blocklistQuery.getPageSize().longValue());
     }
 
     @Test
-    public void testAddBlocklist() throws Exception {
-        BlocklistDTO blocklistDTO = new BlocklistDTO(BlocklistFactory.testBlockId, BlocklistFactory.testBlockLink);
-        doReturn(blocklistDTO).when(blocklistAppService).add(any(BlocklistAddCommand.class));
+    void testAddBlocklist() throws Exception {
+        BlocklistAddDTO blocklistAddDTO = new BlocklistAddDTO(BlocklistFactory.testBlockId, BlocklistFactory.testBlockLink);
+        doReturn(blocklistAddDTO).when(blocklistAppService).add(any(BlocklistAddCommand.class));
 
         BlocklistAddRequest body = new BlocklistAddRequest();
         body.setBlockLink(BlocklistFactory.testBlockLink);
@@ -176,19 +173,19 @@ public class BlocklistControllerTests {
                 .andExpect(mvcResult -> {
                     Result<?> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<?>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
                 });
 
         ArgumentCaptor<BlocklistAddCommand> argumentCaptor = ArgumentCaptor.forClass(BlocklistAddCommand.class);
         verify(blocklistAppService).add(argumentCaptor.capture());
         BlocklistAddCommand addCommand = argumentCaptor.getValue();
-        Assert.assertEquals(BlocklistFactory.testBlockLink, addCommand.getBlockLink());
-        Assert.assertEquals(BlocklistFactory.testBlockRemark, addCommand.getRemark());
-        Assert.assertEquals(BlocklistFactory.testBlockStatus, addCommand.getStatus());
+        Assertions.assertEquals(BlocklistFactory.testBlockLink, addCommand.getBlockLink());
+        Assertions.assertEquals(BlocklistFactory.testBlockRemark, addCommand.getRemark());
+        Assertions.assertEquals(BlocklistFactory.testBlockStatus, addCommand.getStatus());
     }
 
     @Test
-    public void testUpdateBlocklist() throws Exception {
+    void testUpdateBlocklist() throws Exception {
         doNothing().when(blocklistAppService).update(any(BlocklistUpdateCommand.class));
 
         BlocklistUpdateRequest body = new BlocklistUpdateRequest();
@@ -201,15 +198,15 @@ public class BlocklistControllerTests {
                 .andExpect(mvcResult -> {
                     Result<?> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<?>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
                 });
 
         ArgumentCaptor<BlocklistUpdateCommand> argumentCaptor = ArgumentCaptor.forClass(BlocklistUpdateCommand.class);
         verify(blocklistAppService).update(argumentCaptor.capture());
         BlocklistUpdateCommand updateCommand = argumentCaptor.getValue();
-        Assert.assertEquals(BlocklistFactory.testBlockId, updateCommand.getBlockId());
-        Assert.assertEquals(BlocklistFactory.testBlockRemark, updateCommand.getRemark());
-        Assert.assertEquals(BlocklistFactory.testBlockStatus, updateCommand.getStatus());
+        Assertions.assertEquals(BlocklistFactory.testBlockId, updateCommand.getBlockId());
+        Assertions.assertEquals(BlocklistFactory.testBlockRemark, updateCommand.getRemark());
+        Assertions.assertEquals(BlocklistFactory.testBlockStatus, updateCommand.getStatus());
     }
 
     @Test
@@ -224,13 +221,13 @@ public class BlocklistControllerTests {
                 .andExpect(mvcResult -> {
                     Result<?> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<?>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
                 });
 
         ArgumentCaptor<BlocklistRemoveCommand> argumentCaptor = ArgumentCaptor.forClass(BlocklistRemoveCommand.class);
         verify(blocklistAppService).remove(argumentCaptor.capture());
         BlocklistRemoveCommand removeCommand = argumentCaptor.getValue();
-        Assert.assertEquals(BlocklistFactory.testBlockId, removeCommand.getBlockId());
+        Assertions.assertEquals(BlocklistFactory.testBlockId, removeCommand.getBlockId());
     }
 
     private void mockOnlyTestBlocklistInBlocklistList() {
@@ -247,14 +244,12 @@ public class BlocklistControllerTests {
                 return PagingResult.<BlocklistQueryDTO>newBuilder()
                         .paging(invocationParams.getPaging())
                         .records(Collections.singletonList(blocklistQueryDTO))
-                        .totalPages(1L)
                         .totalCount(1L)
                         .build();
             }
             return PagingResult.newBuilder()
                     .paging(invocationParams.getPaging())
                     .records(Collections.emptyList())
-                    .totalPages(0L)
                     .totalCount(0L)
                     .build();
         }).when(blocklistQueryService).queryBlocklist(any(BlocklistQuery.class));
@@ -264,17 +259,17 @@ public class BlocklistControllerTests {
         String resultJson = mvcResult.getResponse().getContentAsString();
         Result<PagingResult<BlocklistListVO>> result = JsonUtils.fromJson(resultJson, new TypeReference<Result<PagingResult<BlocklistListVO>>>() {
         });
-        Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
-        Assert.assertEquals(1L, result.getData().getTotalPages().longValue());
-        Assert.assertEquals(1L, result.getData().getTotalCount().longValue());
-        Assert.assertEquals(1L, result.getData().getPaging().getPageNo().longValue());
-        Assert.assertEquals(10L, result.getData().getPaging().getPageSize().longValue());
-        Assert.assertEquals(1L, result.getData().getRecords().size());
+        Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+        Assertions.assertEquals(1L, result.getData().getTotalPages().longValue());
+        Assertions.assertEquals(1L, result.getData().getTotalCount().longValue());
+        Assertions.assertEquals(1L, result.getData().getPaging().getPageNo().longValue());
+        Assertions.assertEquals(10L, result.getData().getPaging().getPageSize().longValue());
+        Assertions.assertEquals(1L, result.getData().getRecords().size());
 
         BlocklistListVO blocklistListVO = result.getData().getRecords().get(0);
-        Assert.assertEquals(BlocklistFactory.testBlockId, blocklistListVO.getBlockId());
-        Assert.assertEquals(BlockFacadeStatus.convert(BlocklistFactory.testBlockStatus).get(), blocklistListVO.getStatus());
-        Assert.assertEquals(BlocklistFactory.testBlockLink, blocklistListVO.getBlockLink());
-        Assert.assertEquals(BlocklistFactory.testBlockRemark, blocklistListVO.getRemark());
+        Assertions.assertEquals(BlocklistFactory.testBlockId, blocklistListVO.getBlockId());
+        Assertions.assertEquals(BlockFacadeStatus.convert(BlocklistFactory.testBlockStatus).get(), blocklistListVO.getStatus());
+        Assertions.assertEquals(BlocklistFactory.testBlockLink, blocklistListVO.getBlockLink());
+        Assertions.assertEquals(BlocklistFactory.testBlockRemark, blocklistListVO.getRemark());
     }
 }

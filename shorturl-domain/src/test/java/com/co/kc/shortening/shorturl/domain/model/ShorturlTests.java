@@ -2,83 +2,83 @@ package com.co.kc.shortening.shorturl.domain.model;
 
 import com.co.kc.shortening.shared.domain.model.Link;
 import com.co.kc.shortening.common.exception.BusinessException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ShorturlTests {
+class ShorturlTests {
     private Shorturl shorturl;
 
-    @Before
+    @BeforeEach
     public void initShorturl() {
-        shorturl = ShorturlFactory.createShorturl();
+        shorturl = ShorturlFactory.createTestShorturl();
     }
 
     @Test
-    public void testShorturlPropertiesSucceedToSet() {
-        Assert.assertEquals(ShorturlFactory.getTestShortId(), shorturl.getShortId());
-        Assert.assertEquals(ShorturlFactory.getTestShortCode(), shorturl.getShortCode());
-        Assert.assertEquals(ShorturlFactory.testValidTime, shorturl.getValidTime());
-        Assert.assertEquals(ShorturlFactory.getTestRawLink(), shorturl.getRawLink());
-        Assert.assertEquals(ShorturlFactory.testStatus, shorturl.getStatus());
+    void testShorturlPropertiesSucceedToSet() {
+        Assertions.assertEquals(ShorturlFactory.getTestShortId(), shorturl.getShortId());
+        Assertions.assertEquals(ShorturlFactory.getTestShortCode(), shorturl.getShortCode());
+        Assertions.assertEquals(ShorturlFactory.testValidTime, shorturl.getValidTime());
+        Assertions.assertEquals(ShorturlFactory.getTestRawLink(), shorturl.getRawLink());
+        Assertions.assertEquals(ShorturlFactory.testStatus, shorturl.getStatus());
     }
 
 
     @Test
-    public void testActivate() {
+    void testActivate() {
         shorturl.activate();
-        Assert.assertEquals(ShorturlStatus.ONLINE, shorturl.getStatus());
+        Assertions.assertEquals(ShorturlStatus.ONLINE, shorturl.getStatus());
 
         shorturl.inactivate();
-        Assert.assertEquals(ShorturlStatus.OFFLINE, shorturl.getStatus());
+        Assertions.assertEquals(ShorturlStatus.OFFLINE, shorturl.getStatus());
     }
 
     @Test
-    public void testIsActive() {
+    void testIsActive() {
         shorturl.activate();
-        Assert.assertTrue(shorturl.isActive());
+        Assertions.assertTrue(shorturl.isActive());
 
         shorturl.inactivate();
-        Assert.assertFalse(shorturl.isActive());
+        Assertions.assertFalse(shorturl.isActive());
     }
 
     @Test
-    public void testUpdateValidTime() {
+    void testUpdateValidTime() {
         shorturl.changeValidTime(ShorturlFactory.testChangedValidTime);
-        Assert.assertEquals(ShorturlFactory.testChangedValidTime, shorturl.getValidTime());
+        Assertions.assertEquals(ShorturlFactory.testChangedValidTime, shorturl.getValidTime());
     }
 
     @Test
-    public void testIsInValidTime() {
-        Assert.assertTrue(shorturl.isInValidTime());
+    void testIsInValidTime() {
+        Assertions.assertTrue(shorturl.isInValidTime());
         shorturl.changeValidTime(ShorturlFactory.testExpiredValidTime);
-        Assert.assertFalse(shorturl.isInValidTime());
+        Assertions.assertFalse(shorturl.isInValidTime());
     }
 
     @Test
-    public void testAutoInactivateWhenUpdateExpiredValidTime() {
+    void testAutoInactivateWhenUpdateExpiredValidTime() {
         shorturl.activate();
-        Assert.assertTrue(shorturl.isActive());
+        Assertions.assertTrue(shorturl.isActive());
         shorturl.changeValidTime(ShorturlFactory.testExpiredValidTime);
-        Assert.assertFalse(shorturl.isInValidTime());
-        Assert.assertFalse(shorturl.isActive());
+        Assertions.assertFalse(shorturl.isInValidTime());
+        Assertions.assertFalse(shorturl.isActive());
     }
 
     @Test
-    public void testFailActivateBecauseOfNotInValidTime() {
+    void testFailActivateBecauseOfNotInValidTime() {
         shorturl.changeValidTime(ShorturlFactory.testExpiredValidTime);
         try {
             shorturl.activate();
         } catch (BusinessException e) {
-            Assert.assertEquals("短链已过期，激活失败", e.getMsg());
+            Assertions.assertEquals("短链已过期，激活失败", e.getMsg());
             return;
         }
-        Assert.fail();
+        Assertions.fail();
     }
 
     @Test
-    public void testGetShortLink() {
+    void testGetShortLink() {
         Link shortLink = shorturl.getLink(ShorturlFactory.getTestShortDomain());
-        Assert.assertEquals(ShorturlFactory.testShortLink, shortLink.getUrl());
+        Assertions.assertEquals(ShorturlFactory.testShortLink, shortLink.getUrl());
     }
 }

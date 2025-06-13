@@ -25,15 +25,15 @@ public class RedisLockClient implements LockClient {
     public boolean tryLock(String key, Long liveTime) {
         try {
             return redissonClient.getLock(key).tryLock(0, liveTime, TimeUnit.SECONDS);
-        } catch (InterruptedException ignore) {
-            LOG.error("LockHelper invoke tryLock method failure, key:{}", key, ignore);
+        } catch (InterruptedException ex) {
+            LOG.error("RedisLockClient invoke tryLock method failure, key:{}", key, ex);
         }
         return false;
     }
 
     @Override
     public boolean tryLock(String key) {
-        return tryLock(key, 10L);
+        return redissonClient.getLock(key).tryLock();
     }
 
     /**
@@ -49,8 +49,8 @@ public class RedisLockClient implements LockClient {
 
         try {
             return redissonClient.getLock(key).tryLock(waitTime, liveTime, TimeUnit.SECONDS);
-        } catch (InterruptedException ignore) {
-            LOG.error("LockHelper invoke tryLock method failure, key:{}", key, ignore);
+        } catch (InterruptedException ex) {
+            LOG.error("RedisLockClient invoke tryLock method failure, key:{}", key, ex);
         }
         return false;
     }
@@ -62,11 +62,11 @@ public class RedisLockClient implements LockClient {
             if (lock.isLocked() && lock.isHeldByCurrentThread()) {
                 lock.unlock();
             } else {
-                LOG.warn("LockHelper invoke tryLock method failure because of not existing or not holding , key:{}", key);
+                LOG.warn("RedisLockClient invoke tryLock method failure because of not existing or not holding , key:{}", key);
             }
-        } catch (Exception ignore) {
+        } catch (Exception ex) {
             // 解锁失败
-            LOG.error("LockHelper invoke releaseLock method failure, key:{}", key, ignore);
+            LOG.error("RedisLockClient invoke releaseLock method failure, key:{}", key, ex);
         }
         return true;
     }

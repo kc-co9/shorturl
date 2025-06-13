@@ -1,9 +1,8 @@
 package com.co.kc.shortening.infrastructure.config.bean;
 
 import com.co.kc.shortening.application.provider.ShortDomainProvider;
-import com.co.kc.shortening.application.service.queryservice.ShorturlQueryService;
 import com.co.kc.shortening.blocklist.service.BlocklistService;
-import com.co.kc.shortening.application.service.appservice.ShorturlAppService;
+import com.co.kc.shortening.application.service.app.ShorturlAppService;
 import com.co.kc.shortening.infrastructure.client.id.bizid.ShortIdClient;
 import com.co.kc.shortening.infrastructure.client.id.code.ShortCodeClient;
 import com.co.kc.shortening.infrastructure.config.properties.ShorturlProperties;
@@ -29,7 +28,7 @@ public class ShorturlConfig {
     }
 
     @Bean
-    public ShortDomainProvider shortDomainProvider(ShorturlProperties shorturlProperties) {
+    public ShortDomainYmlProvider shortDomainYmlProvider(ShorturlProperties shorturlProperties) {
         return new ShortDomainYmlProvider(shorturlProperties);
     }
 
@@ -39,12 +38,12 @@ public class ShorturlConfig {
     }
 
     @Bean
-    public ShorturlRepository shorturlRepository(UrlMappingService urlMappingService) {
+    public ShorturlMySqlRepository shorturlRepository(UrlMappingService urlMappingService) {
         return new ShorturlMySqlRepository(urlMappingService);
     }
 
     @Bean
-    public ShorturlQueryService shorturlQueryService(UrlMappingService urlMappingService,
+    public ShorturlQueryMySqlService shorturlQueryService(UrlMappingService urlMappingService,
                                                      ShortDomainProvider shortDomainProvider) {
         return new ShorturlQueryMySqlService(urlMappingService, shortDomainProvider);
     }

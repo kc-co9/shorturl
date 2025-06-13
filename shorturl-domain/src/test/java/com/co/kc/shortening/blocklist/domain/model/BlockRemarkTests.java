@@ -1,23 +1,23 @@
 package com.co.kc.shortening.blocklist.domain.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class BlockRemarkTests {
+class BlockRemarkTests {
     @Test
-    public void testCreateNullBlockRemark() {
+    void testCreateNullBlockRemark() {
         BlockRemark blockRemark = new BlockRemark(null);
-        Assert.assertEquals("", blockRemark.getRemark());
+        Assertions.assertEquals("", blockRemark.getRemark());
     }
 
     @Test
-    public void testCreateEmptyBlockRemark() {
+    void testCreateEmptyBlockRemark() {
         BlockRemark blockRemark = new BlockRemark("");
-        Assert.assertEquals("", blockRemark.getRemark());
+        Assertions.assertEquals("", blockRemark.getRemark());
     }
 
     @Test
-    public void testCreateExceedLengthBlockRemark() {
+    void testCreateExceedLengthBlockRemark() {
         StringBuilder remark = new StringBuilder();
         for (int i = 0; i < 257; i++) {
             remark.append("T");
@@ -25,16 +25,16 @@ public class BlockRemarkTests {
         try {
             new BlockRemark(remark.toString());
         } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("remark length is greater than 256", ex.getMessage());
+            Assertions.assertEquals("remark length is greater than 256", ex.getMessage());
             return;
         }
-        Assert.fail();
+        Assertions.fail();
     }
 
     @Test
-    public void testCreateBlockRemarkSuccess() {
+    void testCreateBlockRemarkSuccess() {
         BlockRemark blockRemark = new BlockRemark("testRemark");
-        Assert.assertEquals("testRemark", blockRemark.getRemark());
+        Assertions.assertEquals("testRemark", blockRemark.getRemark());
     }
 
 }

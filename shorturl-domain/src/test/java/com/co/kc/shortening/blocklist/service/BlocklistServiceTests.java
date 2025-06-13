@@ -3,17 +3,17 @@ package com.co.kc.shortening.blocklist.service;
 import com.co.kc.shortening.blocklist.domain.model.*;
 import com.co.kc.shortening.shared.domain.model.Link;
 import com.co.kc.shortening.common.exception.BusinessException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class BlocklistServiceTests {
+class BlocklistServiceTests {
     private BlocklistService blocklistService;
 
-    @Before
+    @BeforeEach
     public void initRepository() {
         BlocklistRepository blocklistRepository = new BlocklistMemoryRepository();
 
@@ -36,31 +36,19 @@ public class BlocklistServiceTests {
     }
 
     @Test
-    public void testValidateThrowExWhenLinkIsBlocked() {
-        try {
-            blocklistService.validate(new Link("http://www.active.com"));
-        } catch (BusinessException ex) {
-            Assert.assertEquals("短链已被禁用", ex.getMsg());
-            return;
-        }
-        Assert.fail();
+    void testValidateThrowExWhenLinkIsBlocked() {
+        Link link = new Link("http://www.active.com");
+        BusinessException ex = Assertions.assertThrows(BusinessException.class, () -> blocklistService.validate(link));
+        Assertions.assertEquals("短链已被禁用", ex.getMsg());
     }
 
     @Test
-    public void testValidatePassWhenLinkIsBlockedButInactive() {
-        try {
-            blocklistService.validate(new Link("http://www.inactive.com"));
-        } catch (BusinessException ex) {
-            Assert.fail();
-        }
+    void testValidatePassWhenLinkIsBlockedButInactive() {
+        blocklistService.validate(new Link("http://www.inactive.com"));
     }
 
     @Test
-    public void testValidatePassWhenLinkIsNotBlocked() {
-        try {
-            blocklistService.validate(new Link("http://www.pass.com"));
-        } catch (BusinessException ex) {
-            Assert.fail();
-        }
+    void testValidatePassWhenLinkIsNotBlocked() {
+        blocklistService.validate(new Link("http://www.pass.com"));
     }
 }

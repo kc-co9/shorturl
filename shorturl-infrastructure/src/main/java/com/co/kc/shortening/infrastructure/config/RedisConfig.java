@@ -67,16 +67,16 @@ public class RedisConfig {
 
     @Primary
     @Bean(destroyMethod = "shutdown")
-    public RedissonClient redissonClient(RedissonConfig redissonConfig) {
+    public RedissonClient redissonClient(RedisProperties redisProperties) {
         Config config = new Config();
-        String address = "redis://" + redissonConfig.host + ":" + redissonConfig.port;
+        String address = "redis://" + redisProperties.host + ":" + redisProperties.port;
         SingleServerConfig singleServerConfig = config.useSingleServer();
         singleServerConfig.setAddress(address);
-        if (StringUtils.isNotBlank(redissonConfig.password)) {
-            singleServerConfig.setPassword(redissonConfig.password);
+        if (StringUtils.isNotBlank(redisProperties.password)) {
+            singleServerConfig.setPassword(redisProperties.password);
         }
-        if (StringUtils.isNotBlank(redissonConfig.database)) {
-            singleServerConfig.setDatabase(Integer.parseInt(redissonConfig.database));
+        if (StringUtils.isNotBlank(redisProperties.database)) {
+            singleServerConfig.setDatabase(Integer.parseInt(redisProperties.database));
         }
         return Redisson.create(config);
     }
@@ -84,7 +84,7 @@ public class RedisConfig {
     @Data
     @Configuration
     @ConfigurationProperties(prefix = "spring.redis")
-    public static class RedissonConfig {
+    public static class RedisProperties {
         private String host;
         private Integer port;
         private String password;

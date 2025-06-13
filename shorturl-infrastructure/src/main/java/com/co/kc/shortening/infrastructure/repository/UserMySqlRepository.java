@@ -52,17 +52,27 @@ public class UserMySqlRepository implements UserRepository {
 
     @Override
     public void save(User user) {
-        Administrator administrator = new Administrator();
-        administrator.setAdministratorId(user.getUserId().getId());
-        administrator.setEmail(user.getEmail().getEmail());
-        administrator.setUsername(user.getName().getName());
-        administrator.setPassword(user.getPassword().getPassword());
-        administratorService.save(administrator);
+        if (user.getId() == null) {
+            Administrator administrator = new Administrator();
+            administrator.setAdministratorId(user.getUserId().getId());
+            administrator.setEmail(user.getEmail().getEmail());
+            administrator.setUsername(user.getName().getName());
+            administrator.setPassword(user.getPassword().getPassword());
+            administratorService.save(administrator);
+        } else {
+            Administrator administrator = new Administrator();
+            administrator.setId(user.getId());
+            administrator.setAdministratorId(user.getUserId().getId());
+            administrator.setEmail(user.getEmail().getEmail());
+            administrator.setUsername(user.getName().getName());
+            administrator.setPassword(user.getPassword().getPassword());
+            administratorService.updateById(administrator);
+        }
     }
 
     @Override
     public void remove(User user) {
         administratorService.remove(administratorService.getQueryWrapper()
-                .eq(Administrator::getAdministratorId, user.getUserId()));
+                .eq(Administrator::getAdministratorId, user.getUserId().getId()));
     }
 }

@@ -1,15 +1,15 @@
 package com.co.kc.shortening.application.provider;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class StaticShortDomainProviderTests {
+class StaticShortDomainProviderTests {
     @Test
-    public void testGetDomain() {
+    void testGetDomain() {
         ShortDomainProvider shortDomainProvider = new StaticShortDomainProvider();
-        Assert.assertEquals("https://short.com", shortDomainProvider.getDomain());
+        Assertions.assertEquals("https://short.com", shortDomainProvider.getDomain());
     }
 }

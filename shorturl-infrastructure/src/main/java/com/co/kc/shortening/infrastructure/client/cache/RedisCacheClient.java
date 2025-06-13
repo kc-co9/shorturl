@@ -76,26 +76,6 @@ public class RedisCacheClient implements CacheClient {
     }
 
     @Override
-    public Long increment(String key) {
-        Assert.isTrue(StringUtils.isNotBlank(key), "cache key is null");
-
-        return increment(key, 1, 0);
-    }
-
-    @Override
-    public Long increment(String key, long step, long expireTime) {
-        Assert.isTrue(StringUtils.isNotBlank(key), "cache key is null");
-
-        return redisTemplate.execute((RedisCallback<Long>)connection -> {
-            Long num = connection.incrBy(key.getBytes(), step);
-            if (expireTime > 0 && num != null) {
-                connection.expire(key.getBytes(), expireTime);
-            }
-            return num;
-        });
-    }
-
-    @Override
     public boolean hasKey(String key) {
         Assert.isTrue(StringUtils.isNotBlank(key), "cache key is null");
 

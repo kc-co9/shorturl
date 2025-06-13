@@ -15,6 +15,7 @@ public class UserDetailDtoAssembler {
     public static UserDetailDTO userToDTO(User user) {
         UserDetailDTO userDetailDTO = new UserDetailDTO();
         userDetailDTO.setUserId(user.getUserId().getId());
+        userDetailDTO.setUserEmail(user.getEmail().getEmail());
         userDetailDTO.setUserName(user.getName().getName());
         return userDetailDTO;
     }

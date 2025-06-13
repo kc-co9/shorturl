@@ -1,51 +1,41 @@
 package com.co.kc.shortening.user.domain.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class PermissionValueTests {
+class PermissionValueTests {
     @Test
-    public void testCreateNullPermissionValue() {
-        try {
-            new PermissionValue(null);
-        } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("value is null or empty", ex.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateNullPermissionValue() {
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new PermissionValue(null));
+        Assertions.assertEquals("value is null or empty", ex.getMessage());
     }
 
     @Test
-    public void testCreateEmptyPermissionValue() {
-        try {
-            new PermissionValue("");
-        } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("value is null or empty", ex.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateEmptyPermissionValue() {
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new PermissionValue(""));
+        Assertions.assertEquals("value is null or empty", ex.getMessage());
     }
 
     @Test
-    public void testCreatePermissionValueSuccessfully() {
+    void testCreatePermissionValueSuccessfully() {
         PermissionValue permissionValue = new PermissionValue("testValue");
-        Assert.assertEquals("testValue", permissionValue.getValue());
+        Assertions.assertEquals("testValue", permissionValue.getValue());
     }
 
     @Test
-    public void testSamePermissionValueIsEqual() {
+    void testSamePermissionValueIsEqual() {
         PermissionValue permissionValue1 = new PermissionValue("testValue");
         PermissionValue permissionValue2 = new PermissionValue("testValue");
-        Assert.assertEquals(permissionValue1, permissionValue2);
+        Assertions.assertEquals(permissionValue1, permissionValue2);
     }
 
     @Test
-    public void testDifferentPermissionValueIsNotEqual() {
+    void testDifferentPermissionValueIsNotEqual() {
         PermissionValue permissionValue1 = new PermissionValue("testValue1");
         PermissionValue permissionValue2 = new PermissionValue("testValue2");
-        Assert.assertNotEquals(permissionValue1, permissionValue2);
+        Assertions.assertNotEquals(permissionValue1, permissionValue2);
     }
 }

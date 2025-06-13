@@ -1,48 +1,38 @@
 package com.co.kc.shortening.user.domain.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class UserPasswordTests {
+class UserPasswordTests {
     @Test
-    public void testCreateNullUserPassword() {
-        try {
-            new UserPassword(null);
-        } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("password is null or empty", ex.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateNullUserPassword() {
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new UserPassword(null));
+        Assertions.assertEquals("password is null or empty", ex.getMessage());
     }
 
     @Test
-    public void testCreateEmptyUserPassword() {
-        try {
-            new UserPassword("");
-        } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("password is null or empty", ex.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateEmptyUserPassword() {
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new UserPassword(""));
+        Assertions.assertEquals("password is null or empty", ex.getMessage());
     }
 
     @Test
-    public void testCreateUserPasswordSuccessfully() {
+    void testCreateUserPasswordSuccessfully() {
         UserPassword userPassword = new UserPassword("testUserPassword");
-        Assert.assertEquals("testUserPassword", userPassword.getPassword());
+        Assertions.assertEquals("testUserPassword", userPassword.getPassword());
     }
 
     @Test
-    public void testSameUserPasswordIsEqual() {
+    void testSameUserPasswordIsEqual() {
         UserPassword userPassword1 = new UserPassword("testUserPassword");
         UserPassword userPassword2 = new UserPassword("testUserPassword");
-        Assert.assertEquals(userPassword1, userPassword2);
+        Assertions.assertEquals(userPassword1, userPassword2);
     }
 
     @Test
-    public void testDifferentUserPasswordIsNotEqual() {
+    void testDifferentUserPasswordIsNotEqual() {
         UserPassword userPassword1 = new UserPassword("testUserPassword1");
         UserPassword userPassword2 = new UserPassword("testUserPassword2");
-        Assert.assertNotEquals(userPassword1, userPassword2);
+        Assertions.assertNotEquals(userPassword1, userPassword2);
     }
 }

@@ -1,48 +1,48 @@
 package com.co.kc.shortening.blocklist.domain.model;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class BlocklistTests {
+class BlocklistTests {
     private Blocklist blocklist;
 
-    @Before
+    @BeforeEach
     public void initBlocklist() {
-        blocklist = BlocklistFactory.createBlocklist();
+        blocklist = BlocklistFactory.createTestBlocklist();
     }
 
     @Test
-    public void testBlocklistPropertiesSucceedToSet() {
-        Assert.assertEquals(BlocklistFactory.getTestBlockId(), blocklist.getBlockId());
-        Assert.assertEquals(BlocklistFactory.getTestBlockLink(), blocklist.getLink());
-        Assert.assertEquals(BlocklistFactory.getTestBlockRemark(), blocklist.getRemark());
-        Assert.assertEquals(BlocklistFactory.testBlockStatus, blocklist.getStatus());
+    void testBlocklistPropertiesSucceedToSet() {
+        Assertions.assertEquals(BlocklistFactory.getTestBlockId(), blocklist.getBlockId());
+        Assertions.assertEquals(BlocklistFactory.getTestBlockLink(), blocklist.getLink());
+        Assertions.assertEquals(BlocklistFactory.getTestBlockRemark(), blocklist.getRemark());
+        Assertions.assertEquals(BlocklistFactory.testBlockStatus, blocklist.getStatus());
     }
 
     @Test
-    public void testActivateBlocklist() {
+    void testActivateBlocklist() {
         blocklist.activate();
-        Assert.assertEquals(BlockStatus.ONLINE, blocklist.getStatus());
+        Assertions.assertEquals(BlockStatus.ONLINE, blocklist.getStatus());
     }
 
     @Test
-    public void testInactivateBlocklist() {
+    void testInactivateBlocklist() {
         blocklist.inactivate();
-        Assert.assertEquals(BlockStatus.OFFLINE, blocklist.getStatus());
+        Assertions.assertEquals(BlockStatus.OFFLINE, blocklist.getStatus());
     }
 
     @Test
-    public void testBlocklistChangeRemark() {
-        Assert.assertEquals(BlocklistFactory.getTestBlockRemark(), blocklist.getRemark());
+    void testBlocklistChangeRemark() {
+        Assertions.assertEquals(BlocklistFactory.getTestBlockRemark(), blocklist.getRemark());
         blocklist.changeRemark(BlocklistFactory.getTestBlockChangedRemark());
-        Assert.assertEquals(BlocklistFactory.getTestBlockChangedRemark(), blocklist.getRemark());
+        Assertions.assertEquals(BlocklistFactory.getTestBlockChangedRemark(), blocklist.getRemark());
     }
 
     @Test
-    public void testBlocklistChangeStatus() {
-        Assert.assertEquals(BlocklistFactory.testBlockStatus, blocklist.getStatus());
+    void testBlocklistChangeStatus() {
+        Assertions.assertEquals(BlocklistFactory.testBlockStatus, blocklist.getStatus());
         blocklist.changeStatus(BlocklistFactory.testBlockChangedStatus);
-        Assert.assertEquals(BlocklistFactory.testBlockChangedStatus, blocklist.getStatus());
+        Assertions.assertEquals(BlocklistFactory.testBlockChangedStatus, blocklist.getStatus());
     }
 }

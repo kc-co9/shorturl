@@ -1,6 +1,5 @@
 package com.co.kc.shortening.application.model.cqrs.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;

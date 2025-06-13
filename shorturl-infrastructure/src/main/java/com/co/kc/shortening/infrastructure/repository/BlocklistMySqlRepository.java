@@ -5,14 +5,12 @@ import com.co.kc.shortening.infrastructure.mybatis.entity.UrlBlocklist;
 import com.co.kc.shortening.infrastructure.mybatis.enums.UrlBlocklistStatus;
 import com.co.kc.shortening.infrastructure.mybatis.service.UrlBlocklistService;
 import com.co.kc.shortening.shared.domain.model.Link;
-import org.springframework.stereotype.Service;
 
 /**
  * 黑名单资源库MySQL实现
  *
  * @author kc
  */
-@Service
 public class BlocklistMySqlRepository implements BlocklistRepository {
     private final UrlBlocklistService urlBlocklistService;
 
@@ -54,13 +52,24 @@ public class BlocklistMySqlRepository implements BlocklistRepository {
 
     @Override
     public void save(Blocklist blocklist) {
-        UrlBlocklist urlBlocklist = new UrlBlocklist();
-        urlBlocklist.setBlockId(blocklist.getBlockId().getId());
-        urlBlocklist.setUrl(blocklist.getLink().getUrl());
-        urlBlocklist.setHash(blocklist.getLink().getHash());
-        urlBlocklist.setRemark(blocklist.getRemark().getRemark());
-        urlBlocklist.setStatus(UrlBlocklistStatus.convert(blocklist.getStatus()).get());
-        urlBlocklistService.save(urlBlocklist);
+        if (blocklist.getId() == null) {
+            UrlBlocklist urlBlocklist = new UrlBlocklist();
+            urlBlocklist.setBlockId(blocklist.getBlockId().getId());
+            urlBlocklist.setUrl(blocklist.getLink().getUrl());
+            urlBlocklist.setHash(blocklist.getLink().getHash());
+            urlBlocklist.setRemark(blocklist.getRemark().getRemark());
+            urlBlocklist.setStatus(UrlBlocklistStatus.convert(blocklist.getStatus()).get());
+            urlBlocklistService.save(urlBlocklist);
+        } else {
+            UrlBlocklist urlBlocklist = new UrlBlocklist();
+            urlBlocklist.setId(blocklist.getId());
+            urlBlocklist.setBlockId(blocklist.getBlockId().getId());
+            urlBlocklist.setUrl(blocklist.getLink().getUrl());
+            urlBlocklist.setHash(blocklist.getLink().getHash());
+            urlBlocklist.setRemark(blocklist.getRemark().getRemark());
+            urlBlocklist.setStatus(UrlBlocklistStatus.convert(blocklist.getStatus()).get());
+            urlBlocklistService.updateById(urlBlocklist);
+        }
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.co.kc.shortening.application.model.cqrs.dto.ShorturlQueryDTO;
 import com.co.kc.shortening.application.model.cqrs.query.ShorturlQuery;
 import com.co.kc.shortening.application.model.io.PagingResult;
 import com.co.kc.shortening.application.provider.ShortDomainProvider;
-import com.co.kc.shortening.application.service.queryservice.ShorturlQueryService;
+import com.co.kc.shortening.application.service.query.ShorturlQueryService;
 import com.co.kc.shortening.infrastructure.mybatis.entity.UrlMapping;
 import com.co.kc.shortening.infrastructure.mybatis.enums.UrlMappingStatus;
 import com.co.kc.shortening.infrastructure.mybatis.service.UrlMappingService;
@@ -32,8 +32,9 @@ public class ShorturlQueryMySqlService implements ShorturlQueryService {
     public PagingResult<ShorturlQueryDTO> queryShorturl(ShorturlQuery query) {
         IPage<UrlMapping> urlMappingPage =
                 urlMappingService.page(new Page<>(query.getPageNo(), query.getPageSize()), urlMappingService.getQueryWrapper()
+                        .eq(Objects.nonNull(query.getShortId()), UrlMapping::getShortId, query.getShortId())
                         .eq(StringUtils.isNotBlank(query.getCode()), UrlMapping::getCode, query.getCode())
-                        .eq(Objects.nonNull(query.getStatus()), UrlMapping::getStatus, query.getStatus())
+                        .eq(Objects.nonNull(query.getStatus()), UrlMapping::getStatus, UrlMappingStatus.convert(query.getStatus()).orElse(null))
                         .orderByDesc(UrlMapping::getId));
         List<ShorturlQueryDTO> shorturlList = FunctionUtils.mappingList(urlMappingPage.getRecords(), urlMapping -> {
             ShorturlQueryDTO shorturlQueryDTO = new ShorturlQueryDTO();
@@ -41,7 +42,7 @@ public class ShorturlQueryMySqlService implements ShorturlQueryService {
             shorturlQueryDTO.setCode(urlMapping.getCode());
             shorturlQueryDTO.setRawLink(urlMapping.getUrl());
             shorturlQueryDTO.setShortLink(shortDomainProvider.getDomain() + "/" + urlMapping.getCode());
-            shorturlQueryDTO.setStatus(UrlMappingStatus.convert(urlMapping.getStatus()));
+            shorturlQueryDTO.setStatus(UrlMappingStatus.convert(urlMapping.getStatus()).get());
             shorturlQueryDTO.setValidStart(urlMapping.getValidStart());
             shorturlQueryDTO.setValidEnd(urlMapping.getValidEnd());
             return shorturlQueryDTO;
@@ -50,7 +51,6 @@ public class ShorturlQueryMySqlService implements ShorturlQueryService {
                 .paging(query.getPaging())
                 .records(shorturlList)
                 .totalCount(urlMappingPage.getTotal())
-                .totalPages(urlMappingPage.getPages())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.co.kc.shortening.application.model.io;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.util.Assert;
@@ -31,11 +32,6 @@ public class PagingResult<T> {
      */
     private Long totalCount;
 
-    /**
-     * 总页数
-     */
-    private Long totalPages;
-
     private PagingResult() {
     }
 
@@ -49,7 +45,6 @@ public class PagingResult<T> {
         return PagingResult.<R>newBuilder()
                 .paging(this.getPaging())
                 .records(mappingRecords)
-                .totalPages(this.getTotalPages())
                 .totalCount(this.getTotalCount())
                 .build();
     }
@@ -57,6 +52,46 @@ public class PagingResult<T> {
     public static <T> Builder<T> newBuilder() {
         return new Builder<>();
     }
+
+    @JsonIgnore
+    public Long getPageNo() {
+        return paging.getPageNo();
+    }
+
+    @JsonIgnore
+    public Long getPageSize() {
+        return paging.getPageSize();
+    }
+
+    public Long getTotalPages() {
+        if (getPageSize() == 0) {
+            return 0L;
+        }
+        long pages = getTotalCount() / getPageSize();
+        if (getTotalCount() % getPageSize() != 0) {
+            pages += 1;
+        }
+        return pages;
+    }
+
+    /**
+     * 是否存在上一页
+     *
+     * @return true / false
+     */
+    public boolean hasPrevious() {
+        return getTotalPages() > 1;
+    }
+
+    /**
+     * 是否存在下一页
+     *
+     * @return true / false
+     */
+    public boolean hasNext() {
+        return getPageNo() < this.getTotalPages();
+    }
+
 
     public static class Builder<T> {
         private final PagingResult<T> pagingResult;
@@ -77,11 +112,6 @@ public class PagingResult<T> {
 
         public Builder<T> totalCount(Long totalCount) {
             this.pagingResult.totalCount = totalCount;
-            return this;
-        }
-
-        public Builder<T> totalPages(Long totalPages) {
-            this.pagingResult.totalPages = totalPages;
             return this;
         }
 

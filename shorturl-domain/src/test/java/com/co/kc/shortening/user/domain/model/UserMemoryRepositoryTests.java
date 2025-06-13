@@ -1,24 +1,24 @@
 package com.co.kc.shortening.user.domain.model;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
 /**
  * @author kc
  */
-public class UserMemoryRepositoryTests {
+class UserMemoryRepositoryTests {
     private UserRepository userRepository;
 
-    @Before
+    @BeforeEach
     public void initUserRepository() {
         userRepository = new UserMemoryRepository();
     }
 
     @Test
-    public void testFindSavedUser() {
+    void testFindSavedUser() {
         User newUser =
                 new User(
                         new UserId(10L),
@@ -29,14 +29,14 @@ public class UserMemoryRepositoryTests {
         userRepository.save(newUser);
 
         User userById = userRepository.find(new UserId(10L));
-        Assert.assertEquals(userById, newUser);
+        Assertions.assertEquals(userById, newUser);
 
         User userByEmail = userRepository.find(new UserId(10L));
-        Assert.assertEquals(userByEmail, newUser);
+        Assertions.assertEquals(userByEmail, newUser);
     }
 
     @Test
-    public void testRemoveSavedUser() {
+    void testRemoveSavedUser() {
         User newUser =
                 new User(
                         new UserId(10L),
@@ -47,9 +47,9 @@ public class UserMemoryRepositoryTests {
         userRepository.save(newUser);
 
         User user = userRepository.find(new UserId(10L));
-        Assert.assertEquals(user, newUser);
+        Assertions.assertEquals(user, newUser);
 
         userRepository.remove(user);
-        Assert.assertNull(userRepository.find(new UserId(10L)));
+        Assertions.assertNull(userRepository.find(new UserId(10L)));
     }
 }

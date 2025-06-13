@@ -1,46 +1,31 @@
 package com.co.kc.shortening.shorturl.domain.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class ShortIdTests {
+class ShortIdTests {
     @Test
-    public void testCreateNullShortId() {
-        try {
-            new ShortId(null);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is null", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateNullShortId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new ShortId(null));
+        Assertions.assertEquals("id is null", e.getMessage());
     }
 
     @Test
-    public void testCreateLessThanZeroShortId() {
-        try {
-            new ShortId(-1L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateLessThanZeroShortId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new ShortId(-1L));
+        Assertions.assertEquals("id is less than or equal to 0", e.getMessage());
     }
 
     @Test
-    public void testCreateEqualToZeroShortId() {
-        try {
-            new ShortId(0L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateEqualToZeroShortId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new ShortId(0L));
+        Assertions.assertEquals("id is less than or equal to 0", e.getMessage());
     }
 
 
     @Test
-    public void testCreateShortIdSuccessfully() {
+    void testCreateShortIdSuccessfully() {
         ShortId shortId = new ShortId(10L);
-        Assert.assertEquals(10L, shortId.getId().longValue());
+        Assertions.assertEquals(10L, shortId.getId().longValue());
     }
 }

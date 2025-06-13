@@ -1,6 +1,6 @@
 package com.co.kc.shortening.web.controller;
 
-import com.co.kc.shortening.application.service.appservice.ShorturlAppService;
+import com.co.kc.shortening.application.service.app.ShorturlAppService;
 import com.co.kc.shortening.web.model.vo.UrlPreviewVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

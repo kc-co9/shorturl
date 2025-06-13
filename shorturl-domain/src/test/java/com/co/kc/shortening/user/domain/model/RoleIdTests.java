@@ -1,62 +1,47 @@
 package com.co.kc.shortening.user.domain.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class RoleIdTests {
+class RoleIdTests {
     @Test
-    public void testCreateNullRoleId() {
-        try {
-            new RoleId(null);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is null", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateNullRoleId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new RoleId(null));
+        Assertions.assertEquals("id is null", e.getMessage());
     }
 
     @Test
-    public void testCreateLessThanZeroRoleId() {
-        try {
-            new RoleId(-1L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateLessThanZeroRoleId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new RoleId(-1L));
+        Assertions.assertEquals("id is less than or equal to 0", e.getMessage());
     }
 
     @Test
-    public void testCreateEqualToZeroRoleId() {
-        try {
-            new RoleId(0L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateEqualToZeroRoleId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new RoleId(0L));
+        Assertions.assertEquals("id is less than or equal to 0", e.getMessage());
     }
 
     @Test
-    public void testCreateRoleIdSuccessfully() {
+    void testCreateRoleIdSuccessfully() {
         RoleId roleId = new RoleId(10L);
-        Assert.assertEquals(10L, roleId.getId().longValue());
+        Assertions.assertEquals(10L, roleId.getId().longValue());
     }
 
     @Test
-    public void testSameRoleIdIsEqual() {
+    void testSameRoleIdIsEqual() {
         RoleId roleId1 = new RoleId(10L);
         RoleId roleId2 = new RoleId(10L);
-        Assert.assertEquals(roleId1, roleId2);
+        Assertions.assertEquals(roleId1, roleId2);
     }
 
     @Test
-    public void testDifferentRoleIdIsNotEqual() {
+    void testDifferentRoleIdIsNotEqual() {
         RoleId roleId1 = new RoleId(10L);
         RoleId roleId2 = new RoleId(20L);
-        Assert.assertNotEquals(roleId1, roleId2);
+        Assertions.assertNotEquals(roleId1, roleId2);
     }
 }

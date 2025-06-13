@@ -15,17 +15,16 @@ import com.co.kc.shortening.application.model.cqrs.command.user.SignOutCommand;
 import com.co.kc.shortening.application.model.cqrs.dto.SignInDTO;
 import com.co.kc.shortening.application.model.cqrs.dto.UserDetailDTO;
 import com.co.kc.shortening.application.model.cqrs.query.UserDetailQuery;
-import com.co.kc.shortening.application.service.appservice.UserAppService;
+import com.co.kc.shortening.application.service.app.UserAppService;
 import com.co.kc.shortening.common.exception.AuthException;
 import com.co.kc.shortening.common.utils.JsonUtils;
 import com.co.kc.shortening.user.domain.model.UserFactory;
 import com.co.kc.shortening.web.common.Result;
 import com.co.kc.shortening.web.common.constants.ResultCode;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,7 +32,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
@@ -44,11 +42,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(AccountController.class)
 @Import({MethodSecurityConfig.class, WebSecurityConfig.class})
 @ContextConfiguration(classes = ShortUrlAdminTestApplication.class)
-public class AccountControllerTests {
+class AccountControllerTests {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -62,7 +59,7 @@ public class AccountControllerTests {
     private MockHttpServletRequestBuilder signOutRequest;
     private MockHttpServletRequestBuilder accountDetailRequest;
 
-    @Before
+    @BeforeEach
     public void initMockRequestBuilder() {
         signInRequest = post("/account/v1/signIn").contentType(MediaType.APPLICATION_JSON).characterEncoding(UTF_8.name());
         signOutRequest = post("/account/v1/signOut").contentType(MediaType.APPLICATION_JSON).characterEncoding(UTF_8.name());
@@ -70,7 +67,7 @@ public class AccountControllerTests {
     }
 
     @Test
-    public void testSignInWhenAccountIsCorrect() throws Exception {
+    void testSignInWhenAccountIsCorrect() throws Exception {
         SignInDTO signInDTO = new SignInDTO(UserFactory.testUserId, UserFactory.testUserToken);
         doReturn(signInDTO).when(userAppService).signIn(any(SignInCommand.class));
 
@@ -81,19 +78,19 @@ public class AccountControllerTests {
                 .andExpect(mvcResult -> {
                     Result<AdministratorSignInVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<AdministratorSignInVO>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
-                    Assert.assertEquals(UserFactory.testUserToken, result.getData().getAuthToken());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(UserFactory.testUserToken, result.getData().getAuthToken());
                 });
 
         ArgumentCaptor<SignInCommand> argumentCaptor = ArgumentCaptor.forClass(SignInCommand.class);
         verify(userAppService).signIn(argumentCaptor.capture());
         SignInCommand signInCommand = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserEmail, signInCommand.getEmail());
-        Assert.assertEquals(UserFactory.testUserRawPassword, signInCommand.getPassword());
+        Assertions.assertEquals(UserFactory.testUserEmail, signInCommand.getEmail());
+        Assertions.assertEquals(UserFactory.testUserRawPassword, signInCommand.getPassword());
     }
 
     @Test
-    public void testSignInWhenEmailIsWrong() throws Exception {
+    void testSignInWhenEmailIsWrong() throws Exception {
         doThrow(new AuthException("user is not exist")).when(userAppService).signIn(any(SignInCommand.class));
 
 
@@ -104,19 +101,19 @@ public class AccountControllerTests {
                 .andExpect(mvcResult -> {
                     Result<AdministratorSignInVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<AdministratorSignInVO>>() {
                     });
-                    Assert.assertEquals(ResultCode.AUTH_FAIL.getCode(), result.getCode());
-                    Assert.assertEquals("user is not exist", result.getMsg());
+                    Assertions.assertEquals(ResultCode.AUTH_FAIL.getCode(), result.getCode());
+                    Assertions.assertEquals("user is not exist", result.getMsg());
                 });
 
         ArgumentCaptor<SignInCommand> argumentCaptor = ArgumentCaptor.forClass(SignInCommand.class);
         verify(userAppService).signIn(argumentCaptor.capture());
         SignInCommand signInCommand = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserWrongEmail, signInCommand.getEmail());
-        Assert.assertEquals(UserFactory.testUserRawPassword, signInCommand.getPassword());
+        Assertions.assertEquals(UserFactory.testUserWrongEmail, signInCommand.getEmail());
+        Assertions.assertEquals(UserFactory.testUserRawPassword, signInCommand.getPassword());
     }
 
     @Test
-    public void testSignInWhenPasswordIsWrong() throws Exception {
+    void testSignInWhenPasswordIsWrong() throws Exception {
         doThrow(new AuthException("user is failed to authenticate")).when(userAppService).signIn(any(SignInCommand.class));
 
         AdministratorSignInRequest body = new AdministratorSignInRequest(UserFactory.testUserEmail, UserFactory.testUserWrongRawPassword);
@@ -126,19 +123,19 @@ public class AccountControllerTests {
                 .andExpect(mvcResult -> {
                     Result<AdministratorSignInVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<AdministratorSignInVO>>() {
                     });
-                    Assert.assertEquals(ResultCode.AUTH_FAIL.getCode(), result.getCode());
-                    Assert.assertEquals("user is failed to authenticate", result.getMsg());
+                    Assertions.assertEquals(ResultCode.AUTH_FAIL.getCode(), result.getCode());
+                    Assertions.assertEquals("user is failed to authenticate", result.getMsg());
                 });
 
         ArgumentCaptor<SignInCommand> argumentCaptor = ArgumentCaptor.forClass(SignInCommand.class);
         verify(userAppService).signIn(argumentCaptor.capture());
         SignInCommand signInCommand = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserEmail, signInCommand.getEmail());
-        Assert.assertEquals(UserFactory.testUserWrongRawPassword, signInCommand.getPassword());
+        Assertions.assertEquals(UserFactory.testUserEmail, signInCommand.getEmail());
+        Assertions.assertEquals(UserFactory.testUserWrongRawPassword, signInCommand.getPassword());
     }
 
     @Test
-    public void testSignOut() throws Exception {
+    void testSignOut() throws Exception {
         SecurityMock.mockTestUserHasAuthenticated(tokenClient, sessionClient);
 
         doNothing().when(userAppService).signOut(any(SignOutCommand.class));
@@ -149,20 +146,20 @@ public class AccountControllerTests {
                 .andExpect(mvcResult -> {
                     Result<?> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<?>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
                 });
 
         ArgumentCaptor<SignOutCommand> argumentCaptor = ArgumentCaptor.forClass(SignOutCommand.class);
         verify(userAppService).signOut(argumentCaptor.capture());
         SignOutCommand signOutCommand = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserId, signOutCommand.getUserId());
+        Assertions.assertEquals(UserFactory.testUserId, signOutCommand.getUserId());
     }
 
     @Test
-    public void testAccountDetail() throws Exception {
+    void testAccountDetail() throws Exception {
         SecurityMock.mockTestUserHasAuthenticated(tokenClient, sessionClient);
 
-        UserDetailDTO userDetailDTO = new UserDetailDTO(UserFactory.testUserId, UserFactory.testUserName);
+        UserDetailDTO userDetailDTO = new UserDetailDTO(UserFactory.testUserId, UserFactory.testUserEmail, UserFactory.testUserName);
         doReturn(userDetailDTO).when(userAppService).userDetail(any(UserDetailQuery.class));
 
         MockHttpServletRequestBuilder httpGet = accountDetailRequest.header(ParamsConstants.TOKEN, UserFactory.testUserToken);
@@ -171,14 +168,14 @@ public class AccountControllerTests {
                 .andExpect(mvcResult -> {
                     Result<AdministratorDetailVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<AdministratorDetailVO>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
-                    Assert.assertEquals(UserFactory.testUserId, result.getData().getAdministratorId());
-                    Assert.assertEquals(UserFactory.testUserName, result.getData().getAdministratorName());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(UserFactory.testUserId, result.getData().getAdministratorId());
+                    Assertions.assertEquals(UserFactory.testUserName, result.getData().getAdministratorName());
                 });
 
         ArgumentCaptor<UserDetailQuery> argumentCaptor = ArgumentCaptor.forClass(UserDetailQuery.class);
         verify(userAppService).userDetail(argumentCaptor.capture());
         UserDetailQuery userDetailQuery = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserId, userDetailQuery.getUserId());
+        Assertions.assertEquals(UserFactory.testUserId, userDetailQuery.getUserId());
     }
 }

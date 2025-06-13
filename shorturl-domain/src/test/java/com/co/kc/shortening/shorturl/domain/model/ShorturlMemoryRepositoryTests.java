@@ -1,34 +1,34 @@
 package com.co.kc.shortening.shorturl.domain.model;
 
 import com.co.kc.shortening.shared.domain.model.Link;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-public class ShorturlMemoryRepositoryTests {
+class ShorturlMemoryRepositoryTests {
     private ShorturlRepository shorturlRepository;
 
-    @Before
+    @BeforeEach
     public void initShorturlRepository() {
         shorturlRepository = new ShorturlMemoryRepository();
     }
 
     @Test
-    public void testFindNullByShortId() {
+    void testFindNullByShortId() {
         Shorturl shorturl = shorturlRepository.find(new ShortId(10L));
-        Assert.assertNull(shorturl);
+        Assertions.assertNull(shorturl);
     }
 
     @Test
-    public void testFindNullByCode() {
+    void testFindNullByCode() {
         Shorturl shorturl = shorturlRepository.find(new ShortCode("testNullCode"));
-        Assert.assertNull(shorturl);
+        Assertions.assertNull(shorturl);
     }
 
     @Test
-    public void testFindSavedShorturl() {
+    void testFindSavedShorturl() {
         ShortId shortId = new ShortId(10L);
         ShortCode code = new ShortCode("testCode");
         Link rawLink = new Link("http://www.test.com");
@@ -41,12 +41,12 @@ public class ShorturlMemoryRepositoryTests {
         Shorturl savedShorturl1 = shorturlRepository.find(shortId);
         Shorturl savedShorturl2 = shorturlRepository.find(code);
 
-        Assert.assertEquals(savedShorturl1, savedShorturl2);
+        Assertions.assertEquals(savedShorturl1, savedShorturl2);
 
-        Assert.assertEquals(newShorturl, savedShorturl1);
-        Assert.assertEquals(code, savedShorturl1.getShortCode());
+        Assertions.assertEquals(newShorturl, savedShorturl1);
+        Assertions.assertEquals(code, savedShorturl1.getShortCode());
 
-        Assert.assertEquals(newShorturl, savedShorturl2);
-        Assert.assertEquals(code, savedShorturl2.getShortCode());
+        Assertions.assertEquals(newShorturl, savedShorturl2);
+        Assertions.assertEquals(code, savedShorturl2.getShortCode());
     }
 }

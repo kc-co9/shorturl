@@ -29,7 +29,7 @@ public class ShorturlMySqlRepository implements ShorturlRepository {
                 new ShortId(urlMapping.getShortId()),
                 new ShortCode(urlMapping.getCode()),
                 new Link(urlMapping.getUrl()),
-                UrlMappingStatus.convert(urlMapping.getStatus()),
+                UrlMappingStatus.convert(urlMapping.getStatus()).get(),
                 new ValidTimeInterval(urlMapping.getValidStart(), urlMapping.getValidEnd()));
         shorturl.setId(urlMapping.getId());
         return shorturl;
@@ -46,7 +46,7 @@ public class ShorturlMySqlRepository implements ShorturlRepository {
                 new ShortId(urlMapping.getShortId()),
                 new ShortCode(urlMapping.getCode()),
                 new Link(urlMapping.getUrl()),
-                UrlMappingStatus.convert(urlMapping.getStatus()),
+                UrlMappingStatus.convert(urlMapping.getStatus()).get(),
                 new ValidTimeInterval(urlMapping.getValidStart(), urlMapping.getValidEnd()));
         shorturl.setId(urlMapping.getId());
         return shorturl;
@@ -54,14 +54,27 @@ public class ShorturlMySqlRepository implements ShorturlRepository {
 
     @Override
     public void save(Shorturl shorturl) {
-        UrlMapping urlMapping = new UrlMapping();
-        urlMapping.setShortId(shorturl.getShortId().getId());
-        urlMapping.setUrl(shorturl.getRawLink().getUrl());
-        urlMapping.setCode(shorturl.getShortCode().getCode());
-        urlMapping.setHash(shorturl.getRawLink().getHash());
-        urlMapping.setStatus(UrlMappingStatus.convert(shorturl.getStatus()));
-        urlMapping.setValidStart(shorturl.getValidTime().getStartTime());
-        urlMapping.setValidEnd(shorturl.getValidTime().getEndTime());
-        urlMappingService.save(urlMapping);
+        if (shorturl.getId() == null) {
+            UrlMapping urlMapping = new UrlMapping();
+            urlMapping.setShortId(shorturl.getShortId().getId());
+            urlMapping.setUrl(shorturl.getRawLink().getUrl());
+            urlMapping.setCode(shorturl.getShortCode().getCode());
+            urlMapping.setHash(shorturl.getRawLink().getHash());
+            urlMapping.setStatus(UrlMappingStatus.convert(shorturl.getStatus()).get());
+            urlMapping.setValidStart(shorturl.getValidTime().getStartTime());
+            urlMapping.setValidEnd(shorturl.getValidTime().getEndTime());
+            urlMappingService.save(urlMapping);
+        } else {
+            UrlMapping urlMapping = new UrlMapping();
+            urlMapping.setId(shorturl.getId());
+            urlMapping.setShortId(shorturl.getShortId().getId());
+            urlMapping.setUrl(shorturl.getRawLink().getUrl());
+            urlMapping.setCode(shorturl.getShortCode().getCode());
+            urlMapping.setHash(shorturl.getRawLink().getHash());
+            urlMapping.setStatus(UrlMappingStatus.convert(shorturl.getStatus()).get());
+            urlMapping.setValidStart(shorturl.getValidTime().getStartTime());
+            urlMapping.setValidEnd(shorturl.getValidTime().getEndTime());
+            urlMappingService.updateById(urlMapping);
+        }
     }
 }

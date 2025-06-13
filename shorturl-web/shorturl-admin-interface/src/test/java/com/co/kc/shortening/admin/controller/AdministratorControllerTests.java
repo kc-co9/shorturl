@@ -8,28 +8,27 @@ import com.co.kc.shortening.admin.security.MethodSecurityConfig;
 import com.co.kc.shortening.admin.security.WebSecurityConfig;
 import com.co.kc.shortening.admin.security.constant.ParamsConstants;
 import com.co.kc.shortening.admin.starter.ShortUrlAdminTestApplication;
-import com.co.kc.shortening.admin.utils.MockMvcUtils;
 import com.co.kc.shortening.application.client.SessionClient;
 import com.co.kc.shortening.application.client.TokenClient;
 import com.co.kc.shortening.application.model.cqrs.command.user.UserAddCommand;
 import com.co.kc.shortening.application.model.cqrs.command.user.UserRemoveCommand;
 import com.co.kc.shortening.application.model.cqrs.command.user.UserUpdateCommand;
+import com.co.kc.shortening.application.model.cqrs.dto.UserAddDTO;
 import com.co.kc.shortening.application.model.cqrs.dto.UserDetailDTO;
 import com.co.kc.shortening.application.model.cqrs.dto.UserQueryDTO;
 import com.co.kc.shortening.application.model.cqrs.query.UserDetailQuery;
 import com.co.kc.shortening.application.model.cqrs.query.UserQuery;
 import com.co.kc.shortening.application.model.io.PagingResult;
-import com.co.kc.shortening.application.service.appservice.UserAppService;
-import com.co.kc.shortening.application.service.queryservice.UserQueryService;
+import com.co.kc.shortening.application.service.app.UserAppService;
+import com.co.kc.shortening.application.service.query.UserQueryService;
 import com.co.kc.shortening.common.utils.JsonUtils;
 import com.co.kc.shortening.user.domain.model.UserFactory;
 import com.co.kc.shortening.web.common.Result;
 import com.co.kc.shortening.web.common.constants.ResultCode;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -37,7 +36,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -51,11 +49,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(AdministratorController.class)
 @Import({MethodSecurityConfig.class, WebSecurityConfig.class})
 @ContextConfiguration(classes = ShortUrlAdminTestApplication.class)
-public class AdministratorControllerTests {
+class AdministratorControllerTests {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -73,7 +70,7 @@ public class AdministratorControllerTests {
     private MockHttpServletRequestBuilder updateAdministratorRequest;
     private MockHttpServletRequestBuilder removeAdministratorRequest;
 
-    @Before
+    @BeforeEach
     public void initMockRequestBuilder() {
         SecurityMock.mockTestUserHasAuthenticated(tokenClient, sessionClient);
 
@@ -105,7 +102,7 @@ public class AdministratorControllerTests {
     }
 
     @Test
-    public void testAdministratorListByEmail() throws Exception {
+    void testAdministratorListByEmail() throws Exception {
         mockOnlyTestUserInAdministratorList();
 
         MockHttpServletRequestBuilder httpGet =
@@ -122,14 +119,14 @@ public class AdministratorControllerTests {
         ArgumentCaptor<UserQuery> argumentCaptor = ArgumentCaptor.forClass(UserQuery.class);
         verify(userQueryService).queryUser(argumentCaptor.capture());
         UserQuery userQuery = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserEmail, userQuery.getEmail());
-        Assert.assertEquals("", userQuery.getUsername());
-        Assert.assertEquals(1L, userQuery.getPageNo().longValue());
-        Assert.assertEquals(10L, userQuery.getPageSize().longValue());
+        Assertions.assertEquals(UserFactory.testUserEmail, userQuery.getEmail());
+        Assertions.assertEquals("", userQuery.getUsername());
+        Assertions.assertEquals(1L, userQuery.getPageNo().longValue());
+        Assertions.assertEquals(10L, userQuery.getPageSize().longValue());
     }
 
     @Test
-    public void testAdministratorListByUserName() throws Exception {
+    void testAdministratorListByUserName() throws Exception {
         mockOnlyTestUserInAdministratorList();
 
         MockHttpServletRequestBuilder httpGet =
@@ -145,14 +142,14 @@ public class AdministratorControllerTests {
         ArgumentCaptor<UserQuery> argumentCaptor = ArgumentCaptor.forClass(UserQuery.class);
         verify(userQueryService).queryUser(argumentCaptor.capture());
         UserQuery userQuery = argumentCaptor.getValue();
-        Assert.assertEquals("", userQuery.getEmail());
-        Assert.assertEquals(UserFactory.testUserName, userQuery.getUsername());
-        Assert.assertEquals(1L, userQuery.getPageNo().longValue());
-        Assert.assertEquals(10L, userQuery.getPageSize().longValue());
+        Assertions.assertEquals("", userQuery.getEmail());
+        Assertions.assertEquals(UserFactory.testUserName, userQuery.getUsername());
+        Assertions.assertEquals(1L, userQuery.getPageNo().longValue());
+        Assertions.assertEquals(10L, userQuery.getPageSize().longValue());
     }
 
     @Test
-    public void testAdministratorListByUserEmailAndUserName() throws Exception {
+    void testAdministratorListByUserEmailAndUserName() throws Exception {
         mockOnlyTestUserInAdministratorList();
 
         MockHttpServletRequestBuilder httpGet =
@@ -168,14 +165,14 @@ public class AdministratorControllerTests {
         ArgumentCaptor<UserQuery> argumentCaptor = ArgumentCaptor.forClass(UserQuery.class);
         verify(userQueryService).queryUser(argumentCaptor.capture());
         UserQuery userQuery = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserEmail, userQuery.getEmail());
-        Assert.assertEquals(UserFactory.testUserName, userQuery.getUsername());
-        Assert.assertEquals(1L, userQuery.getPageNo().longValue());
-        Assert.assertEquals(10L, userQuery.getPageSize().longValue());
+        Assertions.assertEquals(UserFactory.testUserEmail, userQuery.getEmail());
+        Assertions.assertEquals(UserFactory.testUserName, userQuery.getUsername());
+        Assertions.assertEquals(1L, userQuery.getPageNo().longValue());
+        Assertions.assertEquals(10L, userQuery.getPageSize().longValue());
     }
 
     @Test
-    public void testAdministratorListByUserWrongEmail() throws Exception {
+    void testAdministratorListByUserWrongEmail() throws Exception {
         mockOnlyTestUserInAdministratorList();
 
         MockHttpServletRequestBuilder httpGet =
@@ -191,15 +188,15 @@ public class AdministratorControllerTests {
         ArgumentCaptor<UserQuery> argumentCaptor = ArgumentCaptor.forClass(UserQuery.class);
         verify(userQueryService).queryUser(argumentCaptor.capture());
         UserQuery userQuery = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserWrongEmail, userQuery.getEmail());
-        Assert.assertEquals("", userQuery.getUsername());
-        Assert.assertEquals(1L, userQuery.getPageNo().longValue());
-        Assert.assertEquals(10L, userQuery.getPageSize().longValue());
+        Assertions.assertEquals(UserFactory.testUserWrongEmail, userQuery.getEmail());
+        Assertions.assertEquals("", userQuery.getUsername());
+        Assertions.assertEquals(1L, userQuery.getPageNo().longValue());
+        Assertions.assertEquals(10L, userQuery.getPageSize().longValue());
     }
 
     @Test
-    public void testAdministratorDetail() throws Exception {
-        UserDetailDTO userDetailDTO = new UserDetailDTO(UserFactory.testUserId, UserFactory.testUserName);
+    void testAdministratorDetail() throws Exception {
+        UserDetailDTO userDetailDTO = new UserDetailDTO(UserFactory.testUserId, UserFactory.testUserEmail, UserFactory.testUserName);
         doReturn(userDetailDTO).when(userAppService).userDetail(any(UserDetailQuery.class));
 
         MockHttpServletRequestBuilder httpGet =
@@ -209,20 +206,20 @@ public class AdministratorControllerTests {
                 .andExpect(mvcResult -> {
                     Result<AdministratorDetailVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<AdministratorDetailVO>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
-                    Assert.assertEquals(UserFactory.testUserId, result.getData().getAdministratorId());
-                    Assert.assertEquals(UserFactory.testUserName, result.getData().getAdministratorName());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(UserFactory.testUserId, result.getData().getAdministratorId());
+                    Assertions.assertEquals(UserFactory.testUserName, result.getData().getAdministratorName());
                 });
 
         ArgumentCaptor<UserDetailQuery> argumentCaptor = ArgumentCaptor.forClass(UserDetailQuery.class);
         verify(userAppService).userDetail(argumentCaptor.capture());
         UserDetailQuery userDetailQuery = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserId, userDetailQuery.getUserId());
+        Assertions.assertEquals(UserFactory.testUserId, userDetailQuery.getUserId());
     }
 
     @Test
-    public void testAddAdministrator() throws Exception {
-        doNothing().when(userAppService).addUser(any(UserAddCommand.class));
+    void testAddAdministrator() throws Exception {
+        doReturn(new UserAddDTO(UserFactory.testUserId)).when(userAppService).addUser(any(UserAddCommand.class));
 
         AdministratorAddRequest request = new AdministratorAddRequest();
         request.setUsername(UserFactory.testUserName);
@@ -235,19 +232,19 @@ public class AdministratorControllerTests {
                 .andExpect(mvcResult -> {
                     Result<?> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<?>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
                 });
 
         ArgumentCaptor<UserAddCommand> argumentCaptor = ArgumentCaptor.forClass(UserAddCommand.class);
         verify(userAppService).addUser(argumentCaptor.capture());
         UserAddCommand userAddCommand = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserEmail, userAddCommand.getEmail());
-        Assert.assertEquals(UserFactory.testUserName, userAddCommand.getUsername());
-        Assert.assertEquals(UserFactory.testUserRawPassword, userAddCommand.getPassword());
+        Assertions.assertEquals(UserFactory.testUserEmail, userAddCommand.getEmail());
+        Assertions.assertEquals(UserFactory.testUserName, userAddCommand.getUsername());
+        Assertions.assertEquals(UserFactory.testUserRawPassword, userAddCommand.getPassword());
     }
 
     @Test
-    public void testUpdateAdministrator() throws Exception {
+    void testUpdateAdministrator() throws Exception {
         doNothing().when(userAppService).updateUser(any(UserUpdateCommand.class));
 
         AdministratorUpdateRequest request = new AdministratorUpdateRequest();
@@ -262,16 +259,16 @@ public class AdministratorControllerTests {
                 .andExpect(mvcResult -> {
                     Result<?> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<?>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
                 });
 
         ArgumentCaptor<UserUpdateCommand> argumentCaptor = ArgumentCaptor.forClass(UserUpdateCommand.class);
         verify(userAppService).updateUser(argumentCaptor.capture());
         UserUpdateCommand userUpdateCommand = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserId, userUpdateCommand.getUserId());
-        Assert.assertEquals(UserFactory.testUserEmail, userUpdateCommand.getEmail());
-        Assert.assertEquals(UserFactory.testUserName, userUpdateCommand.getUsername());
-        Assert.assertEquals(UserFactory.testUserRawPassword, userUpdateCommand.getPassword());
+        Assertions.assertEquals(UserFactory.testUserId, userUpdateCommand.getUserId());
+        Assertions.assertEquals(UserFactory.testUserEmail, userUpdateCommand.getEmail());
+        Assertions.assertEquals(UserFactory.testUserName, userUpdateCommand.getUsername());
+        Assertions.assertEquals(UserFactory.testUserRawPassword, userUpdateCommand.getPassword());
     }
 
     @Test
@@ -287,13 +284,13 @@ public class AdministratorControllerTests {
                 .andExpect(mvcResult -> {
                     Result<?> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<?>>() {
                     });
-                    Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+                    Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
                 });
 
         ArgumentCaptor<UserRemoveCommand> argumentCaptor = ArgumentCaptor.forClass(UserRemoveCommand.class);
         verify(userAppService).removeUser(argumentCaptor.capture());
         UserRemoveCommand userRemoveCommand = argumentCaptor.getValue();
-        Assert.assertEquals(UserFactory.testUserId, userRemoveCommand.getUserId());
+        Assertions.assertEquals(UserFactory.testUserId, userRemoveCommand.getUserId());
     }
 
     private void mockOnlyTestUserInAdministratorList() {
@@ -309,14 +306,12 @@ public class AdministratorControllerTests {
                 return PagingResult.<UserQueryDTO>newBuilder()
                         .paging(invocationParams.getPaging())
                         .records(Collections.singletonList(userQueryDTO))
-                        .totalPages(1L)
                         .totalCount(1L)
                         .build();
             }
             return PagingResult.newBuilder()
                     .paging(invocationParams.getPaging())
                     .records(Collections.emptyList())
-                    .totalPages(0L)
                     .totalCount(0L)
                     .build();
         }).when(userQueryService).queryUser(any(UserQuery.class));
@@ -326,28 +321,28 @@ public class AdministratorControllerTests {
         String resultJson = mvcResult.getResponse().getContentAsString();
         Result<PagingResult<AdministratorListVO>> result = JsonUtils.fromJson(resultJson, new TypeReference<Result<PagingResult<AdministratorListVO>>>() {
         });
-        Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
-        Assert.assertEquals(1L, result.getData().getTotalPages().longValue());
-        Assert.assertEquals(1L, result.getData().getTotalCount().longValue());
-        Assert.assertEquals(1L, result.getData().getPaging().getPageNo().longValue());
-        Assert.assertEquals(10L, result.getData().getPaging().getPageSize().longValue());
-        Assert.assertEquals(1L, result.getData().getRecords().size());
+        Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+        Assertions.assertEquals(1L, result.getData().getTotalPages().longValue());
+        Assertions.assertEquals(1L, result.getData().getTotalCount().longValue());
+        Assertions.assertEquals(1L, result.getData().getPaging().getPageNo().longValue());
+        Assertions.assertEquals(10L, result.getData().getPaging().getPageSize().longValue());
+        Assertions.assertEquals(1L, result.getData().getRecords().size());
 
         AdministratorListVO administratorListVO = result.getData().getRecords().get(0);
-        Assert.assertEquals(UserFactory.testUserId, administratorListVO.getAdministratorId());
-        Assert.assertEquals(UserFactory.testUserName, administratorListVO.getUsername());
-        Assert.assertEquals(UserFactory.testUserEmail, administratorListVO.getEmail());
+        Assertions.assertEquals(UserFactory.testUserId, administratorListVO.getAdministratorId());
+        Assertions.assertEquals(UserFactory.testUserName, administratorListVO.getUsername());
+        Assertions.assertEquals(UserFactory.testUserEmail, administratorListVO.getEmail());
     }
 
     private void shouldNothingInAdministratorList(MvcResult mvcResult) throws Exception {
         String resultJson = mvcResult.getResponse().getContentAsString();
         Result<PagingResult<AdministratorListVO>> result = JsonUtils.fromJson(resultJson, new TypeReference<Result<PagingResult<AdministratorListVO>>>() {
         });
-        Assert.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
-        Assert.assertEquals(0L, result.getData().getTotalPages().longValue());
-        Assert.assertEquals(0L, result.getData().getTotalCount().longValue());
-        Assert.assertEquals(1L, result.getData().getPaging().getPageNo().longValue());
-        Assert.assertEquals(10L, result.getData().getPaging().getPageSize().longValue());
-        Assert.assertEquals(0L, result.getData().getRecords().size());
+        Assertions.assertEquals(ResultCode.SUCCESS.getCode(), result.getCode());
+        Assertions.assertEquals(0L, result.getData().getTotalPages().longValue());
+        Assertions.assertEquals(0L, result.getData().getTotalCount().longValue());
+        Assertions.assertEquals(1L, result.getData().getPaging().getPageNo().longValue());
+        Assertions.assertEquals(10L, result.getData().getPaging().getPageSize().longValue());
+        Assertions.assertEquals(0L, result.getData().getRecords().size());
     }
 }

@@ -1,48 +1,38 @@
 package com.co.kc.shortening.shorturl.domain.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class ShortCodeTests {
+class ShortCodeTests {
     @Test
-    public void testCreateNullShortCode() {
-        try {
-            new ShortCode(null);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("code is null", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateNullShortCode() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new ShortCode(null));
+        Assertions.assertEquals("code is null", e.getMessage());
     }
 
     @Test
-    public void testCreateEmptyShortCode() {
-        try {
-            new ShortCode("");
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("code is null", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateEmptyShortCode() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new ShortCode(""));
+        Assertions.assertEquals("code is null", e.getMessage());
     }
 
     @Test
-    public void testCreateShortCodeSuccessfully() {
+    void testCreateShortCodeSuccessfully() {
         ShortCode code = new ShortCode("testCode");
-        Assert.assertEquals("testCode", code.getCode());
+        Assertions.assertEquals("testCode", code.getCode());
     }
 
     @Test
-    public void testSameShortCodeValueIsEqual() {
-        Assert.assertEquals(new ShortCode("10"), new ShortCode("10"));
+    void testSameShortCodeValueIsEqual() {
+        Assertions.assertEquals(new ShortCode("10"), new ShortCode("10"));
     }
 
 
     @Test
-    public void testDifferentShortCodeValueIsNotEqual() {
-        Assert.assertNotEquals(new ShortCode("10"), new ShortCode("11"));
+    void testDifferentShortCodeValueIsNotEqual() {
+        Assertions.assertNotEquals(new ShortCode("10"), new ShortCode("11"));
     }
 }

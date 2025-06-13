@@ -18,6 +18,10 @@ public class UserDetailDTO {
      */
     private Long userId;
     /**
+     * 用户邮箱
+     */
+    private String userEmail;
+    /**
      * 用户名
      */
     private String userName;

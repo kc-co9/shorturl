@@ -1,62 +1,47 @@
 package com.co.kc.shortening.user.domain.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class PermissionIdTests {
+class PermissionIdTests {
     @Test
-    public void testCreateNullPermissionId() {
-        try {
-            new PermissionId(null);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is null", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateNullPermissionId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new PermissionId(null));
+        Assertions.assertEquals("id is null", e.getMessage());
     }
 
     @Test
-    public void testCreateLessThanZeroPermissionId() {
-        try {
-            new PermissionId(-1L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateLessThanZeroPermissionId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new PermissionId(-1L));
+        Assertions.assertEquals("id is less than or equal to 0", e.getMessage());
     }
 
     @Test
-    public void testCreateEqualToZeroPermissionId() {
-        try {
-            new PermissionId(0L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateEqualToZeroPermissionId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new PermissionId(0L));
+        Assertions.assertEquals("id is less than or equal to 0", e.getMessage());
     }
 
     @Test
-    public void testCreatePermissionIdSuccessfully() {
+    void testCreatePermissionIdSuccessfully() {
         PermissionId permissionId = new PermissionId(10L);
-        Assert.assertEquals(10L, permissionId.getId().longValue());
+        Assertions.assertEquals(10L, permissionId.getId().longValue());
     }
 
     @Test
-    public void testSamePermissionIdIsEqual() {
+    void testSamePermissionIdIsEqual() {
         PermissionId permissionId1 = new PermissionId(10L);
         PermissionId permissionId2 = new PermissionId(10L);
-        Assert.assertEquals(permissionId1, permissionId2);
+        Assertions.assertEquals(permissionId1, permissionId2);
     }
 
     @Test
-    public void testDifferentPermissionIdIsNotEqual() {
+    void testDifferentPermissionIdIsNotEqual() {
         PermissionId permissionId1 = new PermissionId(10L);
         PermissionId permissionId2 = new PermissionId(20L);
-        Assert.assertNotEquals(permissionId1, permissionId2);
+        Assertions.assertNotEquals(permissionId1, permissionId2);
     }
 }

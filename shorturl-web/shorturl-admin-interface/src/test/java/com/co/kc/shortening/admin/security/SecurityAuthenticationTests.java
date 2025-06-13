@@ -11,23 +11,21 @@ import com.co.kc.shortening.application.model.cqrs.command.user.SignInCommand;
 import com.co.kc.shortening.application.model.cqrs.dto.SignInDTO;
 import com.co.kc.shortening.application.model.cqrs.dto.UserDetailDTO;
 import com.co.kc.shortening.application.model.cqrs.query.UserDetailQuery;
-import com.co.kc.shortening.application.service.appservice.UserAppService;
+import com.co.kc.shortening.application.service.app.UserAppService;
 import com.co.kc.shortening.common.utils.JsonUtils;
 import com.co.kc.shortening.user.domain.model.UserFactory;
 import com.co.kc.shortening.web.common.Result;
 import com.co.kc.shortening.web.common.constants.ResultCode;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -41,11 +39,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(AccountController.class)
 @Import({MethodSecurityConfig.class, WebSecurityConfig.class})
 @ContextConfiguration(classes = ShortUrlAdminTestApplication.class)
-public class SecurityAuthenticationTests {
+class SecurityAuthenticationTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -59,7 +56,7 @@ public class SecurityAuthenticationTests {
     private MockHttpServletRequestBuilder signInRequest;
     private MockHttpServletRequestBuilder accountDetailRequest;
 
-    @Before
+    @BeforeEach
     public void initMockRequestBuilder() {
         signInRequest =
                 post("/account/v1/signIn")
@@ -72,7 +69,7 @@ public class SecurityAuthenticationTests {
     }
 
     @Test
-    public void testSignInWhenUserIsNotAuthenticated() throws Exception {
+    void testSignInWhenUserIsNotAuthenticated() throws Exception {
         SignInDTO signInDTO = new SignInDTO(UserFactory.testUserId, UserFactory.testUserToken);
         doReturn(signInDTO).when(userAppService).signIn(any(SignInCommand.class));
         AdministratorSignInRequest body = new AdministratorSignInRequest(UserFactory.testUserEmail, UserFactory.testUserRawPassword);
@@ -83,10 +80,10 @@ public class SecurityAuthenticationTests {
     }
 
     @Test
-    public void testAccountDetailWhenUserHasAuthenticated() throws Exception {
+    void testAccountDetailWhenUserHasAuthenticated() throws Exception {
         SecurityMock.mockTestUserHasAuthenticated(tokenClient, sessionClient);
 
-        UserDetailDTO userDetailDTO = new UserDetailDTO(UserFactory.testUserId, UserFactory.testUserName);
+        UserDetailDTO userDetailDTO = new UserDetailDTO(UserFactory.testUserId, UserFactory.testUserEmail, UserFactory.testUserName);
         doReturn(userDetailDTO).when(userAppService).userDetail(any(UserDetailQuery.class));
 
         mockMvc.perform(accountDetailRequest.header(ParamsConstants.TOKEN, UserFactory.testUserToken))
@@ -95,7 +92,7 @@ public class SecurityAuthenticationTests {
     }
 
     @Test
-    public void testAccountDetailWhenUserIsNotAuthenticated() throws Exception {
+    void testAccountDetailWhenUserIsNotAuthenticated() throws Exception {
         SecurityMock.mockTestUserHasAuthenticated(tokenClient, sessionClient);
         mockMvc.perform(accountDetailRequest)
                 .andExpect(status().isOk())
@@ -103,7 +100,7 @@ public class SecurityAuthenticationTests {
     }
 
     @Test
-    public void testAccountDetailWhenUserAuthenticationHasExpired() throws Exception {
+    void testAccountDetailWhenUserAuthenticationHasExpired() throws Exception {
         SecurityMock.mockTestUserAuthenticationHasExpired(tokenClient, sessionClient);
         mockMvc.perform(accountDetailRequest.header(ParamsConstants.TOKEN, UserFactory.testUserToken))
                 .andExpect(status().isOk())
@@ -111,11 +108,11 @@ public class SecurityAuthenticationTests {
     }
 
     private void success(MvcResult mvcResult) throws UnsupportedEncodingException {
-        Assert.assertEquals(ResultCode.SUCCESS.getCode(), parseResultCode(mvcResult));
+        Assertions.assertEquals(ResultCode.SUCCESS.getCode(), parseResultCode(mvcResult));
     }
 
     private void isNotAuthenticated(MvcResult mvcResult) throws UnsupportedEncodingException {
-        Assert.assertEquals(ResultCode.AUTH_FAIL.getCode(), parseResultCode(mvcResult));
+        Assertions.assertEquals(ResultCode.AUTH_FAIL.getCode(), parseResultCode(mvcResult));
     }
 
     private Integer parseResultCode(MvcResult mvcResult) throws UnsupportedEncodingException {

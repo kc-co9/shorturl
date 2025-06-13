@@ -1,16 +1,16 @@
 package com.co.kc.shortening.application.client;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class RandomIdClientTests {
+class RandomIdClientTests {
     @Test
-    public void testGenRandomId() {
+    void testGenRandomId() {
         IdClient<Long> idClient = new RandomIdClient();
-        Assert.assertNotNull(idClient.next());
-        Assert.assertTrue(idClient.next() >= 1);
+        Assertions.assertNotNull(idClient.next());
+        Assertions.assertTrue(idClient.next() >= 1);
     }
 }

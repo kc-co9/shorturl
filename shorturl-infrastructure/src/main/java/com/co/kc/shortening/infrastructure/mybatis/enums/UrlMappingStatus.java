@@ -5,6 +5,8 @@ import com.co.kc.shortening.shorturl.domain.model.ShorturlStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Optional;
+
 /**
  * @author kc
  */
@@ -27,21 +29,23 @@ public enum UrlMappingStatus {
     @EnumValue
     private final Integer code;
 
-    public static ShorturlStatus convert(UrlMappingStatus status) {
+    public static Optional<ShorturlStatus> convert(UrlMappingStatus status) {
         if (ACTIVE.equals(status)) {
-            return ShorturlStatus.ONLINE;
+            return Optional.of(ShorturlStatus.ONLINE);
         } else if (INVALID.equals(status)) {
-            return ShorturlStatus.OFFLINE;
+            return Optional.of(ShorturlStatus.OFFLINE);
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 
-    public static UrlMappingStatus convert(ShorturlStatus status) {
+    public static Optional<UrlMappingStatus> convert(ShorturlStatus status) {
         if (ShorturlStatus.ONLINE.equals(status)) {
-            return UrlMappingStatus.ACTIVE;
+            return Optional.of(UrlMappingStatus.ACTIVE);
+        } else if (ShorturlStatus.OFFLINE.equals(status)) {
+            return Optional.of(UrlMappingStatus.INVALID);
         } else {
-            return UrlMappingStatus.INVALID;
+            return Optional.empty();
         }
     }
 }

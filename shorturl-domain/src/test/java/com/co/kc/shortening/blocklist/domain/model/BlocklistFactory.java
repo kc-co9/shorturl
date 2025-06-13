@@ -11,7 +11,7 @@ public class BlocklistFactory {
     public static final BlockStatus testBlockChangedStatus = BlockStatus.OFFLINE;
 
 
-    public static Blocklist createBlocklist() {
+    public static Blocklist createTestBlocklist() {
         return new Blocklist(getTestBlockId(), getTestBlockLink(), getTestBlockRemark(), testBlockStatus);
     }
 

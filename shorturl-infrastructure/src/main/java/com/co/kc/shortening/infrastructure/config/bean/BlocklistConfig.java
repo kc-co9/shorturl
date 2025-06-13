@@ -1,7 +1,6 @@
 package com.co.kc.shortening.infrastructure.config.bean;
 
-import com.co.kc.shortening.application.service.appservice.BlocklistAppService;
-import com.co.kc.shortening.application.service.queryservice.BlocklistQueryService;
+import com.co.kc.shortening.application.service.app.BlocklistAppService;
 import com.co.kc.shortening.blocklist.domain.model.BlocklistRepository;
 import com.co.kc.shortening.infrastructure.mybatis.service.UrlBlocklistService;
 import com.co.kc.shortening.infrastructure.repository.BlocklistMySqlRepository;
@@ -24,7 +23,7 @@ public class BlocklistConfig {
     }
 
     @Bean
-    public BlocklistRepository blocklistRepository(UrlBlocklistService urlBlocklistService) {
+    public BlocklistMySqlRepository blocklistRepository(UrlBlocklistService urlBlocklistService) {
         return new BlocklistMySqlRepository(urlBlocklistService);
     }
 
@@ -34,7 +33,7 @@ public class BlocklistConfig {
     }
 
     @Bean
-    public BlocklistQueryService blocklistQueryService(UrlBlocklistService urlBlocklistService) {
+    public BlocklistQueryMySqlService blocklistQueryService(UrlBlocklistService urlBlocklistService) {
         return new BlocklistQueryMySqlService(urlBlocklistService);
     }
 

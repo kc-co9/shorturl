@@ -1,51 +1,41 @@
 package com.co.kc.shortening.user.domain.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class UserNameTests {
+class UserNameTests {
     @Test
-    public void testCreateNullUserName() {
-        try {
-            new UserName(null);
-        } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("name is null or empty", ex.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateNullUserName() {
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new UserName(null));
+        Assertions.assertEquals("name is null or empty", ex.getMessage());
     }
 
     @Test
-    public void testCreateEmptyUserName() {
-        try {
-            new UserName("");
-        } catch (IllegalArgumentException ex) {
-            Assert.assertEquals("name is null or empty", ex.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateEmptyUserName() {
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new UserName(""));
+        Assertions.assertEquals("name is null or empty", ex.getMessage());
     }
 
     @Test
-    public void testCreateUserNameSuccessfully() {
+    void testCreateUserNameSuccessfully() {
         UserName userName = new UserName("testUserName");
-        Assert.assertEquals("testUserName", userName.getName());
+        Assertions.assertEquals("testUserName", userName.getName());
     }
 
     @Test
-    public void testSameUserNameIsEqual() {
+    void testSameUserNameIsEqual() {
         UserName userName1 = new UserName("testUserName");
         UserName userName2 = new UserName("testUserName");
-        Assert.assertEquals(userName1, userName2);
+        Assertions.assertEquals(userName1, userName2);
     }
 
     @Test
-    public void testDifferentUserNameIsNotEqual() {
+    void testDifferentUserNameIsNotEqual() {
         UserName userName1 = new UserName("testUserName1");
         UserName userName2 = new UserName("testUserName2");
-        Assert.assertNotEquals(userName1, userName2);
+        Assertions.assertNotEquals(userName1, userName2);
     }
 }

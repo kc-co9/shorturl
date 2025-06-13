@@ -1,8 +1,8 @@
 package com.co.kc.shortening.application.client;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.*;
 import java.util.function.Supplier;
@@ -10,51 +10,51 @@ import java.util.function.Supplier;
 /**
  * @author kc
  */
-public class MemoryLockClientTests {
+class MemoryLockClientTests {
     private LockClient lockClient;
 
-    @Before
+    @BeforeEach
     public void initLockClient() {
         lockClient = new MemoryLockClient();
     }
 
     @Test
-    public void testTryLockWithoutLiveTime() {
+    void testTryLockWithoutLiveTime() {
         Supplier<Boolean> supplier1 = () -> lockClient.tryLock("testLock");
         Supplier<Boolean> supplier2 = () -> lockClient.tryLock("testLock");
 
         Executor executor = Executors.newFixedThreadPool(2);
-        Assert.assertTrue(CompletableFuture.supplyAsync(supplier1, executor).join());
-        Assert.assertFalse(CompletableFuture.supplyAsync(supplier2, executor).join());
+        Assertions.assertTrue(CompletableFuture.supplyAsync(supplier1, executor).join());
+        Assertions.assertFalse(CompletableFuture.supplyAsync(supplier2, executor).join());
     }
 
     @Test
-    public void testTryLockWithLiveTime() {
+    void testTryLockWithLiveTime() {
         Supplier<Boolean> supplier1 = () -> lockClient.tryLock("testLock", 10L);
         Supplier<Boolean> supplier2 = () -> lockClient.tryLock("testLock", 5L);
 
         Executor executor = Executors.newFixedThreadPool(2);
-        Assert.assertTrue(CompletableFuture.supplyAsync(supplier1, executor).join());
-        Assert.assertFalse(CompletableFuture.supplyAsync(supplier2, executor).join());
+        Assertions.assertTrue(CompletableFuture.supplyAsync(supplier1, executor).join());
+        Assertions.assertFalse(CompletableFuture.supplyAsync(supplier2, executor).join());
     }
 
     @Test
-    public void testTryLockWhenLockExpired() {
+    void testTryLockWhenLockExpired() {
         Supplier<Boolean> supplier1 = () -> lockClient.tryLock("testLock", 0L);
         Supplier<Boolean> supplier2 = () -> lockClient.tryLock("testLock", 5L);
 
         Executor executor = Executors.newFixedThreadPool(2);
-        Assert.assertTrue(CompletableFuture.supplyAsync(supplier1, executor).join());
-        Assert.assertTrue(CompletableFuture.supplyAsync(supplier2, executor).join());
+        Assertions.assertTrue(CompletableFuture.supplyAsync(supplier1, executor).join());
+        Assertions.assertTrue(CompletableFuture.supplyAsync(supplier2, executor).join());
     }
 
     @Test
-    public void testTryLockWhenLockRelease() {
+    void testTryLockWhenLockRelease() {
         Supplier<Boolean> supplier1 = () -> lockClient.tryLock("testLock") && lockClient.releaseLock("testLock");
         Supplier<Boolean> supplier2 = () -> lockClient.tryLock("testLock");
 
         Executor executor = Executors.newFixedThreadPool(2);
-        Assert.assertTrue(CompletableFuture.supplyAsync(supplier1, executor).join());
-        Assert.assertTrue(CompletableFuture.supplyAsync(supplier2, executor).join());
+        Assertions.assertTrue(CompletableFuture.supplyAsync(supplier1, executor).join());
+        Assertions.assertTrue(CompletableFuture.supplyAsync(supplier2, executor).join());
     }
 }

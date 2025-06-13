@@ -7,7 +7,7 @@ import com.co.kc.shortening.application.model.cqrs.command.user.SignOutCommand;
 import com.co.kc.shortening.application.model.cqrs.dto.SignInDTO;
 import com.co.kc.shortening.application.model.cqrs.dto.UserDetailDTO;
 import com.co.kc.shortening.application.model.cqrs.query.UserDetailQuery;
-import com.co.kc.shortening.application.service.appservice.UserAppService;
+import com.co.kc.shortening.application.service.app.UserAppService;
 import com.co.kc.shortening.admin.model.request.AdministratorSignInRequest;
 import com.co.kc.shortening.admin.model.response.AdministratorSignInVO;
 import com.co.kc.shortening.application.annotation.Auth;

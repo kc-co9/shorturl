@@ -17,7 +17,7 @@ public class ShorturlFactory {
     public static final ValidTimeInterval testChangedValidTime = new ValidTimeInterval(LocalDateTime.now().minusDays(10), LocalDateTime.now().plusDays(10));
     public static final ValidTimeInterval testExpiredValidTime = new ValidTimeInterval(LocalDateTime.now().minusDays(10), LocalDateTime.now().minusDays(1));
 
-    public static Shorturl createShorturl() {
+    public static Shorturl createTestShorturl() {
         return new Shorturl(getTestShortId(), getTestShortCode(), getTestRawLink(), testStatus, testValidTime);
     }
 

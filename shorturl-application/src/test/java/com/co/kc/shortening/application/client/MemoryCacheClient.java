@@ -1,9 +1,7 @@
 package com.co.kc.shortening.application.client;
 
-import com.co.kc.shortening.common.exception.BusinessException;
 import com.co.kc.shortening.common.utils.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.junit.platform.commons.util.StringUtils;
 
 import java.util.HashMap;
@@ -71,29 +69,6 @@ public class MemoryCacheClient implements CacheClient {
             cache.remove(key);
             expired.remove(key);
         }
-    }
-
-    @Override
-    public synchronized Long increment(String key) {
-        String val = cache.getOrDefault(key, "0");
-        if (!NumberUtils.isDigits(val)) {
-            throw new BusinessException("非法操作");
-        }
-        Long incrVal = Long.parseLong(val) + 1;
-        cache.put(key, String.valueOf(incrVal));
-        return incrVal;
-    }
-
-    @Override
-    public synchronized Long increment(String key, long step, long expireTime) {
-        String val = cache.getOrDefault(key, "0");
-        if (!NumberUtils.isDigits(val)) {
-            throw new BusinessException("非法操作");
-        }
-        Long incrVal = Long.parseLong(val) + step;
-        cache.put(key, String.valueOf(incrVal));
-        expired.put(key, System.currentTimeMillis() + expireTime * 1000);
-        return incrVal;
     }
 
     @Override

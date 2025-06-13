@@ -1,38 +1,38 @@
 package com.co.kc.shortening.user.domain.model;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author kc
  */
-public class PermissionTests {
+class PermissionTests {
     private Permission permission;
 
-    @Before
-    public void initPermission() {
+    @BeforeEach
+    void initPermission() {
         permission = PermissionFactory.createPermission();
     }
 
     @Test
-    public void testPermissionPropertiesSucceedToSet() {
-        Assert.assertEquals(PermissionFactory.getTestPermissionId(), permission.getPermissionId());
-        Assert.assertEquals(PermissionFactory.getTestPermissionValue(), permission.getPermissionValue());
-        Assert.assertEquals(PermissionFactory.getTestPermissionDesc(), permission.getPermissionDesc());
+    void testPermissionPropertiesSucceedToSet() {
+        Assertions.assertEquals(PermissionFactory.getTestPermissionId(), permission.getPermissionId());
+        Assertions.assertEquals(PermissionFactory.getTestPermissionValue(), permission.getPermissionValue());
+        Assertions.assertEquals(PermissionFactory.getTestPermissionDesc(), permission.getPermissionDesc());
     }
 
     @Test
-    public void testPermissionChangePermissionValue() {
-        Assert.assertEquals(PermissionFactory.getTestPermissionValue(), permission.getPermissionValue());
+    void testPermissionChangePermissionValue() {
+        Assertions.assertEquals(PermissionFactory.getTestPermissionValue(), permission.getPermissionValue());
         permission.changePermission(PermissionFactory.getTestChangedPermissionValue());
-        Assert.assertEquals(PermissionFactory.getTestChangedPermissionValue(), permission.getPermissionValue());
+        Assertions.assertEquals(PermissionFactory.getTestChangedPermissionValue(), permission.getPermissionValue());
     }
 
     @Test
-    public void testPermissionChangePermissionDesc() {
-        Assert.assertEquals(PermissionFactory.getTestPermissionDesc(), permission.getPermissionDesc());
+    void testPermissionChangePermissionDesc() {
+        Assertions.assertEquals(PermissionFactory.getTestPermissionDesc(), permission.getPermissionDesc());
         permission.changeDescription(PermissionFactory.getTestChangedPermissionDesc());
-        Assert.assertEquals(PermissionFactory.getTestChangedPermissionDesc(), permission.getPermissionDesc());
+        Assertions.assertEquals(PermissionFactory.getTestChangedPermissionDesc(), permission.getPermissionDesc());
     }
 }

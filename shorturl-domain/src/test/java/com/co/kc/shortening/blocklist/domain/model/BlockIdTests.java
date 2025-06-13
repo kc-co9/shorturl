@@ -1,59 +1,44 @@
 package com.co.kc.shortening.blocklist.domain.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class BlockIdTests {
+class BlockIdTests {
     @Test
-    public void testCreateNullBlockId() {
-        try {
-            new BlockId(null);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is null", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateNullBlockId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new BlockId(null));
+        Assertions.assertEquals("id is null", e.getMessage());
     }
 
     @Test
-    public void testCreateLessThanZeroBlockId() {
-        try {
-            new BlockId(-1L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateLessThanZeroBlockId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new BlockId(-1L));
+        Assertions.assertEquals("id is less than or equal to 0", e.getMessage());
     }
 
     @Test
-    public void testCreateEqualToZeroBlockId() {
-        try {
-            new BlockId(0L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("id is less than or equal to 0", e.getMessage());
-            return;
-        }
-        Assert.fail();
+    void testCreateEqualToZeroBlockId() {
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new BlockId(0L));
+        Assertions.assertEquals("id is less than or equal to 0", e.getMessage());
     }
 
     @Test
-    public void testCreateBlockIdSuccessfully() {
+    void testCreateBlockIdSuccessfully() {
         BlockId blockId = new BlockId(10L);
-        Assert.assertEquals(10L, blockId.getId().longValue());
+        Assertions.assertEquals(10L, blockId.getId().longValue());
     }
 
     @Test
-    public void testSameBlockIdIsEqual() {
+    void testSameBlockIdIsEqual() {
         BlockId blockId1 = new BlockId(10L);
         BlockId blockId2 = new BlockId(10L);
-        Assert.assertEquals(blockId1, blockId2);
+        Assertions.assertEquals(blockId1, blockId2);
     }
 
     @Test
-    public void testDifferentBlockIdIsNotEqual() {
+    void testDifferentBlockIdIsNotEqual() {
         BlockId blockId1 = new BlockId(10L);
         BlockId blockId2 = new BlockId(20L);
-        Assert.assertNotEquals(blockId1, blockId2);
+        Assertions.assertNotEquals(blockId1, blockId2);
     }
 }
