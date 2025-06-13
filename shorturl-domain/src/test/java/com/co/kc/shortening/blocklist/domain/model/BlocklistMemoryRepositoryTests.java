@@ -1,6 +1,5 @@
 package com.co.kc.shortening.blocklist.domain.model;
 
-import com.co.kc.shortening.shared.domain.model.Link;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,13 +14,13 @@ class BlocklistMemoryRepositoryTests {
 
     @Test
     void testFindNullByBlockId() {
-        Blocklist blocklist = blocklistRepository.find(new BlockId(10L));
+        Blocklist blocklist = blocklistRepository.find(BlocklistFactory.getTestBlockId());
         Assertions.assertNull(blocklist);
     }
 
     @Test
     void testFindNullByLink() {
-        Blocklist blocklist = blocklistRepository.find(new Link("http://www.test.com"));
+        Blocklist blocklist = blocklistRepository.find(BlocklistFactory.getTestBlockLink());
         Assertions.assertNull(blocklist);
     }
 
@@ -46,11 +45,7 @@ class BlocklistMemoryRepositoryTests {
     }
 
     private Blocklist saveTestBlocklist() {
-        BlockId blockId = new BlockId(10L);
-        Link blockLink = new Link("http://www.test.com");
-        BlockRemark remark = new BlockRemark("testRemark");
-        BlockStatus status = BlockStatus.ONLINE;
-        Blocklist blocklist = new Blocklist(blockId, blockLink, remark, status);
+        Blocklist blocklist = BlocklistFactory.createTestBlocklist();
         blocklistRepository.save(blocklist);
         return blocklist;
     }

@@ -19,7 +19,7 @@ class BlocklistServiceTests {
 
         Blocklist activeBlocklist =
                 new Blocklist(new BlockId(10L),
-                        new Link("http://www.active.com"),
+                        new Link("https://www.active.com"),
                         new BlockRemark("activeBlockLink"),
                         BlockStatus.ONLINE);
         blocklistRepository.save(activeBlocklist);
@@ -27,7 +27,7 @@ class BlocklistServiceTests {
         Blocklist inactiveBlocklist =
                 new Blocklist(
                         new BlockId(11L),
-                        new Link("http://www.inactive.com"),
+                        new Link("https://www.inactive.com"),
                         new BlockRemark("inactiveBlockLink"),
                         BlockStatus.OFFLINE);
         blocklistRepository.save(inactiveBlocklist);
@@ -37,18 +37,18 @@ class BlocklistServiceTests {
 
     @Test
     void testValidateThrowExWhenLinkIsBlocked() {
-        Link link = new Link("http://www.active.com");
+        Link link = new Link("https://www.active.com");
         BusinessException ex = Assertions.assertThrows(BusinessException.class, () -> blocklistService.validate(link));
         Assertions.assertEquals("短链已被禁用", ex.getMsg());
     }
 
     @Test
     void testValidatePassWhenLinkIsBlockedButInactive() {
-        blocklistService.validate(new Link("http://www.inactive.com"));
+        blocklistService.validate(new Link("https://www.inactive.com"));
     }
 
     @Test
     void testValidatePassWhenLinkIsNotBlocked() {
-        blocklistService.validate(new Link("http://www.pass.com"));
+        blocklistService.validate(new Link("https://www.pass.com"));
     }
 }

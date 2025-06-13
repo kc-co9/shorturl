@@ -15,10 +15,6 @@ spring:
         max-active: 32
         max-wait: 100
         min-idle: 4
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
 
 mybatis-plus:
   typeEnumsPackage: com.co.kc.**.enums
@@ -44,3 +40,5 @@ druid:
   maxPoolPreparedStatementPerConnectionSize: 20   #开启poolPreparedStatements后生效
   connectionProperties: 'druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000'  #通过connectProperties属性来打开mergeSql功能;慢SQL记录
   useGlobalDataSourceStat: true  # 合并多个DruidDataSource的监控数据
+
+shorturl.shortDomain: https://www.short.com

@@ -8,9 +8,9 @@ public class ShorturlFactory {
 
     public static final Long testShortId = 10L;
     public static final String testShortCode = "testCode";
-    public static final String testRawLink = "http://www.test.com";
-    public static final String testShortDomain = "http://www.short.com";
-    public static final String testShortLink = "http://www.short.com/testCode";
+    public static final String testRawLink = "https://www.test.com";
+    public static final String testShortDomain = "https://www.short.com";
+    public static final String testShortLink = "https://www.short.com/testCode";
     public static final ShorturlStatus testStatus = ShorturlStatus.ONLINE;
     public static final ShorturlStatus testChangedStatus = ShorturlStatus.OFFLINE;
     public static final ValidTimeInterval testValidTime = new ValidTimeInterval(LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1));

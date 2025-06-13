@@ -23,10 +23,10 @@ class LinkTests {
 
     @Test
     void testCreateSimpleLink() {
-        Link link = new Link("http://www.test.com");
-        Assertions.assertEquals("http://www.test.com", link.getUrl());
-        Assertions.assertEquals(HashUtils.murmurHash32("http://www.test.com"), link.getHash());
-        Assertions.assertEquals("http", link.getProtocol());
+        Link link = new Link("https://www.test.com");
+        Assertions.assertEquals("https://www.test.com", link.getUrl());
+        Assertions.assertEquals(HashUtils.murmurHash32("https://www.test.com"), link.getHash());
+        Assertions.assertEquals("https", link.getProtocol());
         Assertions.assertEquals("www.test.com", link.getHost());
         Assertions.assertEquals("", link.getPath());
         Assertions.assertNull(link.getQuery());
@@ -35,10 +35,10 @@ class LinkTests {
 
     @Test
     void testCreateLinkWithPath() {
-        Link link = new Link("http://www.test.com/abc");
-        Assertions.assertEquals("http://www.test.com/abc", link.getUrl());
-        Assertions.assertEquals(HashUtils.murmurHash32("http://www.test.com/abc"), link.getHash());
-        Assertions.assertEquals("http", link.getProtocol());
+        Link link = new Link("https://www.test.com/abc");
+        Assertions.assertEquals("https://www.test.com/abc", link.getUrl());
+        Assertions.assertEquals(HashUtils.murmurHash32("https://www.test.com/abc"), link.getHash());
+        Assertions.assertEquals("https", link.getProtocol());
         Assertions.assertEquals("www.test.com", link.getHost());
         Assertions.assertEquals("/abc", link.getPath());
         Assertions.assertNull(link.getQuery());
@@ -47,10 +47,10 @@ class LinkTests {
 
     @Test
     void testCreateLinkWithQuery() {
-        Link link = new Link("http://www.test.com?q=abc");
-        Assertions.assertEquals("http://www.test.com?q=abc", link.getUrl());
-        Assertions.assertEquals(HashUtils.murmurHash32("http://www.test.com?q=abc"), link.getHash());
-        Assertions.assertEquals("http", link.getProtocol());
+        Link link = new Link("https://www.test.com?q=abc");
+        Assertions.assertEquals("https://www.test.com?q=abc", link.getUrl());
+        Assertions.assertEquals(HashUtils.murmurHash32("https://www.test.com?q=abc"), link.getHash());
+        Assertions.assertEquals("https", link.getProtocol());
         Assertions.assertEquals("www.test.com", link.getHost());
         Assertions.assertEquals("", link.getPath());
         Assertions.assertEquals("q=abc", link.getQuery());
@@ -59,10 +59,10 @@ class LinkTests {
 
     @Test
     void testCreateLinkWithPathAndQuery() {
-        Link link = new Link("http://www.test.com/abc?q=efg");
-        Assertions.assertEquals("http://www.test.com/abc?q=efg", link.getUrl());
-        Assertions.assertEquals(HashUtils.murmurHash32("http://www.test.com/abc?q=efg"), link.getHash());
-        Assertions.assertEquals("http", link.getProtocol());
+        Link link = new Link("https://www.test.com/abc?q=efg");
+        Assertions.assertEquals("https://www.test.com/abc?q=efg", link.getUrl());
+        Assertions.assertEquals(HashUtils.murmurHash32("https://www.test.com/abc?q=efg"), link.getHash());
+        Assertions.assertEquals("https", link.getProtocol());
         Assertions.assertEquals("www.test.com", link.getHost());
         Assertions.assertEquals("/abc", link.getPath());
         Assertions.assertEquals("q=efg", link.getQuery());
@@ -71,15 +71,15 @@ class LinkTests {
 
     @Test
     void testEqLinkWithSameProperties() {
-        Link link1 = new Link("http://www.test.com");
-        Link link2 = new Link("http://www.test.com");
+        Link link1 = new Link("https://www.test.com");
+        Link link2 = new Link("https://www.test.com");
         Assertions.assertEquals(link1, link2);
     }
 
     @Test
     void testNotEqLinkWithDifferentProperties() {
-        Link link1 = new Link("http://www.test1.com");
-        Link link2 = new Link("http://www.test2.com");
+        Link link1 = new Link("https://www.test1.com");
+        Link link2 = new Link("https://www.test2.com");
         Assertions.assertNotEquals(link1, link2);
     }
 

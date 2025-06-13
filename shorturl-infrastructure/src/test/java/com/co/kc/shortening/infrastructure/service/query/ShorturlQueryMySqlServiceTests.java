@@ -1,6 +1,5 @@
 package com.co.kc.shortening.infrastructure.service.query;
 
-
 import com.co.kc.shortening.application.model.cqrs.command.shorturl.ShorturlAddCommand;
 import com.co.kc.shortening.application.model.cqrs.dto.ShorturlQueryDTO;
 import com.co.kc.shortening.application.model.cqrs.query.ShorturlQuery;
@@ -9,7 +8,6 @@ import com.co.kc.shortening.application.model.io.PagingResult;
 import com.co.kc.shortening.application.service.app.ShorturlAppService;
 import com.co.kc.shortening.infrastructure.extension.InfrastructureExtension;
 import com.co.kc.shortening.infrastructure.starter.ShortUrlInfrastructureTestApplication;
-import com.co.kc.shortening.shorturl.domain.model.ShorturlFactory;
 import com.co.kc.shortening.shorturl.domain.model.ShorturlStatus;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.Assertions;
@@ -19,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -27,9 +24,6 @@ import java.time.LocalDateTime;
 @Rollback
 @Transactional
 @ExtendWith(InfrastructureExtension.class)
-@TestPropertySource(properties = {
-        "shorturl.shortDomain=" + ShorturlFactory.testShortDomain,
-})
 @SpringBootTest(classes = ShortUrlInfrastructureTestApplication.class)
 class ShorturlQueryMySqlServiceTests {
     @Autowired

@@ -9,15 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 @Rollback
 @Transactional
 @ExtendWith(InfrastructureExtension.class)
-@TestPropertySource(properties = {
-        "shorturl.shortDomain=" + ShorturlFactory.testShortDomain,
-})
 @SpringBootTest(classes = ShortUrlInfrastructureTestApplication.class)
 class ShortDomainYmlProviderTests {
     @Autowired

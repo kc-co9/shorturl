@@ -4,7 +4,7 @@ import com.co.kc.shortening.shared.domain.model.Link;
 
 public class BlocklistFactory {
     public static final Long testBlockId = 10L;
-    public static final String testBlockLink = "http://www.test.com";
+    public static final String testBlockLink = "https://www.test.com";
     public static final String testBlockRemark = "test block remark";
     public static final String testBlockChangedRemark = "test block changed remark";
     public static final BlockStatus testBlockStatus = BlockStatus.ONLINE;
