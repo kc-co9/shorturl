@@ -17,6 +17,8 @@ public class UserFactory {
     public static final String testUserName = "test_name";
     public static final String testUserChangedName = "test_changed_name";
     public static final String testUserRawPassword = "test_raw_password";
+    public static final String testUserEmptyRawPassword = "";
+    public static final String testUserInvalidRawPassword = "**********";
     public static final String testUserChangedRawPassword = "test_changed_raw_password";
     public static final String testUserWrongRawPassword = "test_wrong_raw_password";
     public static final List<Long> testUserRoleIds = Collections.emptyList();
@@ -63,6 +65,14 @@ public class UserFactory {
 
     public static UserPassword getTestUserPassword() {
         return testPasswordService.encrypt(new UserRawPassword(testUserRawPassword));
+    }
+
+    public static UserRawPassword getTestUserEmptyRawPassword() {
+        return new UserRawPassword(testUserEmptyRawPassword);
+    }
+
+    public static UserRawPassword getTestUserInvalidRawPassword() {
+        return new UserRawPassword(testUserInvalidRawPassword);
     }
 
     public static UserRawPassword getTestUserChangedRawPassword() {

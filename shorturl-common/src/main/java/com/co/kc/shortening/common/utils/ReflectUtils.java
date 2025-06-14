@@ -1,12 +1,11 @@
 package com.co.kc.shortening.common.utils;
 
-import com.co.kc.shortening.common.exception.BusinessException;
+import com.co.kc.shortening.common.exception.ReflectException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,35 +36,28 @@ public class ReflectUtils {
     }
 
     public static Method generateGetMethod(Class<?> clazz, String fieldName) {
-        Method getMethod;
         try {
-            getMethod = clazz.getMethod(generateGetMethodName(fieldName));
+            return clazz.getMethod(generateGetMethodName(fieldName));
         } catch (NoSuchMethodException e) {
-            LOG.error("reflect invoke failure", e);
-            throw new BusinessException("reflect invoke failure");
+            throw new ReflectException("get 'generateGetMethod' Method failure", e);
         }
-        return getMethod;
     }
 
     public static Method generateSetMethod(Class<?> clazz, String fieldName, Class<?> parameterTypes) throws NoSuchMethodException {
-        Method setMethod;
         try {
-            setMethod = clazz.getMethod(generateSetMethodName(fieldName), parameterTypes);
+            return clazz.getMethod(generateSetMethodName(fieldName), parameterTypes);
         } catch (NoSuchMethodException e) {
-            LOG.error("reflect invoke failure", e);
-            throw e;
+            throw new ReflectException("get 'generateSetMethod' Method failure", e);
         }
-        return setMethod;
     }
 
     public static Object invokeGetMethod(Object o, String fieldName) {
-        Method getMethod = generateGetMethod(o.getClass(), fieldName);
         try {
+            Method getMethod = generateGetMethod(o.getClass(), fieldName);
             getMethod.setAccessible(true);
             return getMethod.invoke(o);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            LOG.error("reflect invoke failure", e);
-            throw new BusinessException("reflect invoke failure");
+        } catch (Exception e) {
+            throw new ReflectException("invoke 'invokeGetMethod' Method failure", e);
         }
     }
 
@@ -75,8 +67,7 @@ public class ReflectUtils {
             setMethod.setAccessible(true);
             setMethod.invoke(o, args);
         } catch (Exception e) {
-            LOG.error("reflect invoke failure", e);
-            throw new BusinessException("reflect invoke failure");
+            throw new ReflectException("invoke 'invokeSetMethod' Method failure", e);
         }
     }
 
@@ -85,8 +76,7 @@ public class ReflectUtils {
             Method setMethod = generateSetMethod(o.getClass(), fieldName, parameterTypes);
             setMethod.invoke(o, args);
         } catch (Exception e) {
-            LOG.error("reflect invoke failure", e);
-            throw new BusinessException("reflect invoke failure");
+            throw new ReflectException("invoke 'invokeSetMethod' Method failure", e);
         }
     }
 
@@ -116,16 +106,16 @@ public class ReflectUtils {
     /**
      * 判断是否是基础数据类型，即 int,double,long等类似格式
      */
-    public static boolean isBaseType(Class clazz) {
+    public static boolean isBaseType(Class<?> clazz) {
         return clazz.isPrimitive();
     }
 
     /**
      * 判断是否是基础数据类型的包装类型
      */
-    public static boolean isWrapBaseType(Class clz) {
+    public static boolean isWrapBaseType(Class<?> clz) {
         try {
-            return ((Class) clz.getField("TYPE").get(null)).isPrimitive();
+            return ((Class<?>) clz.getField("TYPE").get(null)).isPrimitive();
         } catch (Exception e) {
             return false;
         }
@@ -137,7 +127,6 @@ public class ReflectUtils {
             Field field = obj.getClass().getDeclaredField(name);
             // 设置访问权限
             field.setAccessible(true);
-
             // 得到私有的变量值
             return field.get(obj);
         } catch (Exception e) {

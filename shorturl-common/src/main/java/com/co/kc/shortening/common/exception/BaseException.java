@@ -1,6 +1,6 @@
 package com.co.kc.shortening.common.exception;
 
-import com.co.kc.shortening.common.constant.ExceptionCode;
+import com.co.kc.shortening.common.constant.ErrorCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,34 +28,34 @@ public class BaseException extends RuntimeException {
     private final String reason;
 
     public BaseException(String msg) {
-        this(ExceptionCode.DEFAULT.getCode(), msg, "", null);
+        this(ErrorCode.SYS_ERROR.getCode(), msg, "", null);
     }
 
     public BaseException(String msg, String reason) {
-        this(ExceptionCode.DEFAULT.getCode(), msg, reason, null);
+        this(ErrorCode.SYS_ERROR.getCode(), msg, reason, null);
     }
 
     public BaseException(String msg, Throwable throwable) {
-        this(ExceptionCode.DEFAULT.getCode(), msg, "", throwable);
+        this(ErrorCode.SYS_ERROR.getCode(), msg, "", throwable);
     }
 
     public BaseException(String msg, String reason, Throwable throwable) {
-        this(ExceptionCode.DEFAULT.getCode(), msg, reason, throwable);
+        this(ErrorCode.SYS_ERROR.getCode(), msg, reason, throwable);
     }
 
-    public BaseException(ExceptionCode exCode) {
+    public BaseException(ErrorCode exCode) {
         this(exCode.getCode(), exCode.getMsg(), "", null);
     }
 
-    public BaseException(ExceptionCode exCode, String reason) {
+    public BaseException(ErrorCode exCode, String reason) {
         this(exCode.getCode(), exCode.getMsg(), reason, null);
     }
 
-    public BaseException(ExceptionCode exCode, Throwable throwable) {
+    public BaseException(ErrorCode exCode, Throwable throwable) {
         this(exCode.getCode(), exCode.getMsg(), "", throwable);
     }
 
-    public BaseException(ExceptionCode exCode, String reason, Throwable throwable) {
+    public BaseException(ErrorCode exCode, String reason, Throwable throwable) {
         this(exCode.getCode(), exCode.getMsg(), reason, throwable);
     }
 

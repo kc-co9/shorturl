@@ -1,5 +1,7 @@
 package com.co.kc.shortening.common.exception;
 
+import com.co.kc.shortening.common.constant.ErrorCode;
+
 /**
  * 权限异常
  * <p>
@@ -8,7 +10,7 @@ package com.co.kc.shortening.common.exception;
  * @author kc
  */
 public class PermissionException extends BaseException {
-    public PermissionException(String msg) {
-        super(msg);
+    public PermissionException(String reason) {
+        super(ErrorCode.AUTH_DENY, reason);
     }
 }

@@ -2,7 +2,7 @@ package com.co.kc.shortening.admin.security.authentication;
 
 import com.co.kc.shortening.application.client.TokenClient;
 import com.co.kc.shortening.application.model.client.TokenDTO;
-import com.co.kc.shortening.admin.security.constant.ParamsConstants;
+import com.co.kc.shortening.web.common.constants.ParamsConstants;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 

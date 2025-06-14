@@ -19,6 +19,7 @@ import com.co.kc.shortening.user.domain.model.*;
 import com.co.kc.shortening.user.service.AuthService;
 import com.co.kc.shortening.user.service.PasswordService;
 import com.co.kc.shortening.user.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -113,14 +114,12 @@ public class UserAppService {
             throw new NotFoundException("用户不存在");
         }
 
-        UserEmail userEmail = new UserEmail(command.getEmail());
-        UserName userName = new UserName(command.getUsername());
-        UserRawPassword userRawPassword = new UserRawPassword(command.getPassword());
-        UserPassword userPassword = passwordService.encrypt(userRawPassword);
-
-        user.changeEmail(userEmail);
-        user.changeUserName(userName);
-        user.changePassword(userPassword);
+        user.changeEmail(new UserEmail(command.getEmail()));
+        user.changeUserName(new UserName(command.getUsername()));
+        if (shouldUpdatePassword(command.getPassword())) {
+            UserPassword userPassword = passwordService.encrypt(new UserRawPassword(command.getPassword()));
+            user.changePassword(userPassword);
+        }
         userRepository.save(user);
     }
 
@@ -132,5 +131,9 @@ public class UserAppService {
         }
 
         userRepository.remove(user);
+    }
+
+    private boolean shouldUpdatePassword(String rawPassword) {
+        return StringUtils.isNotBlank(rawPassword) && !rawPassword.contains("*");
     }
 }

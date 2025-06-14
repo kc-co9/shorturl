@@ -16,7 +16,7 @@ class Sha256PasswordServiceTests {
     @Test
     void testEncryptPassword() {
         RandomString randomString = new RandomString();
-        UserRawPassword userRawPassword = new UserRawPassword(randomString.randomAscii(20));
+        UserRawPassword userRawPassword = new UserRawPassword(randomString.randomAlpha(20));
         UserPassword userPassword = passwordService.encrypt(userRawPassword);
         Assertions.assertNotNull(userPassword);
         Assertions.assertNotNull(userPassword.getPassword());
@@ -25,7 +25,7 @@ class Sha256PasswordServiceTests {
     @Test
     void testVerifyPassword() {
         RandomString randomString = new RandomString();
-        UserRawPassword userRawPassword = new UserRawPassword(randomString.randomAscii(20));
+        UserRawPassword userRawPassword = new UserRawPassword(randomString.randomAlpha(20));
         UserPassword userPassword = passwordService.encrypt(userRawPassword);
         Assertions.assertTrue(passwordService.verify(userRawPassword, userPassword));
     }

@@ -7,7 +7,7 @@ import com.co.kc.shortening.admin.model.request.BlocklistUpdateRequest;
 import com.co.kc.shortening.admin.model.response.BlocklistListVO;
 import com.co.kc.shortening.admin.security.MethodSecurityConfig;
 import com.co.kc.shortening.admin.security.WebSecurityConfig;
-import com.co.kc.shortening.admin.security.constant.ParamsConstants;
+import com.co.kc.shortening.web.common.constants.ParamsConstants;
 import com.co.kc.shortening.admin.starter.ShortUrlAdminTestApplication;
 import com.co.kc.shortening.application.client.SessionClient;
 import com.co.kc.shortening.application.client.TokenClient;

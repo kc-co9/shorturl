@@ -42,7 +42,7 @@ public class FunctionUtils {
 
     public static <T, R> Set<R> mappingSet(List<T> list, Function<T, R> function) {
         if (CollectionUtils.isEmpty(list)) {
-            return new HashSet<>();
+            return Collections.emptySet();
         }
 
         return list.stream().map(function).collect(Collectors.toSet());
@@ -50,7 +50,7 @@ public class FunctionUtils {
 
     public static <T, R> Set<R> mappingSet(Set<T> set, Function<T, R> function) {
         if (CollectionUtils.isEmpty(set)) {
-            return new HashSet<>();
+            return Collections.emptySet();
         }
 
         return set.stream().map(function).collect(Collectors.toSet());
@@ -58,7 +58,7 @@ public class FunctionUtils {
 
     public static <T, K, V> Map<K, V> mappingMap(List<T> list, Function<T, K> key, Function<T, V> value) {
         if (CollectionUtils.isEmpty(list)) {
-            return new HashMap<>();
+            return Collections.emptyMap();
         }
 
         return list.stream().collect(Collectors.toMap(key, value, (a1, a2) -> a1));
@@ -66,7 +66,7 @@ public class FunctionUtils {
 
     public static <T, R> Map<R, List<T>> mappingGroup(List<T> list, Function<T, R> function) {
         if (CollectionUtils.isEmpty(list)) {
-            return new HashMap<>();
+            return Collections.emptyMap();
         }
 
         return list.stream().collect(Collectors.groupingBy(function));
@@ -74,7 +74,7 @@ public class FunctionUtils {
 
     public static <T, R, P> Map<R, List<P>> mappingGroup(List<T> list, Function<T, R> function, Function<T, P> mapping) {
         if (CollectionUtils.isEmpty(list)) {
-            return new HashMap<>();
+            return Collections.emptyMap();
         }
 
         return list.stream().collect(

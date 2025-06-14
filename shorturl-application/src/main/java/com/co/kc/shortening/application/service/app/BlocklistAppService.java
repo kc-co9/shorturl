@@ -6,7 +6,7 @@ import com.co.kc.shortening.application.model.cqrs.command.blocklist.BlocklistUp
 import com.co.kc.shortening.application.client.IdClient;
 import com.co.kc.shortening.application.model.cqrs.dto.BlocklistAddDTO;
 import com.co.kc.shortening.blocklist.domain.model.*;
-import com.co.kc.shortening.common.exception.AlreadyExistsException;
+import com.co.kc.shortening.common.exception.RepeatException;
 import com.co.kc.shortening.common.exception.NotFoundException;
 import com.co.kc.shortening.shared.domain.model.Link;
 
@@ -34,7 +34,7 @@ public class BlocklistAppService {
 
         Blocklist blocklist = blocklistRepository.find(blockedLink);
         if (blocklist != null) {
-            throw new AlreadyExistsException("黑名单已存在");
+            throw new RepeatException("黑名单已存在");
         }
 
         blocklist = new Blocklist(blockId, blockedLink, blockRemark, status);

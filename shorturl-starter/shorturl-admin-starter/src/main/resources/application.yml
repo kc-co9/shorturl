@@ -88,3 +88,7 @@ knife4j:
 
 shorturl:
   shortDomain: http://127.0.0.1:9095
+
+log:
+  path: ./logs
+  format: pretty

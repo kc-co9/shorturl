@@ -130,6 +130,7 @@
 <script>
 import {CONSTANTS} from '@/api/common'
 import {getAdministratorList, addAdministrator, updateAdministrator, removeAdministrator} from '@/api/administrator'
+import {updateBlocklist} from "@/api/blocklist";
 
 export default {
   name: 'Administrator',
@@ -199,42 +200,74 @@ export default {
       this.addVisible = true;
     },
     add() {
-      addAdministrator(this.addForm)
-          .then((response) => {
-            if (response.code === CONSTANTS.SUCCESS_CODE) {
-              this.search();
-              this.addVisible = false
-              this.addForm.username = null
-              this.addForm.email = null
-              this.addForm.password = null
-            }
-          })
-          .catch((err) => {
-            console.error(err)
-          })
+      this.$confirm('此操作将新增管理员, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        addAdministrator(this.addForm)
+            .then((response) => {
+              if (response.code === CONSTANTS.SUCCESS_CODE) {
+                this.$message({
+                  type: 'success',
+                  message: '新增成功!'
+                });
+                this.search();
+                this.addVisible = false
+                this.addForm.username = null
+                this.addForm.email = null
+                this.addForm.password = null
+              }
+            })
+            .catch((err) => {
+              console.error(err)
+              this.$message.error('新增异常，请稍后重试');
+            })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消新增'
+        });
+      });
     },
     showEdit(row) {
       this.editForm.administratorId = row.administratorId
       this.editForm.username = row.username
       this.editForm.email = row.email
-      this.editForm.password = row.password
+      this.editForm.password = "**********"
       this.editVisible = true
     },
     edit() {
-      updateAdministrator(this.editForm)
-          .then((response) => {
-            if (response.code === CONSTANTS.SUCCESS_CODE) {
-              this.search();
-              this.editVisible = false
-              this.editForm.administratorId = null
-              this.editForm.username = null
-              this.editForm.email = null
-              this.editForm.password = null
-            }
-          })
-          .catch((err) => {
-            console.error(err)
-          })
+      this.$confirm('此操作将更新管理员, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        updateAdministrator(this.editForm)
+            .then((response) => {
+              if (response.code === CONSTANTS.SUCCESS_CODE) {
+                this.$message({
+                  type: 'success',
+                  message: '更新成功!'
+                });
+                this.search();
+                this.editVisible = false
+                this.editForm.administratorId = null
+                this.editForm.username = null
+                this.editForm.email = null
+                this.editForm.password = null
+              }
+            })
+            .catch((err) => {
+              console.error(err)
+              this.$message.error('更新异常，请稍后重试');
+            })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消更新'
+        });
+      });
     },
     remove(row) {
       removeAdministrator({administratorId: row.administratorId})

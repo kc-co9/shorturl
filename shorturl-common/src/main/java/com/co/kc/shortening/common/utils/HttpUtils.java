@@ -58,7 +58,7 @@ public class HttpUtils {
                 LOG.warn("http GET request return exception code:{},body:{}", response.code(), response.body());
                 throw new HttpException("http GET request failure");
             }
-            return response.body().string();
+            return Objects.requireNonNull(response.body()).string();
         } catch (IOException e) {
             LOG.error("http GET request throw IOException", e);
             throw new HttpException("http GET request failure");
@@ -80,7 +80,7 @@ public class HttpUtils {
                 LOG.warn("http POST request return exception code:{},body:{}", response.code(), response.body());
                 throw new HttpException("http POST request failure");
             }
-            return response.body().string();
+            return Objects.requireNonNull(response.body()).string();
         } catch (IOException e) {
             LOG.error("http POST request throw IOException", e);
             throw new HttpException("http POST request failure");

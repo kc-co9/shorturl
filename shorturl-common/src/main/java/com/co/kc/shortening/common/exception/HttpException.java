@@ -1,5 +1,7 @@
 package com.co.kc.shortening.common.exception;
 
+import com.co.kc.shortening.common.constant.ErrorCode;
+
 /**
  * HTTP请求异常
  * <p>
@@ -8,7 +10,11 @@ package com.co.kc.shortening.common.exception;
  * @author kc
  */
 public class HttpException extends BaseException {
-    public HttpException(String msg) {
-        super(msg);
+    public HttpException(String reason) {
+        super(ErrorCode.NETWORK_ERROR, reason);
+    }
+
+    public HttpException(String reason, Throwable throwable) {
+        super(ErrorCode.NETWORK_ERROR, reason, throwable);
     }
 }

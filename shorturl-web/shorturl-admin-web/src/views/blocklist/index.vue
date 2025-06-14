@@ -131,6 +131,7 @@
 <script>
 import {CONSTANTS} from '@/api/common'
 import {getBlocklistList, addBlocklist, updateBlocklist, removeBlocklist} from '@/api/blocklist'
+import {updateShorturl} from "@/api/shorturl";
 
 export default {
   name: 'Server',
@@ -165,8 +166,8 @@ export default {
         status: null,
       },
       statusEnum: {
+        0: '已失效',
         1: '已激活',
-        2: '已失效'
       }
     }
   },
@@ -205,19 +206,35 @@ export default {
       this.addVisible = true;
     },
     add() {
-      addBlocklist(this.addForm)
-          .then((response) => {
-            if (response.code === CONSTANTS.SUCCESS_CODE) {
-              this.search();
-              this.addVisible = false
-              this.addForm.blockLink = null
-              this.addForm.status = null
-              this.addForm.remark = null
-            }
-          })
-          .catch((err) => {
-            console.error(err)
-          })
+      this.$confirm('此操作将新增黑名单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        addBlocklist(this.addForm)
+            .then((response) => {
+              if (response.code === CONSTANTS.SUCCESS_CODE) {
+                this.$message({
+                  type: 'success',
+                  message: '新增成功!'
+                });
+                this.search();
+                this.addVisible = false
+                this.addForm.blockLink = null
+                this.addForm.status = null
+                this.addForm.remark = null
+              }
+            })
+            .catch((err) => {
+              console.error(err)
+              this.$message.error('新增异常，请稍后重试');
+            })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消新增'
+        });
+      });
     },
     showEdit(row) {
       this.editForm.blockId = row.blockId
@@ -226,19 +243,35 @@ export default {
       this.editVisible = true
     },
     edit() {
-      updateBlocklist(this.editForm)
-          .then((response) => {
-            if (response.code === CONSTANTS.SUCCESS_CODE) {
-              this.search();
-              this.editVisible = false
-              this.editForm.blockId = null
-              this.editForm.remark = null
-              this.editForm.status = null
-            }
-          })
-          .catch((err) => {
-            console.error(err)
-          })
+      this.$confirm('此操作将更新黑名单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        updateBlocklist(this.editForm)
+            .then((response) => {
+              if (response.code === CONSTANTS.SUCCESS_CODE) {
+                this.$message({
+                  type: 'success',
+                  message: '更新成功!'
+                });
+                this.search();
+                this.editVisible = false
+                this.editForm.blockId = null
+                this.editForm.remark = null
+                this.editForm.status = null
+              }
+            })
+            .catch((err) => {
+              console.error(err)
+              this.$message.error('更新异常，请稍后重试');
+            })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消更新'
+        });
+      });
     },
     remove(row) {
       removeBlocklist({blockId: row.blockId})

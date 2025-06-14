@@ -1,5 +1,7 @@
 package com.co.kc.shortening.common.exception;
 
+import com.co.kc.shortening.common.constant.ErrorCode;
+
 /**
  * 业务异常
  * <p>
@@ -10,5 +12,9 @@ package com.co.kc.shortening.common.exception;
 public class BusinessException extends BaseException {
     public BusinessException(String msg) {
         super(msg);
+    }
+
+    public BusinessException(ErrorCode errorCode, String reason) {
+        super(errorCode, reason);
     }
 }

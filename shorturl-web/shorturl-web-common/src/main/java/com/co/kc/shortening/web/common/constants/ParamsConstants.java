@@ -1,4 +1,4 @@
-package com.co.kc.shortening.admin.security.constant;
+package com.co.kc.shortening.web.common.constants;
 
 /**
  * @author kc

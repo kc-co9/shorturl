@@ -3,7 +3,7 @@ package com.co.kc.shortening.admin.security;
 import com.co.kc.shortening.admin.controller.AccountController;
 import com.co.kc.shortening.admin.mock.SecurityMock;
 import com.co.kc.shortening.admin.model.request.AdministratorSignInRequest;
-import com.co.kc.shortening.admin.security.constant.ParamsConstants;
+import com.co.kc.shortening.web.common.constants.ParamsConstants;
 import com.co.kc.shortening.admin.starter.ShortUrlAdminTestApplication;
 import com.co.kc.shortening.application.client.SessionClient;
 import com.co.kc.shortening.application.client.TokenClient;
@@ -12,6 +12,7 @@ import com.co.kc.shortening.application.model.cqrs.dto.SignInDTO;
 import com.co.kc.shortening.application.model.cqrs.dto.UserDetailDTO;
 import com.co.kc.shortening.application.model.cqrs.query.UserDetailQuery;
 import com.co.kc.shortening.application.service.app.UserAppService;
+import com.co.kc.shortening.common.constant.ErrorCode;
 import com.co.kc.shortening.common.utils.JsonUtils;
 import com.co.kc.shortening.user.domain.model.UserFactory;
 import com.co.kc.shortening.web.common.Result;
@@ -112,7 +113,7 @@ class SecurityAuthenticationTests {
     }
 
     private void isNotAuthenticated(MvcResult mvcResult) throws UnsupportedEncodingException {
-        Assertions.assertEquals(ResultCode.AUTH_FAIL.getCode(), parseResultCode(mvcResult));
+        Assertions.assertEquals(ErrorCode.AUTH_FAIL.getCode(), parseResultCode(mvcResult));
     }
 
     private Integer parseResultCode(MvcResult mvcResult) throws UnsupportedEncodingException {

@@ -17,6 +17,12 @@ class UserRawPasswordTests {
     }
 
     @Test
+    void testCreateIllegalUserRawPassword() {
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new UserRawPassword("****"));
+        Assertions.assertEquals("password contains illegal characters", ex.getMessage());
+    }
+
+    @Test
     void testCreateUserRawPasswordSuccessfully() {
         UserRawPassword userRawPassword = new UserRawPassword("testUserRawPassword");
         Assertions.assertEquals("testUserRawPassword", userRawPassword.getRawPassword());

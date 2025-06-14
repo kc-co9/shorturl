@@ -1,5 +1,7 @@
 package com.co.kc.shortening.common.exception;
 
+import com.co.kc.shortening.common.constant.ErrorCode;
+
 /**
  * 认证异常
  * <p>
@@ -8,7 +10,11 @@ package com.co.kc.shortening.common.exception;
  * @author kc
  */
 public class AuthException extends BaseException {
-    public AuthException(String msg) {
-        super(msg);
+    public AuthException(String reason) {
+        super(ErrorCode.AUTH_FAIL, reason);
+    }
+
+    public AuthException(ErrorCode errorCode, String reason) {
+        super(errorCode, reason);
     }
 }

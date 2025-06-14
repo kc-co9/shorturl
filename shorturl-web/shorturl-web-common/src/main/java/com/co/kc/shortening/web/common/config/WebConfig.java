@@ -4,6 +4,7 @@ import com.co.kc.shortening.web.common.constants.enums.BaseEnum;
 import com.co.kc.shortening.web.common.convert.IntegerCodeToBaseEnumConverterFactory;
 import com.co.kc.shortening.web.common.convert.StringCodeToBaseEnumConverterFactory;
 import com.co.kc.shortening.web.common.serializer.BaseEnumSerializer;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -60,8 +61,8 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jacksonObjectMapperCustomization() {
-        BaseEnumSerializer baseEnumSerializer = new BaseEnumSerializer();
         return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder
-                .serializerByType(BaseEnum.class, baseEnumSerializer);
+                .serializerByType(Long.class, ToStringSerializer.instance)
+                .serializerByType(BaseEnum.class, new BaseEnumSerializer());
     }
 }

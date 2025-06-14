@@ -1,6 +1,7 @@
 package com.co.kc.shortening.web.common.advice;
 
 import com.co.kc.shortening.web.common.Result;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -19,12 +20,12 @@ import java.util.Optional;
 @RestControllerAdvice(basePackages = {"com.co.kc.shortening"})
 public class ResultAdvice implements ResponseBodyAdvice<Object> {
     @Override
-    public boolean supports(MethodParameter returnType, Class converterType) {
+    public boolean supports(@NotNull MethodParameter returnType, @NotNull Class converterType) {
         return true;
     }
 
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+    public Object beforeBodyWrite(Object body, @NotNull MethodParameter returnType, @NotNull MediaType selectedContentType, Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         // 设置 Content-Type（不再需要显式指定 UTF-8，JSON 默认使用 UTF-8）
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         if (body instanceof Result) {

@@ -1,8 +1,10 @@
 package com.co.kc.shortening.admin.security.deniedhandler;
 
+import com.co.kc.shortening.common.constant.ErrorCode;
 import com.co.kc.shortening.common.utils.JsonUtils;
 import com.co.kc.shortening.web.common.Result;
-import com.co.kc.shortening.web.common.constants.ResultCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -22,9 +24,12 @@ import java.io.IOException;
  * @since 2022/02/19
  */
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+    private static final Logger LOG = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);
+
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        Result<?> response = Result.error(ResultCode.AUTH_FAIL, "身份认证失败");
+        LOG.error("身份认证失败, request:{}, response:{}, ex:{}", httpServletRequest, httpServletResponse, e);
+        Result<?> response = Result.error(ErrorCode.AUTH_FAIL);
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType("application/json;charset=UTF-8");
         httpServletResponse.getWriter().print(JsonUtils.toJson(response));

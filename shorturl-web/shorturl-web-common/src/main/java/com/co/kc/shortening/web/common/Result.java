@@ -1,5 +1,6 @@
 package com.co.kc.shortening.web.common;
 
+import com.co.kc.shortening.common.constant.ErrorCode;
 import com.co.kc.shortening.common.exception.BaseException;
 import com.co.kc.shortening.web.common.constants.ResultCode;
 import lombok.AllArgsConstructor;
@@ -38,28 +39,16 @@ public class Result<T> {
         return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(), data);
     }
 
-    public static Result<Map<String, Object>> error() {
-        return new Result<>(ResultCode.ERROR.getCode(), ResultCode.ERROR.getMsg(), Collections.emptyMap());
-    }
-
-    public static Result<Map<String, Object>> error(ResultCode errorCode) {
+    public static Result<Map<String, Object>> error(ErrorCode errorCode) {
         return new Result<>(errorCode.getCode(), errorCode.getMsg(), Collections.emptyMap());
     }
 
-    public static Result<Map<String, Object>> error(ResultCode errorCode, String msg) {
+    public static Result<Map<String, Object>> error(ErrorCode errorCode, String msg) {
         return new Result<>(errorCode.getCode(), msg, Collections.emptyMap());
     }
 
-    public static Result<Map<String, Object>> error(ResultCode errorCode, BaseException ex) {
-        return new Result<>(errorCode.getCode(), ex.getMsg(), Collections.emptyMap());
-    }
-
-    public static <T> Result<T> error(T data) {
-        return new Result<>(ResultCode.ERROR.getCode(), ResultCode.ERROR.getMsg(), data);
-    }
-
-    public static <T> Result<T> error(ResultCode errorCode, T data) {
-        return new Result<>(errorCode.getCode(), errorCode.getMsg(), data);
+    public static Result<Map<String, Object>> error(BaseException ex) {
+        return new Result<>(ex.getCode(), ex.getMsg(), Collections.emptyMap());
     }
 
 }

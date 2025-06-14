@@ -5,6 +5,7 @@ import com.co.kc.shortening.infrastructure.starter.ShortUrlInfrastructureTestApp
 import com.co.kc.shortening.user.domain.model.UserFactory;
 import com.co.kc.shortening.user.domain.model.UserPassword;
 import com.co.kc.shortening.user.domain.model.UserRawPassword;
+import jodd.util.RandomString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +24,8 @@ class BcryptPasswordServiceTests {
 
     @Test
     void testVerifyEncryptedPassword() {
-        UserRawPassword userRawPassword = new UserRawPassword(UserFactory.testUserRawPassword);
+        RandomString randomString = new RandomString();
+        UserRawPassword userRawPassword = new UserRawPassword(randomString.randomAlpha(20));
         UserPassword userPassword = bcryptPasswordService.encrypt(userRawPassword);
         Assertions.assertTrue(bcryptPasswordService.verify(userRawPassword, userPassword));
     }

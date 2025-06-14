@@ -11,7 +11,12 @@ import com.co.kc.shortening.application.service.app.UserAppService;
 import com.co.kc.shortening.common.exception.NotFoundException;
 import com.co.kc.shortening.infrastructure.extension.InfrastructureExtension;
 import com.co.kc.shortening.infrastructure.starter.ShortUrlInfrastructureTestApplication;
+import com.co.kc.shortening.user.domain.model.User;
 import com.co.kc.shortening.user.domain.model.UserFactory;
+import com.co.kc.shortening.user.domain.model.UserId;
+import com.co.kc.shortening.user.domain.model.UserRepository;
+import com.co.kc.shortening.user.service.PasswordService;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +34,12 @@ class UserAppServiceTests {
     @Autowired
     private SessionClient sessionClient;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private UserAppService userAppService;
+    @Autowired
+    private PasswordService passwordService;
+
 
     private UserAddDTO initUser;
 
@@ -65,16 +75,61 @@ class UserAppServiceTests {
     }
 
     @Test
-    void testUpdatInitUser() {
+    void testUserDetailWhenUserIsNotFounded() {
+        UserDetailQuery userDetailQuery = new UserDetailQuery(RandomUtils.nextLong(initUser.getUserId() + 1, initUser.getUserId() + 10));
+        Assertions.assertThrows(NotFoundException.class, () -> userAppService.userDetail(userDetailQuery));
+    }
+
+    @Test
+    void testUpdateInitUserWithChangedEmailAndChangedName() {
         UserUpdateCommand updateCommand =
                 new UserUpdateCommand(initUser.getUserId(), UserFactory.testUserChangedEmail, UserFactory.testUserChangedName, UserFactory.testUserRawPassword);
         userAppService.updateUser(updateCommand);
 
-        UserDetailQuery userDetailQuery = new UserDetailQuery(initUser.getUserId());
-        UserDetailDTO userDetailDTO = userAppService.userDetail(userDetailQuery);
-        Assertions.assertEquals(initUser.getUserId(), userDetailDTO.getUserId());
-        Assertions.assertEquals(UserFactory.testUserChangedEmail, userDetailDTO.getUserEmail());
-        Assertions.assertEquals(UserFactory.testUserChangedName, userDetailDTO.getUserName());
+        User user = userRepository.find(new UserId(initUser.getUserId()));
+        Assertions.assertEquals(initUser.getUserId(), user.getUserId().getId());
+        Assertions.assertEquals(UserFactory.testUserChangedEmail, user.getEmail().getEmail());
+        Assertions.assertEquals(UserFactory.testUserChangedName, user.getName().getName());
+        Assertions.assertTrue(passwordService.verify(UserFactory.getTestUserRawPassword(), user.getPassword()));
+    }
+
+    @Test
+    void testUpdateInitUserWithInvalidPassword() {
+        UserUpdateCommand updateCommand =
+                new UserUpdateCommand(initUser.getUserId(), UserFactory.testUserEmail, UserFactory.testUserName, UserFactory.testUserInvalidRawPassword);
+        userAppService.updateUser(updateCommand);
+
+        User user = userRepository.find(new UserId(initUser.getUserId()));
+        Assertions.assertEquals(initUser.getUserId(), user.getUserId().getId());
+        Assertions.assertEquals(UserFactory.testUserEmail, user.getEmail().getEmail());
+        Assertions.assertEquals(UserFactory.testUserName, user.getName().getName());
+        Assertions.assertTrue(passwordService.verify(UserFactory.getTestUserRawPassword(), user.getPassword()));
+    }
+
+    @Test
+    void testUpdateInitUserWithEmptyPassword() {
+        UserUpdateCommand updateCommand =
+                new UserUpdateCommand(initUser.getUserId(), UserFactory.testUserEmail, UserFactory.testUserName, UserFactory.testUserEmptyRawPassword);
+        userAppService.updateUser(updateCommand);
+
+        User user = userRepository.find(new UserId(initUser.getUserId()));
+        Assertions.assertEquals(initUser.getUserId(), user.getUserId().getId());
+        Assertions.assertEquals(UserFactory.testUserEmail, user.getEmail().getEmail());
+        Assertions.assertEquals(UserFactory.testUserName, user.getName().getName());
+        Assertions.assertTrue(passwordService.verify(UserFactory.getTestUserRawPassword(), user.getPassword()));
+    }
+
+    @Test
+    void testUpdateInitUserWithChangedPassword() {
+        UserUpdateCommand updateCommand =
+                new UserUpdateCommand(initUser.getUserId(), UserFactory.testUserEmail, UserFactory.testUserName, UserFactory.testUserChangedRawPassword);
+        userAppService.updateUser(updateCommand);
+
+        User user = userRepository.find(new UserId(initUser.getUserId()));
+        Assertions.assertEquals(initUser.getUserId(), user.getUserId().getId());
+        Assertions.assertEquals(UserFactory.testUserEmail, user.getEmail().getEmail());
+        Assertions.assertEquals(UserFactory.testUserName, user.getName().getName());
+        Assertions.assertTrue(passwordService.verify(UserFactory.getTestUserChangedRawPassword(), user.getPassword()));
     }
 
     @Test
@@ -82,7 +137,7 @@ class UserAppServiceTests {
         UserRemoveCommand removeCommand = new UserRemoveCommand(initUser.getUserId());
         userAppService.removeUser(removeCommand);
 
-        UserDetailQuery userDetailQuery = new UserDetailQuery(initUser.getUserId());
-        Assertions.assertThrows(NotFoundException.class, () -> userAppService.userDetail(userDetailQuery));
+        User user = userRepository.find(new UserId(initUser.getUserId()));
+        Assertions.assertNull(user);
     }
 }

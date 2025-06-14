@@ -6,7 +6,7 @@ import com.co.kc.shortening.admin.model.response.AdministratorDetailVO;
 import com.co.kc.shortening.admin.model.response.AdministratorSignInVO;
 import com.co.kc.shortening.admin.security.MethodSecurityConfig;
 import com.co.kc.shortening.admin.security.WebSecurityConfig;
-import com.co.kc.shortening.admin.security.constant.ParamsConstants;
+import com.co.kc.shortening.web.common.constants.ParamsConstants;
 import com.co.kc.shortening.admin.starter.ShortUrlAdminTestApplication;
 import com.co.kc.shortening.application.client.SessionClient;
 import com.co.kc.shortening.application.client.TokenClient;
@@ -16,6 +16,7 @@ import com.co.kc.shortening.application.model.cqrs.dto.SignInDTO;
 import com.co.kc.shortening.application.model.cqrs.dto.UserDetailDTO;
 import com.co.kc.shortening.application.model.cqrs.query.UserDetailQuery;
 import com.co.kc.shortening.application.service.app.UserAppService;
+import com.co.kc.shortening.common.constant.ErrorCode;
 import com.co.kc.shortening.common.exception.AuthException;
 import com.co.kc.shortening.common.utils.JsonUtils;
 import com.co.kc.shortening.user.domain.model.UserFactory;
@@ -93,7 +94,6 @@ class AccountControllerTests {
     void testSignInWhenEmailIsWrong() throws Exception {
         doThrow(new AuthException("user is not exist")).when(userAppService).signIn(any(SignInCommand.class));
 
-
         AdministratorSignInRequest body = new AdministratorSignInRequest(UserFactory.testUserWrongEmail, UserFactory.testUserRawPassword);
         MockHttpServletRequestBuilder httpPost = signInRequest.content(JsonUtils.toJson(body));
         mockMvc.perform(httpPost)
@@ -101,8 +101,8 @@ class AccountControllerTests {
                 .andExpect(mvcResult -> {
                     Result<AdministratorSignInVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<AdministratorSignInVO>>() {
                     });
-                    Assertions.assertEquals(ResultCode.AUTH_FAIL.getCode(), result.getCode());
-                    Assertions.assertEquals("user is not exist", result.getMsg());
+                    Assertions.assertEquals(ErrorCode.AUTH_FAIL.getCode(), result.getCode());
+                    Assertions.assertEquals(ErrorCode.AUTH_FAIL.getMsg(), result.getMsg());
                 });
 
         ArgumentCaptor<SignInCommand> argumentCaptor = ArgumentCaptor.forClass(SignInCommand.class);
@@ -123,8 +123,8 @@ class AccountControllerTests {
                 .andExpect(mvcResult -> {
                     Result<AdministratorSignInVO> result = JsonUtils.fromJson(mvcResult.getResponse().getContentAsString(), new TypeReference<Result<AdministratorSignInVO>>() {
                     });
-                    Assertions.assertEquals(ResultCode.AUTH_FAIL.getCode(), result.getCode());
-                    Assertions.assertEquals("user is failed to authenticate", result.getMsg());
+                    Assertions.assertEquals(ErrorCode.AUTH_FAIL.getCode(), result.getCode());
+                    Assertions.assertEquals(ErrorCode.AUTH_FAIL.getMsg(), result.getMsg());
                 });
 
         ArgumentCaptor<SignInCommand> argumentCaptor = ArgumentCaptor.forClass(SignInCommand.class);
