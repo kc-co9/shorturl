@@ -12,7 +12,7 @@ import com.co.kc.shortening.infrastructure.repository.PermissionMySqlRepository;
 import com.co.kc.shortening.infrastructure.repository.RoleMySqlRepository;
 import com.co.kc.shortening.infrastructure.repository.UserMySqlRepository;
 import com.co.kc.shortening.infrastructure.service.domain.BcryptPasswordService;
-import com.co.kc.shortening.infrastructure.service.query.UserQueryMySqlService;
+import com.co.kc.shortening.infrastructure.service.query.UserMySqlQueryService;
 import com.co.kc.shortening.user.domain.model.PermissionRepository;
 import com.co.kc.shortening.user.domain.model.RoleRepository;
 import com.co.kc.shortening.user.domain.model.UserRepository;
@@ -45,17 +45,17 @@ public class UserConfig {
     }
 
     @Bean
-    public UserMySqlRepository userRepository(AdministratorService administratorService) {
+    public UserMySqlRepository userMySqlRepository(AdministratorService administratorService) {
         return new UserMySqlRepository(administratorService);
     }
 
     @Bean
-    public RoleMySqlRepository roleRepository() {
+    public RoleMySqlRepository roleMySqlRepository() {
         return new RoleMySqlRepository();
     }
 
     @Bean
-    public PermissionMySqlRepository permissionRepository() {
+    public PermissionMySqlRepository permissionMySqlRepository() {
         return new PermissionMySqlRepository();
     }
 
@@ -65,8 +65,8 @@ public class UserConfig {
     }
 
     @Bean
-    public UserQueryMySqlService userQueryService(AdministratorService administratorService) {
-        return new UserQueryMySqlService(administratorService);
+    public UserMySqlQueryService userQueryMySqlService(AdministratorService administratorService) {
+        return new UserMySqlQueryService(administratorService);
     }
 
     @Bean

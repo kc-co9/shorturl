@@ -1,10 +1,19 @@
 package com.co.kc.shortening.shorturl.domain.model;
 
+import com.co.kc.shortening.blocklist.domain.model.Blocklist;
+import com.co.kc.shortening.common.utils.DateUtils;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * 时间范围-值对象
@@ -13,7 +22,8 @@ import java.time.LocalDateTime;
  */
 @Getter
 @ToString
-@EqualsAndHashCode
+@JsonSerialize(using = ValidTimeInterval.ValidTimeIntervalSerializer.class)
+@JsonDeserialize(using = ValidTimeInterval.ValidTimeIntervalDeserializer.class)
 public class ValidTimeInterval {
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
@@ -37,5 +47,47 @@ public class ValidTimeInterval {
             throw new IllegalArgumentException("datetime is null");
         }
         return datetime.compareTo(startTime) >= 0 && datetime.compareTo(endTime) <= 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ValidTimeInterval that = (ValidTimeInterval) o;
+
+        String thisFormatStartTime = DateUtils.commonFormat(startTime);
+        String thatFormatStartTime = DateUtils.commonFormat(that.startTime);
+        if (!Objects.equals(thisFormatStartTime, thatFormatStartTime)) {
+            return false;
+        }
+
+        String thisFormatEndTime = DateUtils.commonFormat(endTime);
+        String thatFormatEndTime = DateUtils.commonFormat(that.endTime);
+        return Objects.equals(thisFormatEndTime, thatFormatEndTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(DateUtils.commonFormat(startTime), DateUtils.commonFormat(endTime));
+    }
+
+    static class ValidTimeIntervalSerializer extends JsonSerializer<ValidTimeInterval> {
+        @Override
+        public void serialize(ValidTimeInterval validTimeInterval, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+            gen.writeStartObject();
+            gen.writeStringField("startTime", DateUtils.commonFormat(validTimeInterval.getStartTime()));
+            gen.writeObjectField("endTime", DateUtils.commonFormat(validTimeInterval.getEndTime()));
+            gen.writeEndObject();
+        }
+    }
+
+    static class ValidTimeIntervalDeserializer extends JsonDeserializer<ValidTimeInterval> {
+        @Override
+        public ValidTimeInterval deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+            JsonNode node = p.getCodec().readTree(p);
+            LocalDateTime startTime = DateUtils.commonParse(node.get("startTime").asText());
+            LocalDateTime endTime = DateUtils.commonParse(node.get("endTime").asText());
+            return new ValidTimeInterval(startTime, endTime);
+        }
     }
 }

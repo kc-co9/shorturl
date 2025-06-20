@@ -17,10 +17,10 @@ import java.util.Objects;
 /**
  * @author kc
  */
-public class BlocklistQueryMySqlService implements BlocklistQueryService {
+public class BlocklistMySqlQueryService implements BlocklistQueryService {
     private final UrlBlocklistService urlBlocklistService;
 
-    public BlocklistQueryMySqlService(UrlBlocklistService urlBlocklistService) {
+    public BlocklistMySqlQueryService(UrlBlocklistService urlBlocklistService) {
         this.urlBlocklistService = urlBlocklistService;
     }
 

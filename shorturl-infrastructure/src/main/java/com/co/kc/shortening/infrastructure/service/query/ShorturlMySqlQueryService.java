@@ -19,11 +19,11 @@ import java.util.Objects;
 /**
  * @author kc
  */
-public class ShorturlQueryMySqlService implements ShorturlQueryService {
+public class ShorturlMySqlQueryService implements ShorturlQueryService {
     private final UrlMappingService urlMappingService;
     private final ShortDomainProvider shortDomainProvider;
 
-    public ShorturlQueryMySqlService(UrlMappingService urlMappingService, ShortDomainProvider shortDomainProvider) {
+    public ShorturlMySqlQueryService(UrlMappingService urlMappingService, ShortDomainProvider shortDomainProvider) {
         this.urlMappingService = urlMappingService;
         this.shortDomainProvider = shortDomainProvider;
     }

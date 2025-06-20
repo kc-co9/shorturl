@@ -25,11 +25,11 @@ import java.time.LocalDateTime;
 @Transactional
 @ExtendWith(InfrastructureExtension.class)
 @SpringBootTest(classes = ShortUrlInfrastructureTestApplication.class)
-class ShorturlQueryMySqlServiceTests {
+class ShorturlMySqlQueryServiceTests {
     @Autowired
     private ShorturlAppService shorturlAppService;
     @Autowired
-    private ShorturlQueryMySqlService shorturlQueryMySqlService;
+    private ShorturlMySqlQueryService shorturlMySqlQueryService;
 
     @BeforeEach
     void initShorturl() {
@@ -48,7 +48,7 @@ class ShorturlQueryMySqlServiceTests {
         for (long pageNo = 1; ; pageNo++) {
             ShorturlQuery shorturlQuery = new ShorturlQuery();
             shorturlQuery.setPaging(new Paging(pageNo, 10L));
-            PagingResult<ShorturlQueryDTO> pagingResult = shorturlQueryMySqlService.queryShorturl(shorturlQuery);
+            PagingResult<ShorturlQueryDTO> pagingResult = shorturlMySqlQueryService.queryShorturl(shorturlQuery);
             if (CollectionUtils.isEmpty(pagingResult.getRecords())) {
                 break;
             }
@@ -68,7 +68,7 @@ class ShorturlQueryMySqlServiceTests {
         ShorturlQuery shorturlQuery = new ShorturlQuery();
         shorturlQuery.setShortId(parentQueryDTO.getShortId());
         shorturlQuery.setPaging(new Paging(1L, 1L));
-        PagingResult<ShorturlQueryDTO> pagingResult = shorturlQueryMySqlService.queryShorturl(shorturlQuery);
+        PagingResult<ShorturlQueryDTO> pagingResult = shorturlMySqlQueryService.queryShorturl(shorturlQuery);
         Assertions.assertEquals(1L, pagingResult.getTotalCount().longValue());
         Assertions.assertEquals(1L, pagingResult.getTotalPages().longValue());
         Assertions.assertEquals(1L, pagingResult.getRecords().size());
@@ -87,7 +87,7 @@ class ShorturlQueryMySqlServiceTests {
         ShorturlQuery shorturlQuery = new ShorturlQuery();
         shorturlQuery.setCode(parentQueryDTO.getCode());
         shorturlQuery.setPaging(new Paging(1L, 1L));
-        PagingResult<ShorturlQueryDTO> pagingResult = shorturlQueryMySqlService.queryShorturl(shorturlQuery);
+        PagingResult<ShorturlQueryDTO> pagingResult = shorturlMySqlQueryService.queryShorturl(shorturlQuery);
         Assertions.assertEquals(1L, pagingResult.getTotalCount().longValue());
         Assertions.assertEquals(1L, pagingResult.getTotalPages().longValue());
         Assertions.assertEquals(1L, pagingResult.getRecords().size());
@@ -106,7 +106,7 @@ class ShorturlQueryMySqlServiceTests {
         ShorturlQuery shorturlQuery = new ShorturlQuery();
         shorturlQuery.setStatus(parentQueryDTO.getStatus());
         shorturlQuery.setPaging(new Paging(1L, 10L));
-        PagingResult<ShorturlQueryDTO> pagingResult = shorturlQueryMySqlService.queryShorturl(shorturlQuery);
+        PagingResult<ShorturlQueryDTO> pagingResult = shorturlMySqlQueryService.queryShorturl(shorturlQuery);
         Assertions.assertEquals(21L, pagingResult.getTotalCount().longValue());
         Assertions.assertEquals(3L, pagingResult.getTotalPages().longValue());
     }
@@ -116,7 +116,7 @@ class ShorturlQueryMySqlServiceTests {
         shorturlQuery.setValidTimeStart(parentQueryDTO.getValidStart());
         shorturlQuery.setValidTimeEnd(parentQueryDTO.getValidEnd());
         shorturlQuery.setPaging(new Paging(1L, 10L));
-        PagingResult<ShorturlQueryDTO> pagingResult = shorturlQueryMySqlService.queryShorturl(shorturlQuery);
+        PagingResult<ShorturlQueryDTO> pagingResult = shorturlMySqlQueryService.queryShorturl(shorturlQuery);
         Assertions.assertEquals(21L, pagingResult.getTotalCount().longValue());
         Assertions.assertEquals(3L, pagingResult.getTotalPages().longValue());
     }

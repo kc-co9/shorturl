@@ -1,10 +1,16 @@
 package com.co.kc.shortening.shared.domain.model;
 
 import com.co.kc.shortening.common.utils.HashUtils;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.net.URI;
 
 /**
@@ -14,6 +20,8 @@ import java.net.URI;
  */
 @Getter
 @EqualsAndHashCode
+@JsonSerialize(using = Link.LinkSerializer.class)
+@JsonDeserialize(using = Link.LinkDeserializer.class)
 public class Link {
     /**
      * The original URL
@@ -60,5 +68,22 @@ public class Link {
 
     public Link appendPath(String path) {
         return new Link(url + "/" + path);
+    }
+
+    static class LinkSerializer extends JsonSerializer<Link> {
+        @Override
+        public void serialize(Link link, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+            gen.writeStartObject();
+            gen.writeStringField("url", link.getUrl());
+            gen.writeEndObject();
+        }
+    }
+
+    static class LinkDeserializer extends JsonDeserializer<Link> {
+        @Override
+        public Link deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+            JsonNode node = p.getCodec().readTree(p);
+            return new Link(node.get("url").asText());
+        }
     }
 }

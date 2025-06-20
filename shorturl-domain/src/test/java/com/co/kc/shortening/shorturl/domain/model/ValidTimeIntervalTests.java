@@ -43,4 +43,18 @@ class ValidTimeIntervalTests {
                 new ValidTimeInterval(LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
         Assertions.assertFalse(validTimeInterval.contain(LocalDateTime.now().plusHours(10)));
     }
+
+    @Test
+    void testSameValidTimeIntervalIsEquals() {
+        ValidTimeInterval validTimeInterval1 = new ValidTimeInterval(LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
+        ValidTimeInterval validTimeInterval2 = new ValidTimeInterval(LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
+        Assertions.assertEquals(validTimeInterval1, validTimeInterval2);
+    }
+
+    @Test
+    void testDifferentValidTimeIntervalIsNotEquals() {
+        ValidTimeInterval validTimeInterval1 = new ValidTimeInterval(LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
+        ValidTimeInterval validTimeInterval2 = new ValidTimeInterval(LocalDateTime.now().minusHours(2), LocalDateTime.now().plusHours(2));
+        Assertions.assertNotEquals(validTimeInterval1, validTimeInterval2);
+    }
 }

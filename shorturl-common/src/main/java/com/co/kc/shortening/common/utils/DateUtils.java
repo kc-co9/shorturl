@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 /**
@@ -48,6 +49,14 @@ public class DateUtils {
 
     public static long valueOfMilliSecond(LocalDateTime time) {
         return time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    public static String commonFormat(LocalDateTime dateTime) {
+        return dateTime.format(DateTimeFormatter.ofPattern(FORMAT_COMMON_DATETIME));
+    }
+
+    public static LocalDateTime commonParse(String dateTime) {
+        return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(FORMAT_COMMON_DATETIME));
     }
 
     public static boolean equals(LocalDateTime t1, LocalDateTime t2) {

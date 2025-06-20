@@ -24,11 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @ExtendWith(InfrastructureExtension.class)
 @SpringBootTest(classes = ShortUrlInfrastructureTestApplication.class)
-class BlocklistQueryMySqlServiceTests {
+class BlocklistMySqlQueryServiceTests {
     @Autowired
     private BlocklistAppService blocklistAppService;
     @Autowired
-    private BlocklistQueryMySqlService blocklistQueryMySqlService;
+    private BlocklistMySqlQueryService blocklistMySqlQueryService;
 
     @BeforeEach
     void initBlocklist() {
@@ -46,7 +46,7 @@ class BlocklistQueryMySqlServiceTests {
         for (long pageNo = 1; ; pageNo++) {
             BlocklistQuery blocklistQuery = new BlocklistQuery();
             blocklistQuery.setPaging(new Paging(pageNo, 10L));
-            PagingResult<BlocklistQueryDTO> pagingResult = blocklistQueryMySqlService.queryBlocklist(blocklistQuery);
+            PagingResult<BlocklistQueryDTO> pagingResult = blocklistMySqlQueryService.queryBlocklist(blocklistQuery);
             if (CollectionUtils.isEmpty(pagingResult.getRecords())) {
                 break;
             }
@@ -63,7 +63,7 @@ class BlocklistQueryMySqlServiceTests {
         BlocklistQuery blocklistQuery = new BlocklistQuery();
         blocklistQuery.setBlockId(parentQueryDTO.getBlockId());
         blocklistQuery.setPaging(new Paging(1L, 1L));
-        PagingResult<BlocklistQueryDTO> pagingResult = blocklistQueryMySqlService.queryBlocklist(blocklistQuery);
+        PagingResult<BlocklistQueryDTO> pagingResult = blocklistMySqlQueryService.queryBlocklist(blocklistQuery);
         Assertions.assertEquals(1L, pagingResult.getTotalCount().longValue());
         Assertions.assertEquals(1L, pagingResult.getTotalPages().longValue());
         Assertions.assertEquals(1L, pagingResult.getRecords().size());
@@ -80,7 +80,7 @@ class BlocklistQueryMySqlServiceTests {
         BlocklistQuery blocklistQuery = new BlocklistQuery();
         blocklistQuery.setStatus(parentQueryDTO.getStatus());
         blocklistQuery.setPaging(new Paging(1L, 10L));
-        PagingResult<BlocklistQueryDTO> pagingResult = blocklistQueryMySqlService.queryBlocklist(blocklistQuery);
+        PagingResult<BlocklistQueryDTO> pagingResult = blocklistMySqlQueryService.queryBlocklist(blocklistQuery);
         Assertions.assertEquals(21, pagingResult.getTotalCount().longValue());
         Assertions.assertEquals(3, pagingResult.getTotalPages().longValue());
     }

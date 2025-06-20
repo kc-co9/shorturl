@@ -23,11 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @ExtendWith(InfrastructureExtension.class)
 @SpringBootTest(classes = ShortUrlInfrastructureTestApplication.class)
-class UserQueryMySqlServiceTests {
+class UserMySqlQueryServiceTests {
     @Autowired
     private UserAppService userAppService;
     @Autowired
-    private UserQueryMySqlService userQueryMySqlService;
+    private UserMySqlQueryService userMySqlQueryService;
 
     @BeforeEach
     void initUser() {
@@ -43,7 +43,7 @@ class UserQueryMySqlServiceTests {
         for (long pageNo = 1; ; pageNo++) {
             UserQuery userQuery = new UserQuery();
             userQuery.setPaging(new Paging(pageNo, 10L));
-            PagingResult<UserQueryDTO> pageResult = userQueryMySqlService.queryUser(userQuery);
+            PagingResult<UserQueryDTO> pageResult = userMySqlQueryService.queryUser(userQuery);
             if (CollectionUtils.isEmpty(pageResult.getRecords())) {
                 break;
             }
@@ -62,7 +62,7 @@ class UserQueryMySqlServiceTests {
         UserQuery query = new UserQuery();
         query.setUserId(parentQueryDTO.getUserId());
         query.setPaging(new Paging(1L, 1L));
-        PagingResult<UserQueryDTO> pagingResult = userQueryMySqlService.queryUser(query);
+        PagingResult<UserQueryDTO> pagingResult = userMySqlQueryService.queryUser(query);
         Assertions.assertEquals(1L, pagingResult.getTotalCount().longValue());
         Assertions.assertEquals(1L, pagingResult.getTotalPages().longValue());
         Assertions.assertEquals(1L, pagingResult.getRecords().size());
@@ -78,7 +78,7 @@ class UserQueryMySqlServiceTests {
         UserQuery query = new UserQuery();
         query.setEmail(parentQueryDTO.getEmail());
         query.setPaging(new Paging(1L, 1L));
-        PagingResult<UserQueryDTO> pagingResult = userQueryMySqlService.queryUser(query);
+        PagingResult<UserQueryDTO> pagingResult = userMySqlQueryService.queryUser(query);
         Assertions.assertEquals(1L, pagingResult.getTotalCount().longValue());
         Assertions.assertEquals(1L, pagingResult.getTotalPages().longValue());
         Assertions.assertEquals(1L, pagingResult.getRecords().size());
@@ -94,7 +94,7 @@ class UserQueryMySqlServiceTests {
         UserQuery query = new UserQuery();
         query.setUsername(parentQueryDTO.getUsername());
         query.setPaging(new Paging(1L, 1L));
-        PagingResult<UserQueryDTO> pagingResult = userQueryMySqlService.queryUser(query);
+        PagingResult<UserQueryDTO> pagingResult = userMySqlQueryService.queryUser(query);
         Assertions.assertEquals(1L, pagingResult.getTotalCount().longValue());
         Assertions.assertEquals(1L, pagingResult.getTotalPages().longValue());
         Assertions.assertEquals(1L, pagingResult.getRecords().size());

@@ -17,10 +17,10 @@ import java.util.Objects;
 /**
  * @author kc
  */
-public class UserQueryMySqlService implements UserQueryService {
+public class UserMySqlQueryService implements UserQueryService {
     private final AdministratorService administratorService;
 
-    public UserQueryMySqlService(AdministratorService administratorService) {
+    public UserMySqlQueryService(AdministratorService administratorService) {
         this.administratorService = administratorService;
     }
 

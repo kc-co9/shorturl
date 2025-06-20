@@ -8,8 +8,8 @@ import com.co.kc.shortening.application.service.app.BlocklistAppService;
 import com.co.kc.shortening.blocklist.domain.model.BlockId;
 import com.co.kc.shortening.blocklist.domain.model.Blocklist;
 import com.co.kc.shortening.blocklist.domain.model.BlocklistFactory;
-import com.co.kc.shortening.blocklist.domain.model.BlocklistRepository;
 import com.co.kc.shortening.infrastructure.extension.InfrastructureExtension;
+import com.co.kc.shortening.infrastructure.repository.BlocklistMySqlRepository;
 import com.co.kc.shortening.infrastructure.starter.ShortUrlInfrastructureTestApplication;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest(classes = ShortUrlInfrastructureTestApplication.class)
 class BlocklistAppServiceTests {
     @Autowired
-    private BlocklistRepository blocklistRepository;
+    private BlocklistMySqlRepository blocklistMySqlRepository;
     @Autowired
     private BlocklistAppService blocklistAppService;
 
@@ -33,7 +33,7 @@ class BlocklistAppServiceTests {
     void testAddBlocklist() {
         BlocklistAddDTO blocklistAddDTO = addTestBlocklist();
 
-        Blocklist blocklist = blocklistRepository.find(new BlockId(blocklistAddDTO.getBlockId()));
+        Blocklist blocklist = blocklistMySqlRepository.find(new BlockId(blocklistAddDTO.getBlockId()));
         Assertions.assertNotNull(blocklist);
         Assertions.assertEquals(blocklistAddDTO.getBlockId(), blocklist.getBlockId().getId());
         Assertions.assertEquals(BlocklistFactory.getTestBlockRemark(), blocklist.getRemark());
@@ -51,7 +51,7 @@ class BlocklistAppServiceTests {
         updateCommand.setStatus(BlocklistFactory.testBlockChangedStatus);
         blocklistAppService.update(updateCommand);
 
-        Blocklist blocklist = blocklistRepository.find(new BlockId(blocklistAddDTO.getBlockId()));
+        Blocklist blocklist = blocklistMySqlRepository.find(new BlockId(blocklistAddDTO.getBlockId()));
         Assertions.assertNotNull(blocklist);
         Assertions.assertEquals(BlocklistFactory.getTestBlockChangedRemark(), blocklist.getRemark());
         Assertions.assertEquals(BlocklistFactory.testBlockChangedStatus, blocklist.getStatus());
@@ -65,7 +65,7 @@ class BlocklistAppServiceTests {
         removeCommand.setBlockId(blocklistAddDTO.getBlockId());
         blocklistAppService.remove(removeCommand);
 
-        Assertions.assertNull(blocklistRepository.find(new BlockId(blocklistAddDTO.getBlockId())));
+        Assertions.assertNull(blocklistMySqlRepository.find(new BlockId(blocklistAddDTO.getBlockId())));
     }
 
     private BlocklistAddDTO addTestBlocklist() {
