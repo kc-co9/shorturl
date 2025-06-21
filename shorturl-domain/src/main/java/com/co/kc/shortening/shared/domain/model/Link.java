@@ -1,6 +1,7 @@
 package com.co.kc.shortening.shared.domain.model;
 
 import com.co.kc.shortening.common.utils.HashUtils;
+import com.co.kc.shortening.common.utils.ReflectUtils;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
@@ -74,7 +75,7 @@ public class Link {
         @Override
         public void serialize(Link link, JsonGenerator gen, SerializerProvider serializers) throws IOException {
             gen.writeStartObject();
-            gen.writeStringField("url", link.getUrl());
+            gen.writeStringField(ReflectUtils.getPropertyName(Link::getUrl), link.getUrl());
             gen.writeEndObject();
         }
     }
@@ -83,7 +84,8 @@ public class Link {
         @Override
         public Link deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
             JsonNode node = p.getCodec().readTree(p);
-            return new Link(node.get("url").asText());
+            String url = node.get(ReflectUtils.getPropertyName(Link::getUrl)).asText();
+            return new Link(url);
         }
     }
 }

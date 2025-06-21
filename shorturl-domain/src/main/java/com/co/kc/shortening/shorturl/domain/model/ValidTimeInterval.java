@@ -1,13 +1,12 @@
 package com.co.kc.shortening.shorturl.domain.model;
 
-import com.co.kc.shortening.blocklist.domain.model.Blocklist;
 import com.co.kc.shortening.common.utils.DateUtils;
+import com.co.kc.shortening.common.utils.ReflectUtils;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -51,8 +50,12 @@ public class ValidTimeInterval {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ValidTimeInterval that = (ValidTimeInterval) o;
 
         String thisFormatStartTime = DateUtils.commonFormat(startTime);
@@ -75,8 +78,8 @@ public class ValidTimeInterval {
         @Override
         public void serialize(ValidTimeInterval validTimeInterval, JsonGenerator gen, SerializerProvider serializers) throws IOException {
             gen.writeStartObject();
-            gen.writeStringField("startTime", DateUtils.commonFormat(validTimeInterval.getStartTime()));
-            gen.writeObjectField("endTime", DateUtils.commonFormat(validTimeInterval.getEndTime()));
+            gen.writeStringField(ReflectUtils.getPropertyName(ValidTimeInterval::getStartTime), DateUtils.commonFormat(validTimeInterval.getStartTime()));
+            gen.writeStringField(ReflectUtils.getPropertyName(ValidTimeInterval::getEndTime), DateUtils.commonFormat(validTimeInterval.getEndTime()));
             gen.writeEndObject();
         }
     }
@@ -85,9 +88,9 @@ public class ValidTimeInterval {
         @Override
         public ValidTimeInterval deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
             JsonNode node = p.getCodec().readTree(p);
-            LocalDateTime startTime = DateUtils.commonParse(node.get("startTime").asText());
-            LocalDateTime endTime = DateUtils.commonParse(node.get("endTime").asText());
-            return new ValidTimeInterval(startTime, endTime);
+            String startTime = node.get(ReflectUtils.getPropertyName(ValidTimeInterval::getStartTime)).asText();
+            String endTime = node.get(ReflectUtils.getPropertyName(ValidTimeInterval::getEndTime)).asText();
+            return new ValidTimeInterval(DateUtils.commonParse(startTime), DateUtils.commonParse(endTime));
         }
     }
 }

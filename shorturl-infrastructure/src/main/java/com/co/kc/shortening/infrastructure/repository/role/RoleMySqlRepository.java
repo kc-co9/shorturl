@@ -1,4 +1,4 @@
-package com.co.kc.shortening.infrastructure.repository;
+package com.co.kc.shortening.infrastructure.repository.role;
 
 import com.co.kc.shortening.user.domain.model.Role;
 import com.co.kc.shortening.user.domain.model.RoleId;

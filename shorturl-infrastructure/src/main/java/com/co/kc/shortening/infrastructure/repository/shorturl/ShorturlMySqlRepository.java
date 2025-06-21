@@ -1,4 +1,4 @@
-package com.co.kc.shortening.infrastructure.repository;
+package com.co.kc.shortening.infrastructure.repository.shorturl;
 
 import com.co.kc.shortening.infrastructure.mybatis.entity.UrlMapping;
 import com.co.kc.shortening.infrastructure.mybatis.enums.UrlMappingStatus;

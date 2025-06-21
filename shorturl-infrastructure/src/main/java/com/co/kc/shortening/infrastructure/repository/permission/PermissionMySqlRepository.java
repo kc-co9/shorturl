@@ -1,4 +1,4 @@
-package com.co.kc.shortening.infrastructure.repository;
+package com.co.kc.shortening.infrastructure.repository.permission;
 
 import com.co.kc.shortening.user.domain.model.Permission;
 import com.co.kc.shortening.user.domain.model.PermissionId;

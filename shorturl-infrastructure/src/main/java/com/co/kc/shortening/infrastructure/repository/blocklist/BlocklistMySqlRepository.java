@@ -1,4 +1,4 @@
-package com.co.kc.shortening.infrastructure.repository;
+package com.co.kc.shortening.infrastructure.repository.blocklist;
 
 import com.co.kc.shortening.blocklist.domain.model.*;
 import com.co.kc.shortening.infrastructure.mybatis.entity.UrlBlocklist;

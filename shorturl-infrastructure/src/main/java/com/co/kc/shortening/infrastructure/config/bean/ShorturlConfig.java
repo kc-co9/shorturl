@@ -10,9 +10,9 @@ import com.co.kc.shortening.infrastructure.config.properties.ShorturlProperties;
 import com.co.kc.shortening.infrastructure.mybatis.service.CodeGenService;
 import com.co.kc.shortening.infrastructure.mybatis.service.UrlMappingService;
 import com.co.kc.shortening.infrastructure.provider.ShortDomainYmlProvider;
-import com.co.kc.shortening.infrastructure.repository.ShorturlCacheRepository;
+import com.co.kc.shortening.infrastructure.repository.shorturl.ShorturlCacheRepository;
 import com.co.kc.shortening.infrastructure.service.query.ShorturlMySqlQueryService;
-import com.co.kc.shortening.infrastructure.repository.ShorturlMySqlRepository;
+import com.co.kc.shortening.infrastructure.repository.shorturl.ShorturlMySqlRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

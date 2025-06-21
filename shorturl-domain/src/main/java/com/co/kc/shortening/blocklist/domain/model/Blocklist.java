@@ -1,5 +1,6 @@
 package com.co.kc.shortening.blocklist.domain.model;
 
+import com.co.kc.shortening.common.utils.ReflectUtils;
 import com.co.kc.shortening.shared.domain.model.Identification;
 import com.co.kc.shortening.shared.domain.model.Link;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -70,11 +71,11 @@ public class Blocklist extends Identification {
         @Override
         public void serialize(Blocklist blocklist, JsonGenerator gen, SerializerProvider serializers) throws IOException {
             gen.writeStartObject();
-            gen.writeNumberField("id", blocklist.getId());
-            gen.writeNumberField("blockId", blocklist.getBlockId().getId());
-            gen.writeStringField("link", blocklist.getLink().getUrl());
-            gen.writeStringField("remark", blocklist.getRemark().getRemark());
-            gen.writeStringField("status", blocklist.getStatus().name());
+            gen.writeNumberField(ReflectUtils.getPropertyName(Blocklist::getId), blocklist.getId());
+            gen.writeNumberField(ReflectUtils.getPropertyName(Blocklist::getBlockId), blocklist.getBlockId().getId());
+            gen.writeStringField(ReflectUtils.getPropertyName(Blocklist::getLink), blocklist.getLink().getUrl());
+            gen.writeStringField(ReflectUtils.getPropertyName(Blocklist::getRemark), blocklist.getRemark().getRemark());
+            gen.writeStringField(ReflectUtils.getPropertyName(Blocklist::getStatus), blocklist.getStatus().name());
             gen.writeEndObject();
         }
     }
@@ -84,13 +85,18 @@ public class Blocklist extends Identification {
         public Blocklist deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
             JsonNode node = p.getCodec().readTree(p);
 
-            Long id = node.get("id").asLong();
-            BlockId blockId = new BlockId(node.get("blockId").asLong());
-            Link link = new Link(node.get("link").asText());
-            BlockRemark remark = new BlockRemark(node.get("remark").asText());
-            BlockStatus status = BlockStatus.valueOf(node.get("status").asText());
+            Long id = node.get(ReflectUtils.getPropertyName(Blocklist::getId)).asLong();
+            Long blockId = node.get(ReflectUtils.getPropertyName(Blocklist::getBlockId)).asLong();
+            String blockLink = node.get(ReflectUtils.getPropertyName(Blocklist::getLink)).asText();
+            String blockRemark = node.get(ReflectUtils.getPropertyName(Blocklist::getRemark)).asText();
+            String statusName = node.get(ReflectUtils.getPropertyName(Blocklist::getStatus)).asText();
 
-            Blocklist blocklist = new Blocklist(blockId, link, remark, status);
+            Blocklist blocklist =
+                    new Blocklist(
+                            new BlockId(blockId),
+                            new Link(blockLink),
+                            new BlockRemark(blockRemark),
+                            BlockStatus.valueOf(statusName));
             blocklist.setId(id);
             return blocklist;
         }

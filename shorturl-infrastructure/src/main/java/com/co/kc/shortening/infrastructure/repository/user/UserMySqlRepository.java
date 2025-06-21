@@ -1,4 +1,4 @@
-package com.co.kc.shortening.infrastructure.repository;
+package com.co.kc.shortening.infrastructure.repository.user;
 
 import com.co.kc.shortening.infrastructure.mybatis.entity.Administrator;
 import com.co.kc.shortening.infrastructure.mybatis.service.AdministratorService;

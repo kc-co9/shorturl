@@ -1,15 +1,19 @@
 package com.co.kc.shortening.common.utils;
 
 import com.co.kc.shortening.common.exception.ReflectException;
+import com.co.kc.shortening.common.function.SFunction;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -19,74 +23,102 @@ public class ReflectUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReflectUtils.class);
 
+    private static final Pattern GETTER_PATTERN = Pattern.compile("^(get|is|has)(.+)$");
+    private static final String GETTER_METHOD_PREFIX = "get";
+    private static final String SETTER_METHOD_PREFIX = "set";
+
     private ReflectUtils() {
     }
 
-    public static String generateGetMethodName(String fieldName) {
-        return "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+    public static String getterMethodName(String fieldName) {
+        return GETTER_METHOD_PREFIX + capitalize(fieldName);
     }
 
-    public static String generateSetMethodName(String fieldName) {
-        return "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+    public static String setterMethodName(String fieldName) {
+        return SETTER_METHOD_PREFIX + capitalize(fieldName);
+    }
+
+    public static Method getterMethod(Class<?> clazz, String fieldName) {
+        try {
+            return clazz.getMethod(getterMethodName(fieldName));
+        } catch (NoSuchMethodException e) {
+            throw new ReflectException("Fail to get 'getterMethod' Method", e);
+        }
+    }
+
+    public static Method setterMethod(Class<?> clazz, String fieldName, Class<?> parameterTypes) throws NoSuchMethodException {
+        try {
+            return clazz.getMethod(setterMethodName(fieldName), parameterTypes);
+        } catch (NoSuchMethodException e) {
+            throw new ReflectException("Fail to get 'setterMethod' Method", e);
+        }
+    }
+
+    /**
+     * 从方法引用中提取属性名（支持 getter 方法）
+     */
+    public static <T, R> String getPropertyName(SFunction<T, R> methodRef) {
+        try {
+            // 获取方法引用的序列化形式
+            Method writeReplace = methodRef.getClass().getDeclaredMethod("writeReplace");
+            writeReplace.setAccessible(true);
+            SerializedLambda serializedLambda = (SerializedLambda) writeReplace.invoke(methodRef);
+            // 获取方法名
+            String methodName = serializedLambda.getImplMethodName();
+            // 处理 getter 方法
+            Matcher matcher = GETTER_PATTERN.matcher(methodName);
+            if (!matcher.matches()) {
+                // 直接返回方法名（非标准 getter）
+                return methodName;
+            }
+            String propertyPart = matcher.group(2);
+            return decapitalize(propertyPart);
+        } catch (Exception e) {
+            throw new ReflectException("Fail to extract property name from method reference", e);
+        }
     }
 
     public static String generateBeanName(Class<?> clazz) {
         String className = clazz.getSimpleName();
-        return className.substring(0, 1).toLowerCase() + className.substring(1);
+        return capitalize(className);
     }
 
-    public static Method generateGetMethod(Class<?> clazz, String fieldName) {
+    public static Object invokeGetterMethod(Object o, String fieldName) {
         try {
-            return clazz.getMethod(generateGetMethodName(fieldName));
-        } catch (NoSuchMethodException e) {
-            throw new ReflectException("get 'generateGetMethod' Method failure", e);
-        }
-    }
-
-    public static Method generateSetMethod(Class<?> clazz, String fieldName, Class<?> parameterTypes) throws NoSuchMethodException {
-        try {
-            return clazz.getMethod(generateSetMethodName(fieldName), parameterTypes);
-        } catch (NoSuchMethodException e) {
-            throw new ReflectException("get 'generateSetMethod' Method failure", e);
-        }
-    }
-
-    public static Object invokeGetMethod(Object o, String fieldName) {
-        try {
-            Method getMethod = generateGetMethod(o.getClass(), fieldName);
+            Method getMethod = getterMethod(o.getClass(), fieldName);
             getMethod.setAccessible(true);
             return getMethod.invoke(o);
         } catch (Exception e) {
-            throw new ReflectException("invoke 'invokeGetMethod' Method failure", e);
+            throw new ReflectException("Fail to invoke 'invokeGetMethod' Method", e);
         }
     }
 
-    public static void invokeSetMethod(Object o, String fieldName, Object args) {
+    public static void invokeSetterMethod(Object o, String fieldName, Object args) {
         try {
-            Method setMethod = generateSetMethod(o.getClass(), fieldName, args.getClass());
+            Method setMethod = setterMethod(o.getClass(), fieldName, args.getClass());
             setMethod.setAccessible(true);
             setMethod.invoke(o, args);
         } catch (Exception e) {
-            throw new ReflectException("invoke 'invokeSetMethod' Method failure", e);
+            throw new ReflectException("Fail to invoke 'invokeSetMethod' Method", e);
         }
     }
 
-    public static void invokeSetMethod(Object o, String fieldName, Class<?> parameterTypes, Object args) {
+    public static void invokeSetterMethod(Object o, String fieldName, Class<?> parameterTypes, Object args) {
         try {
-            Method setMethod = generateSetMethod(o.getClass(), fieldName, parameterTypes);
+            Method setMethod = setterMethod(o.getClass(), fieldName, parameterTypes);
             setMethod.invoke(o, args);
         } catch (Exception e) {
-            throw new ReflectException("invoke 'invokeSetMethod' Method failure", e);
+            throw new ReflectException("Fail to invoke 'invokeSetMethod' Method", e);
         }
     }
 
     public static <T> T replaceNewValue(Object oldObj, Object updateObj, Class<T> clazz) {
         Field[] fieldArray = clazz.getDeclaredFields();
         for (Field field : fieldArray) {
-            Object value = ReflectUtils.invokeGetMethod(updateObj, field.getName());
+            Object value = ReflectUtils.invokeGetterMethod(updateObj, field.getName());
             boolean isUpdate = Objects.nonNull(value);
             if (isUpdate) {
-                ReflectUtils.invokeSetMethod(oldObj, field.getName(), value);
+                ReflectUtils.invokeSetterMethod(oldObj, field.getName(), value);
             }
         }
 
@@ -130,7 +162,7 @@ public class ReflectUtils {
             // 得到私有的变量值
             return field.get(obj);
         } catch (Exception e) {
-            LOG.error("reflect invoke failure", e);
+            LOG.error("Fail to get private value", e);
             return null;
         }
     }
@@ -169,23 +201,23 @@ public class ReflectUtils {
         Field[] fieldArr = clazz.getDeclaredFields();
         for (Field field : fieldArr) {
             if (field.getType() == Integer.class) {
-                invokeSetMethod(t, field.getName(), 0);
+                invokeSetterMethod(t, field.getName(), 0);
             } else if (field.getType() == Long.class) {
-                invokeSetMethod(t, field.getName(), 0L);
+                invokeSetterMethod(t, field.getName(), 0L);
             } else if (field.getType() == Short.class) {
-                invokeSetMethod(t, field.getName(), 0);
+                invokeSetterMethod(t, field.getName(), 0);
             } else if (field.getType() == Boolean.class) {
-                invokeSetMethod(t, field.getName(), Boolean.FALSE);
+                invokeSetterMethod(t, field.getName(), Boolean.FALSE);
             } else if (field.getType() == Float.class) {
-                invokeSetMethod(t, field.getName(), 0f);
+                invokeSetterMethod(t, field.getName(), 0f);
             } else if (field.getType() == Double.class) {
-                invokeSetMethod(t, field.getName(), 0f);
+                invokeSetterMethod(t, field.getName(), 0f);
             } else if (field.getType() == String.class) {
-                invokeSetMethod(t, field.getName(), "");
+                invokeSetterMethod(t, field.getName(), "");
             } else if (field.getType() == BigDecimal.class) {
-                invokeSetMethod(t, field.getName(), BigDecimal.ZERO);
+                invokeSetterMethod(t, field.getName(), BigDecimal.ZERO);
             } else if (field.getType() == BigInteger.class) {
-                invokeSetMethod(t, field.getName(), BigInteger.ZERO);
+                invokeSetterMethod(t, field.getName(), BigInteger.ZERO);
             } else {
                 LOG.info("初始化默认值类型不匹配,{},{}", t, field.getType());
             }
@@ -196,7 +228,7 @@ public class ReflectUtils {
         try {
             return Thread.currentThread().getStackTrace()[2].getMethodName();
         } catch (Exception ex) {
-            LOG.error("reflect invoke failure", ex);
+            LOG.error("Fail to get current methodName", ex);
             return GeneratorUtils.nextUUID();
         }
     }
@@ -207,7 +239,7 @@ public class ReflectUtils {
             String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
             return String.format("%s.%s", className, methodName);
         } catch (Exception ex) {
-            LOG.error("reflect invoke failure", ex);
+            LOG.error("Fail to get current whole methodName", ex);
             return GeneratorUtils.nextUUID();
         }
     }
@@ -216,9 +248,29 @@ public class ReflectUtils {
         try {
             return Thread.currentThread().getStackTrace()[2].getClassName();
         } catch (Exception ex) {
-            LOG.error("reflect invoke failure", ex);
+            LOG.error("Fail to get current className", ex);
             return GeneratorUtils.nextUUID();
         }
+    }
+
+    /**
+     * 首字母大写
+     */
+    private static String capitalize(String name) {
+        if (name == null || name.isEmpty()) {
+            return name;
+        }
+        return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+    }
+
+    /**
+     * 首字母小写
+     */
+    private static String decapitalize(String name) {
+        if (name == null || name.isEmpty()) {
+            return name;
+        }
+        return Character.toLowerCase(name.charAt(0)) + name.substring(1);
     }
 
 }

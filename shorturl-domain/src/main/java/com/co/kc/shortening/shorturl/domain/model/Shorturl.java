@@ -1,10 +1,12 @@
 package com.co.kc.shortening.shorturl.domain.model;
 
+import com.co.kc.shortening.common.utils.ReflectUtils;
 import com.co.kc.shortening.shared.domain.model.Identification;
 import com.co.kc.shortening.common.exception.BusinessException;
 import com.co.kc.shortening.shared.domain.model.Link;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -97,12 +99,12 @@ public class Shorturl extends Identification {
         @Override
         public void serialize(Shorturl shorturl, JsonGenerator gen, SerializerProvider serializers) throws IOException {
             gen.writeStartObject();
-            gen.writeNumberField("id", shorturl.getId());
-            gen.writeNumberField("shortId", shorturl.getShortId().getId());
-            gen.writeStringField("shortCode", shorturl.getShortCode().getCode());
-            gen.writeStringField("rawLink", shorturl.getRawLink().getUrl());
-            gen.writeStringField("status", shorturl.getStatus().name());
-            gen.writeObjectField("validTime", shorturl.getValidTime());
+            gen.writeNumberField(ReflectUtils.getPropertyName(Shorturl::getId), shorturl.getId());
+            gen.writeNumberField(ReflectUtils.getPropertyName(Shorturl::getShortId), shorturl.getShortId().getId());
+            gen.writeStringField(ReflectUtils.getPropertyName(Shorturl::getShortCode), shorturl.getShortCode().getCode());
+            gen.writeStringField(ReflectUtils.getPropertyName(Shorturl::getRawLink), shorturl.getRawLink().getUrl());
+            gen.writeStringField(ReflectUtils.getPropertyName(Shorturl::getStatus), shorturl.getStatus().name());
+            gen.writeObjectField(ReflectUtils.getPropertyName(Shorturl::getValidTime), shorturl.getValidTime());
             gen.writeEndObject();
         }
     }
@@ -110,16 +112,23 @@ public class Shorturl extends Identification {
     static class ShorturlDeserializer extends JsonDeserializer<Shorturl> {
         @Override
         public Shorturl deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-            JsonNode node = p.getCodec().readTree(p);
+            ObjectCodec objectCodec = p.getCodec();
+            JsonNode node = objectCodec.readTree(p);
 
-            Long id = node.get("id").asLong();
-            ShortId shortId = new ShortId(node.get("shortId").asLong());
-            ShortCode shortCode = new ShortCode(node.get("shortCode").asText());
-            Link rawLink = new Link(node.get("rawLink").asText());
-            ShorturlStatus status = ShorturlStatus.valueOf(node.get("status").asText());
-            ValidTimeInterval validTime = p.getCodec().treeToValue(node.get("validTime"), ValidTimeInterval.class);
+            Long id = node.get(ReflectUtils.getPropertyName(Shorturl::getId)).asLong();
+            Long shortId = node.get(ReflectUtils.getPropertyName(Shorturl::getShortId)).asLong();
+            String shortCode = node.get(ReflectUtils.getPropertyName(Shorturl::getShortCode)).asText();
+            String rawLink = node.get(ReflectUtils.getPropertyName(Shorturl::getRawLink)).asText();
+            String statusName = node.get(ReflectUtils.getPropertyName(Shorturl::getStatus)).asText();
+            JsonNode validTime = node.get(ReflectUtils.getPropertyName(Shorturl::getValidTime));
 
-            Shorturl shorturl = new Shorturl(shortId, shortCode, rawLink, status, validTime);
+            Shorturl shorturl =
+                    new Shorturl(
+                            new ShortId(shortId),
+                            new ShortCode(shortCode),
+                            new Link(rawLink),
+                            ShorturlStatus.valueOf(statusName),
+                            objectCodec.treeToValue(validTime, ValidTimeInterval.class));
             shorturl.setId(id);
             return shorturl;
         }

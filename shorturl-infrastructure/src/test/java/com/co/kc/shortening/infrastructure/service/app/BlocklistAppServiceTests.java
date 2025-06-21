@@ -9,7 +9,7 @@ import com.co.kc.shortening.blocklist.domain.model.BlockId;
 import com.co.kc.shortening.blocklist.domain.model.Blocklist;
 import com.co.kc.shortening.blocklist.domain.model.BlocklistFactory;
 import com.co.kc.shortening.infrastructure.extension.InfrastructureExtension;
-import com.co.kc.shortening.infrastructure.repository.BlocklistMySqlRepository;
+import com.co.kc.shortening.infrastructure.repository.blocklist.BlocklistMySqlRepository;
 import com.co.kc.shortening.infrastructure.starter.ShortUrlInfrastructureTestApplication;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

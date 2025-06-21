@@ -1,4 +1,4 @@
-package com.co.kc.shortening.infrastructure.repository;
+package com.co.kc.shortening.infrastructure.repository.blocklist;
 
 import com.co.kc.shortening.blocklist.domain.model.Blocklist;
 import com.co.kc.shortening.blocklist.domain.model.BlocklistFactory;

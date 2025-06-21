@@ -1,4 +1,4 @@
-package com.co.kc.shortening.infrastructure.repository;
+package com.co.kc.shortening.infrastructure.repository.shorturl;
 
 import com.co.kc.shortening.infrastructure.extension.InfrastructureExtension;
 import com.co.kc.shortening.infrastructure.starter.ShortUrlInfrastructureTestApplication;
