@@ -30,6 +30,14 @@ spring:
         max-wait: 100
         min-idle: 4
 
+zookeeper:
+  host: 127.0.0.1:2181
+  namespace: shorturl
+  sessionTimeoutMs: 3000
+  connectionTimeoutMs: 3000
+  failRetryCount: 3
+  failRetryIntervalMs: 100
+
 druid:
   initialSize: 5 #初始化连接大小
   minIdle: 5 #最小连接池数量

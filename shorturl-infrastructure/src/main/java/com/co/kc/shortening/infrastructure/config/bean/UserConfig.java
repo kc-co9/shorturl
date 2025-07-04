@@ -4,6 +4,7 @@ import com.co.kc.shortening.application.client.IdClient;
 import com.co.kc.shortening.application.client.SessionClient;
 import com.co.kc.shortening.application.client.TokenClient;
 import com.co.kc.shortening.application.service.app.UserAppService;
+import com.co.kc.shortening.infrastructure.client.id.SnowflakeId;
 import com.co.kc.shortening.infrastructure.client.id.bizid.UserIdClient;
 import com.co.kc.shortening.infrastructure.client.session.RedisSessionClient;
 import com.co.kc.shortening.infrastructure.client.token.JwtTokenClient;
@@ -30,8 +31,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class UserConfig {
 
     @Bean
-    public UserIdClient userIdClient() {
-        return new UserIdClient();
+    public UserIdClient userIdClient(SnowflakeId snowflakeId) {
+        return new UserIdClient(snowflakeId);
     }
 
     @Bean

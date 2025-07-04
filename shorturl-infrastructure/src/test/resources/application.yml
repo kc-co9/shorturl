@@ -16,6 +16,14 @@ spring:
         max-wait: 100
         min-idle: 4
 
+zookeeper:
+  host: 127.0.0.1:2181
+  namespace: shorturl
+  sessionTimeoutMs: 3000
+  connectionTimeoutMs: 3000
+  failRetryCount: 3
+  failRetryIntervalMs: 100
+
 mybatis-plus:
   typeEnumsPackage: com.co.kc.**.enums
   mapper-locations: classpath*:/mapper/**/*.xml

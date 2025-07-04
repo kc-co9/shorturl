@@ -4,6 +4,7 @@ import com.co.kc.shortening.application.provider.ShortDomainProvider;
 import com.co.kc.shortening.blocklist.service.BlocklistService;
 import com.co.kc.shortening.application.service.app.ShorturlAppService;
 import com.co.kc.shortening.infrastructure.client.cache.RedisCacheClient;
+import com.co.kc.shortening.infrastructure.client.id.SnowflakeId;
 import com.co.kc.shortening.infrastructure.client.id.bizid.ShortIdClient;
 import com.co.kc.shortening.infrastructure.client.id.code.ShortCodeClient;
 import com.co.kc.shortening.infrastructure.config.properties.ShorturlProperties;
@@ -24,8 +25,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ShorturlConfig {
     @Bean
-    public ShortIdClient shortIdClient() {
-        return new ShortIdClient();
+    public ShortIdClient shortIdClient(SnowflakeId snowflakeId) {
+        return new ShortIdClient(snowflakeId);
     }
 
     @Bean

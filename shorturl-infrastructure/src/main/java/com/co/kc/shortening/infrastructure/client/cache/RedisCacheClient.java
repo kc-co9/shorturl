@@ -4,7 +4,6 @@ import com.co.kc.shortening.application.client.CacheClient;
 import com.co.kc.shortening.common.utils.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;

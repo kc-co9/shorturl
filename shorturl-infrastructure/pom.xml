@@ -92,6 +92,18 @@
             <artifactId>jjwt</artifactId>
             <version>0.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+            <version>5.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-test</artifactId>
+            <version>5.8.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -29,10 +29,10 @@ public class SnowflakeId {
     /**
      * 每一部分的最大值
      */
-    private static final long MAX_TIMESTAMP = ~(-1L << TIMESTAMP_BIT);
-    private static final long MAX_DATACENTER = ~(-1L << DATACENTER_BIT);
-    private static final long MAX_MACHINE = ~(-1L << MACHINE_BIT);
-    private static final long MAX_SEQUENCE = ~(-1L << SEQUENCE_BIT);
+    public static final long MAX_TIMESTAMP = ~(-1L << TIMESTAMP_BIT);
+    public static final long MAX_DATACENTER = ~(-1L << DATACENTER_BIT);
+    public static final long MAX_MACHINE = ~(-1L << MACHINE_BIT);
+    public static final long MAX_SEQUENCE = ~(-1L << SEQUENCE_BIT);
 
     /**
      * 每一部分的位便宜量

@@ -10,7 +10,11 @@ import com.co.kc.shortening.infrastructure.client.id.SnowflakeId;
  */
 public class ShortIdClient implements IdClient<Long> {
 
-    private final SnowflakeId snowflakeId = new SnowflakeId(1, 1);
+    private final SnowflakeId snowflakeId;
+
+    public ShortIdClient(SnowflakeId snowflakeId) {
+        this.snowflakeId = snowflakeId;
+    }
 
     @Override
     public Long next() {

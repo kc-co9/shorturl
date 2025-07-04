@@ -2,6 +2,7 @@ package com.co.kc.shortening.infrastructure.config.bean;
 
 import com.co.kc.shortening.application.service.app.BlocklistAppService;
 import com.co.kc.shortening.infrastructure.client.cache.RedisCacheClient;
+import com.co.kc.shortening.infrastructure.client.id.SnowflakeId;
 import com.co.kc.shortening.infrastructure.mybatis.service.UrlBlocklistService;
 import com.co.kc.shortening.infrastructure.repository.blocklist.BlocklistCacheRepository;
 import com.co.kc.shortening.infrastructure.repository.blocklist.BlocklistMySqlRepository;
@@ -19,8 +20,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BlocklistConfig {
     @Bean
-    public BlockIdClient blockIdClient() {
-        return new BlockIdClient();
+    public BlockIdClient blockIdClient(SnowflakeId snowflakeId) {
+        return new BlockIdClient(snowflakeId);
     }
 
     @Bean

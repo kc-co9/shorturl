@@ -23,8 +23,6 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 @Component
 public class CacheAspect {
-    private static final String CACHE_ASPECT_PREFIX = "cache_aspect";
-
     private final CacheClient cacheClient;
 
     public CacheAspect(CacheClient cacheClient) {
@@ -45,8 +43,8 @@ public class CacheAspect {
         Cache cache = method.getAnnotation(Cache.class);
         EvaluationContext context = SpELUtils.createContext(signature.getParameterNames(), joinPoint.getArgs());
 
-        String key = String.format("%s:%s:%s:%s", CACHE_ASPECT_PREFIX, method.getDeclaringClass().getName(),
-                method.getName(), SpELUtils.parseSpEL(cache.key(), context));
+        String key = String.format("%s:%s:%s",
+                method.getDeclaringClass().getName(), method.getName(), SpELUtils.parseSpEL(cache.key(), context));
 
         Object value = cacheClient.get(key, method.getReturnType()).orElse(null);
         if (Objects.isNull(value)) {

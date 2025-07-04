@@ -1,15 +1,14 @@
 package com.co.kc.shortening.infrastructure.config;
 
+import com.co.kc.shortening.infrastructure.config.properties.RedisProperties;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.redisson.config.SingleServerConfig;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -69,26 +68,16 @@ public class RedisConfig {
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redissonClient(RedisProperties redisProperties) {
         Config config = new Config();
-        String address = "redis://" + redisProperties.host + ":" + redisProperties.port;
+        String address = "redis://" + redisProperties.getHost() + ":" + redisProperties.getPort();
         SingleServerConfig singleServerConfig = config.useSingleServer();
         singleServerConfig.setAddress(address);
-        if (StringUtils.isNotBlank(redisProperties.password)) {
-            singleServerConfig.setPassword(redisProperties.password);
+        if (StringUtils.isNotBlank(redisProperties.getPassword())) {
+            singleServerConfig.setPassword(redisProperties.getPassword());
         }
-        if (StringUtils.isNotBlank(redisProperties.database)) {
-            singleServerConfig.setDatabase(Integer.parseInt(redisProperties.database));
+        if (StringUtils.isNotBlank(redisProperties.getDatabase())) {
+            singleServerConfig.setDatabase(Integer.parseInt(redisProperties.getDatabase()));
         }
         return Redisson.create(config);
-    }
-
-    @Data
-    @Configuration
-    @ConfigurationProperties(prefix = "spring.redis")
-    public static class RedisProperties {
-        private String host;
-        private Integer port;
-        private String password;
-        private String database;
     }
 
     private static class PrefixedStringRedisSerializer extends StringRedisSerializer {

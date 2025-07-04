@@ -23,8 +23,6 @@ import java.lang.reflect.Method;
 @Component
 public class LockAspect {
 
-    private static final String LOCK_ASPECT_PREFIX = "lock_aspect";
-
     private final LockClient lockClient;
 
     public LockAspect(LockClient lockClient) {
@@ -47,7 +45,7 @@ public class LockAspect {
 
         String key = SpELUtils.parseSpEL(lock.key(), context);
         if (lock.prefix()) {
-            key = String.format("%s:%s:%s:%s", LOCK_ASPECT_PREFIX, method.getDeclaringClass().getName(), method.getName(), key);
+            key = String.format("%s:%s:%s", method.getDeclaringClass().getName(), method.getName(), key);
         }
 
         boolean success = lockClient.tryLock(key, lock.timeout(), Math.max(lock.waitTime(), 0));
