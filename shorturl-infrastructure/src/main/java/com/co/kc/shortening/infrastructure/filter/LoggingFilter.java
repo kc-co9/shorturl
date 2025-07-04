@@ -86,16 +86,17 @@ public class LoggingFilter extends OncePerRequestFilter {
         LogRecord logRecord =
                 LogRecord.builder()
                         .traceId(getTraceId())
-                        .path(request.getRequestURI())
-                        .method(request.getMethod())
-                        .ip(request.getRemoteAddr())
-                        .headers(getHeaders(request))
-                        .parameters(getParameter(request))
+                        .requestPath(request.getRequestURI())
+                        .requestMethod(request.getMethod())
+                        .requestIp(request.getRemoteAddr())
+                        .requestHeaders(getHeaders(request))
+                        .requestParameters(getParameter(request))
                         .requestBody(getRequestBody(request))
+                        .responseStatus(getResponseStatus(response))
+                        .responseTime(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
+                        .responseHeaders(getHeaders(response))
                         .responseBody(getResponseBody(response))
-                        .status(getResponseStatus(response))
                         .durationMs(stopWatch.getTime(TimeUnit.MILLISECONDS))
-                        .timestamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                         .build();
         if (LogConstants.LOG_JSON_FORMAT.equals(logProperties.getFormat())) {
             log.info("请求响应日志: {}", JsonUtils.toJson(logRecord));
@@ -124,6 +125,10 @@ public class LoggingFilter extends OncePerRequestFilter {
             }
         }
         return requestBody;
+    }
+
+    private Map<String, String> getHeaders(HttpServletResponse response) {
+        return NetworkUtils.getHeader(response);
     }
 
     private String getResponseBody(HttpServletResponse response) {
@@ -161,28 +166,30 @@ public class LoggingFilter extends OncePerRequestFilter {
     @Builder
     private static class LogRecord {
         private String traceId;
-        private String method;
-        private String path;
-        private String ip;
-        private Map<String, String> headers;
-        private Map<String, String> parameters;
+        private String requestMethod;
+        private String requestPath;
+        private String requestIp;
+        private Map<String, String> requestHeaders;
+        private Map<String, String> requestParameters;
         private String requestBody;
+        private int responseStatus;
+        private String responseTime;
+        private Map<String, String> responseHeaders;
         private String responseBody;
-        private int status;
         private long durationMs;
-        private String timestamp;
 
         public String toPrettyLog() {
             return "\n================== 请求响应日志 ==================\n" +
                     buildLogLine("请求id", traceId) +
-                    buildLogLine("请求路径", path) +
-                    buildLogLine("请求方法", method) +
-                    buildLogLine("请求IP", ip) +
-                    buildLogLine("请求头", JsonUtils.toJson(headers)) +
-                    buildLogLine("请求参数", JsonUtils.toJson(parameters)) +
+                    buildLogLine("请求路径", requestPath) +
+                    buildLogLine("请求方法", requestMethod) +
+                    buildLogLine("请求IP", requestIp) +
+                    buildLogLine("请求头", JsonUtils.toJson(requestHeaders)) +
+                    buildLogLine("请求参数", JsonUtils.toJson(requestParameters)) +
                     buildLogLine("请求Body", requestBody) +
-                    buildLogLine("响应状态", String.valueOf(status)) +
-                    buildLogLine("响应时间", timestamp) +
+                    buildLogLine("响应状态", String.valueOf(responseStatus)) +
+                    buildLogLine("响应时间", responseTime) +
+                    buildLogLine("响应头", JsonUtils.toJson(responseHeaders)) +
                     buildLogLine("响应Body", responseBody) +
                     buildLogLine("响应耗时", String.format("%sms", durationMs)) +
                     "===================================================";
