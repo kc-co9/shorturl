@@ -19,7 +19,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class BasicConfig {
     @Bean
     public SnowflakeMachineId snowflakeMachineId(BaseProperties baseProperties, CuratorFramework curatorFramework) {
-        return new SnowflakeMachineId(curatorFramework, baseProperties.getSnowflakeDataCenterId(), (int) SnowflakeId.MAX_MACHINE);
+        return new SnowflakeMachineId(curatorFramework, baseProperties.getSnowflakeDataCenterId(), SnowflakeId.MAX_MACHINE);
     }
 
     @Bean
