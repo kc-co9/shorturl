@@ -42,14 +42,9 @@ public class SnowflakeId {
     private static final int MACHINE_BIT_SHIFT = SEQUENCE_BIT;
     private static final int SEQUENCE_BIT_SHIFT = 0;
 
-    /**
-     * 数据中心标识
-     */
-    private final long datacenterId;
-    /**
-     * 机器标识
-     */
-    private final long machineId;
+
+    private final MachineIdAllocator machineIdAllocator;
+
     /**
      * 机器序列号
      */
@@ -59,15 +54,8 @@ public class SnowflakeId {
      */
     private long lastTimestamp = -1L;
 
-    public SnowflakeId(long datacenterId, long machineId) {
-        if (datacenterId > MAX_DATACENTER || datacenterId < 0) {
-            throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
-        }
-        if (machineId > MAX_MACHINE || machineId < 0) {
-            throw new IllegalArgumentException("machineId can't be greater than MAX_MACHINE_NUM or less than 0");
-        }
-        this.datacenterId = datacenterId;
-        this.machineId = machineId;
+    public SnowflakeId(MachineIdAllocator machineIdAllocator) {
+        this.machineIdAllocator = machineIdAllocator;
     }
 
     public synchronized Long next() {
@@ -96,11 +84,26 @@ public class SnowflakeId {
         }
 
         // 时间戳部分 | 数据中心部分 | 机器标识部分 | 序列号部分
-        return milliseconds << TIMESTAMP_BIT_SHIFT | datacenterId << DATACENTER_BIT_SHIFT | machineId << MACHINE_BIT_SHIFT | sequence << SEQUENCE_BIT_SHIFT;
+        return milliseconds << TIMESTAMP_BIT_SHIFT | getDatacenterId() << DATACENTER_BIT_SHIFT | getMachineId() << MACHINE_BIT_SHIFT | sequence << SEQUENCE_BIT_SHIFT;
     }
 
     private long getTimestamp() {
         return System.currentTimeMillis();
+    }
+
+
+    private long getDatacenterId() {
+        if (machineIdAllocator.getDatacenterId() > MAX_DATACENTER || machineIdAllocator.getDatacenterId() < 0) {
+            throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
+        }
+        return machineIdAllocator.getDatacenterId();
+    }
+
+    private long getMachineId() {
+        if (machineIdAllocator.getMachineId() > MAX_MACHINE || machineIdAllocator.getMachineId() < 0) {
+            throw new IllegalArgumentException("machineId can't be greater than MAX_MACHINE_NUM or less than 0");
+        }
+        return machineIdAllocator.getMachineId();
     }
 
     /**

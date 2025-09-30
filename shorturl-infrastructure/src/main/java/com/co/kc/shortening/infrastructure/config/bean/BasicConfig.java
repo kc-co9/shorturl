@@ -2,7 +2,7 @@ package com.co.kc.shortening.infrastructure.config.bean;
 
 import com.co.kc.shortening.infrastructure.client.cache.RedisCacheClient;
 import com.co.kc.shortening.infrastructure.client.id.SnowflakeId;
-import com.co.kc.shortening.infrastructure.client.id.SnowflakeMachineId;
+import com.co.kc.shortening.infrastructure.client.id.MachineIdAllocator;
 import com.co.kc.shortening.infrastructure.client.lock.RedisLockClient;
 import com.co.kc.shortening.infrastructure.config.properties.BaseProperties;
 import lombok.SneakyThrows;
@@ -18,14 +18,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Configuration
 public class BasicConfig {
     @Bean
-    public SnowflakeMachineId snowflakeMachineId(BaseProperties baseProperties, CuratorFramework curatorFramework) {
-        return new SnowflakeMachineId(curatorFramework, baseProperties.getSnowflakeDataCenterId(), SnowflakeId.MAX_MACHINE);
+    public MachineIdAllocator snowflakeMachineId(BaseProperties baseProperties, CuratorFramework curatorFramework) throws Exception {
+        return new MachineIdAllocator(curatorFramework, baseProperties.getSnowflakeDataCenterId(), SnowflakeId.MAX_MACHINE);
     }
 
     @Bean
     @SneakyThrows
-    public SnowflakeId snowflakeId(BaseProperties baseProperties, SnowflakeMachineId snowflakeMachineId) {
-        return new SnowflakeId(baseProperties.getSnowflakeDataCenterId(), snowflakeMachineId.allocateMachineId());
+    public SnowflakeId snowflakeId(MachineIdAllocator machineIdAllocator) {
+        return new SnowflakeId(machineIdAllocator);
     }
 
     @Bean
